@@ -2408,4 +2408,11 @@ Public Class frmMain
         dlgPasteSpecial.ShowDialog()
     End Sub
 
+    Private Sub ComparativeAnalysisToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ComparativeAnalysisToolStripMenuItem.Click
+        dlgMySecondDialog.ShowDialog()
+    End Sub
+
+    Private Sub ComparativeStatisticsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ComparativeStatisticsToolStripMenuItem.Click
+        dlgMySecondDialog.ShowDialog()
+    End Sub
 End Class

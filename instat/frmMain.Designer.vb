@@ -290,6 +290,7 @@ Partial Class frmMain
         Me.mnuClimaticCompareDensityPlot = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuClimaticCompareConditionalQuantiles = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuClimaticCompareTaylorDiagram = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ComparativeAnalysisToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuClimaticMapping = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuClimaticMappingMap = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuClimaticMappingCheckStationLocations = New System.Windows.Forms.ToolStripMenuItem()
@@ -664,6 +665,7 @@ Partial Class frmMain
         Me.mnuDataFrameMetadata = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuScriptFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLogFile = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ComparativeStatisticsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.stsStrip.SuspendLayout()
         Me.Tool_strip.SuspendLayout()
         Me.mnuBar.SuspendLayout()
@@ -691,7 +693,7 @@ Partial Class frmMain
         '
         'mnuDescribe
         '
-        Me.mnuDescribe.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuDescribeOneVariable, Me.mnuDescribeTwoVariables, Me.mnuDescribeThreeVariable, Me.mnuDescribeSpecific, Me.mnuDescribeGeneral, Me.ToolStripSeparator9, Me.mnuDescribeMultivariate, Me.ToolStripSeparator13, Me.mnuDescribeUseGraph, Me.mnuDescribeCombineGraph, Me.mnuDescribeThemes, Me.mnuDescribeViewGraph})
+        Me.mnuDescribe.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuDescribeOneVariable, Me.mnuDescribeTwoVariables, Me.mnuDescribeThreeVariable, Me.mnuDescribeSpecific, Me.mnuDescribeGeneral, Me.ToolStripSeparator9, Me.mnuDescribeMultivariate, Me.ToolStripSeparator13, Me.mnuDescribeUseGraph, Me.mnuDescribeCombineGraph, Me.mnuDescribeThemes, Me.mnuDescribeViewGraph, Me.ComparativeStatisticsToolStripMenuItem})
         Me.mnuDescribe.Name = "mnuDescribe"
         resources.ApplyResources(Me.mnuDescribe, "mnuDescribe")
         Me.mnuDescribe.Tag = "Describe"
@@ -1988,7 +1990,7 @@ Partial Class frmMain
         '
         'mnuClimaticCompare
         '
-        Me.mnuClimaticCompare.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuClimaticCompareCalculation, Me.mnuClimaticCompareSummary, Me.ToolStripSeparator66, Me.mnuClimaticCompareCorrelations, Me.mnuClimaticCompareScatterplot, Me.mnuClimaticCompareTimeSeriesPlot, Me.mnuClimaticCompareSeasonalPlot, Me.mnuClimaticCompareDensityPlot, Me.mnuClimaticCompareConditionalQuantiles, Me.mnuClimaticCompareTaylorDiagram})
+        Me.mnuClimaticCompare.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuClimaticCompareCalculation, Me.mnuClimaticCompareSummary, Me.ToolStripSeparator66, Me.mnuClimaticCompareCorrelations, Me.mnuClimaticCompareScatterplot, Me.mnuClimaticCompareTimeSeriesPlot, Me.mnuClimaticCompareSeasonalPlot, Me.mnuClimaticCompareDensityPlot, Me.mnuClimaticCompareConditionalQuantiles, Me.mnuClimaticCompareTaylorDiagram, Me.ComparativeAnalysisToolStripMenuItem})
         Me.mnuClimaticCompare.Name = "mnuClimaticCompare"
         resources.ApplyResources(Me.mnuClimaticCompare, "mnuClimaticCompare")
         '
@@ -2041,6 +2043,11 @@ Partial Class frmMain
         '
         Me.mnuClimaticCompareTaylorDiagram.Name = "mnuClimaticCompareTaylorDiagram"
         resources.ApplyResources(Me.mnuClimaticCompareTaylorDiagram, "mnuClimaticCompareTaylorDiagram")
+        '
+        'ComparativeAnalysisToolStripMenuItem
+        '
+        Me.ComparativeAnalysisToolStripMenuItem.Name = "ComparativeAnalysisToolStripMenuItem"
+        resources.ApplyResources(Me.ComparativeAnalysisToolStripMenuItem, "ComparativeAnalysisToolStripMenuItem")
         '
         'mnuClimaticMapping
         '
@@ -4207,6 +4214,11 @@ Partial Class frmMain
         Me.mnuLogFile.Name = "mnuLogFile"
         resources.ApplyResources(Me.mnuLogFile, "mnuLogFile")
         '
+        'ComparativeStatisticsToolStripMenuItem
+        '
+        Me.ComparativeStatisticsToolStripMenuItem.Name = "ComparativeStatisticsToolStripMenuItem"
+        resources.ApplyResources(Me.ComparativeStatisticsToolStripMenuItem, "ComparativeStatisticsToolStripMenuItem")
+        '
         'frmMain
         '
         resources.ApplyResources(Me, "$this")
@@ -4878,4 +4890,6 @@ Partial Class frmMain
     Friend WithEvents mnuLastGraph As ToolStripSplitButton
     Friend WithEvents mnuViewer As ToolStripMenuItem
     Friend WithEvents mnuploty As ToolStripMenuItem
+    Friend WithEvents ComparativeAnalysisToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ComparativeStatisticsToolStripMenuItem As ToolStripMenuItem
 End Class
