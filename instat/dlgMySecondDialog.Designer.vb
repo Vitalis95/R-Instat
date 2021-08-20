@@ -22,63 +22,21 @@ Partial Class dlgMySecondDialog
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.UcrBase = New instat.ucrButtons()
-        Me.UcrSelectorByDataFrameAddRemove1 = New instat.ucrSelectorByDataFrameAddRemove()
-        Me.UcrReceiverMySecondDialog1 = New instat.ucrReceiverSingle()
-        Me.UcrReceiverMySecondDialog2 = New instat.ucrReceiverSingle()
         Me.lblStationData = New System.Windows.Forms.Label()
         Me.lblSatelliteData = New System.Windows.Forms.Label()
-        Me.UcrSelectorByDataFrameAddRemove2 = New instat.ucrSelectorByDataFrameAddRemove()
-        Me.UcrSelector1 = New instat.ucrSelector()
         Me.lblFactors = New System.Windows.Forms.Label()
         Me.cblComparativeStatistics = New System.Windows.Forms.ComboBox()
         Me.lblComparativeStatistics = New System.Windows.Forms.Label()
-        Me.rdoOmitMissing = New instat.ucrRadio()
-        Me.UcrReceiverDayOfYear = New instat.ucrReceiverSingle()
         Me.lblDayOfYear = New System.Windows.Forms.Label()
+        Me.UcrReceiverDayOfYear = New instat.ucrReceiverSingle()
+        Me.rdoOmitMissing = New instat.ucrRadio()
+        Me.UcrSelector1 = New instat.ucrSelector()
+        Me.UcrSelectorByDataFrameAddRemove2 = New instat.ucrSelectorByDataFrameAddRemove()
+        Me.UcrReceiverMySecondDialog2 = New instat.ucrReceiverSingle()
+        Me.UcrReceiverMySecondDialog1 = New instat.ucrReceiverSingle()
+        Me.UcrSelectorByDataFrameAddRemove1 = New instat.ucrSelectorByDataFrameAddRemove()
+        Me.UcrBase = New instat.ucrButtons()
         Me.SuspendLayout()
-        '
-        'UcrBase
-        '
-        Me.UcrBase.Location = New System.Drawing.Point(12, 348)
-        Me.UcrBase.Name = "UcrBase"
-        Me.UcrBase.Size = New System.Drawing.Size(410, 52)
-        Me.UcrBase.TabIndex = 0
-        '
-        'UcrSelectorByDataFrameAddRemove1
-        '
-        Me.UcrSelectorByDataFrameAddRemove1.bDropUnusedFilterLevels = False
-        Me.UcrSelectorByDataFrameAddRemove1.bShowHiddenColumns = False
-        Me.UcrSelectorByDataFrameAddRemove1.bUseCurrentFilter = True
-        Me.UcrSelectorByDataFrameAddRemove1.Location = New System.Drawing.Point(0, 0)
-        Me.UcrSelectorByDataFrameAddRemove1.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrSelectorByDataFrameAddRemove1.Name = "UcrSelectorByDataFrameAddRemove1"
-        Me.UcrSelectorByDataFrameAddRemove1.Size = New System.Drawing.Size(210, 180)
-        Me.UcrSelectorByDataFrameAddRemove1.TabIndex = 1
-        '
-        'UcrReceiverMySecondDialog1
-        '
-        Me.UcrReceiverMySecondDialog1.frmParent = Me
-        Me.UcrReceiverMySecondDialog1.Location = New System.Drawing.Point(302, 34)
-        Me.UcrReceiverMySecondDialog1.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrReceiverMySecondDialog1.Name = "UcrReceiverMySecondDialog1"
-        Me.UcrReceiverMySecondDialog1.Selector = Nothing
-        Me.UcrReceiverMySecondDialog1.Size = New System.Drawing.Size(120, 20)
-        Me.UcrReceiverMySecondDialog1.strNcFilePath = ""
-        Me.UcrReceiverMySecondDialog1.TabIndex = 2
-        Me.UcrReceiverMySecondDialog1.ucrSelector = Nothing
-        '
-        'UcrReceiverMySecondDialog2
-        '
-        Me.UcrReceiverMySecondDialog2.frmParent = Me
-        Me.UcrReceiverMySecondDialog2.Location = New System.Drawing.Point(302, 77)
-        Me.UcrReceiverMySecondDialog2.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrReceiverMySecondDialog2.Name = "UcrReceiverMySecondDialog2"
-        Me.UcrReceiverMySecondDialog2.Selector = Nothing
-        Me.UcrReceiverMySecondDialog2.Size = New System.Drawing.Size(120, 20)
-        Me.UcrReceiverMySecondDialog2.strNcFilePath = ""
-        Me.UcrReceiverMySecondDialog2.TabIndex = 3
-        Me.UcrReceiverMySecondDialog2.ucrSelector = Nothing
         '
         'lblStationData
         '
@@ -97,26 +55,6 @@ Partial Class dlgMySecondDialog
         Me.lblSatelliteData.Size = New System.Drawing.Size(68, 13)
         Me.lblSatelliteData.TabIndex = 5
         Me.lblSatelliteData.Text = "Satelite Data"
-        '
-        'UcrSelectorByDataFrameAddRemove2
-        '
-        Me.UcrSelectorByDataFrameAddRemove2.bDropUnusedFilterLevels = False
-        Me.UcrSelectorByDataFrameAddRemove2.bShowHiddenColumns = False
-        Me.UcrSelectorByDataFrameAddRemove2.bUseCurrentFilter = True
-        Me.UcrSelectorByDataFrameAddRemove2.Location = New System.Drawing.Point(0, 0)
-        Me.UcrSelectorByDataFrameAddRemove2.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrSelectorByDataFrameAddRemove2.Name = "UcrSelectorByDataFrameAddRemove2"
-        Me.UcrSelectorByDataFrameAddRemove2.Size = New System.Drawing.Size(210, 180)
-        Me.UcrSelectorByDataFrameAddRemove2.TabIndex = 6
-        '
-        'UcrSelector1
-        '
-        Me.UcrSelector1.bShowHiddenColumns = False
-        Me.UcrSelector1.Location = New System.Drawing.Point(274, 156)
-        Me.UcrSelector1.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrSelector1.Name = "UcrSelector1"
-        Me.UcrSelector1.Size = New System.Drawing.Size(148, 130)
-        Me.UcrSelector1.TabIndex = 7
         '
         'lblFactors
         '
@@ -144,12 +82,14 @@ Partial Class dlgMySecondDialog
         Me.lblComparativeStatistics.TabIndex = 10
         Me.lblComparativeStatistics.Text = "Comparative Statistics"
         '
-        'rdoOmitMissing
+        'lblDayOfYear
         '
-        Me.rdoOmitMissing.Location = New System.Drawing.Point(0, 268)
-        Me.rdoOmitMissing.Name = "rdoOmitMissing"
-        Me.rdoOmitMissing.Size = New System.Drawing.Size(100, 20)
-        Me.rdoOmitMissing.TabIndex = 11
+        Me.lblDayOfYear.AutoSize = True
+        Me.lblDayOfYear.Location = New System.Drawing.Point(299, 97)
+        Me.lblDayOfYear.Name = "lblDayOfYear"
+        Me.lblDayOfYear.Size = New System.Drawing.Size(65, 13)
+        Me.lblDayOfYear.TabIndex = 13
+        Me.lblDayOfYear.Text = "Day Of Year"
         '
         'UcrReceiverDayOfYear
         '
@@ -163,14 +103,74 @@ Partial Class dlgMySecondDialog
         Me.UcrReceiverDayOfYear.TabIndex = 12
         Me.UcrReceiverDayOfYear.ucrSelector = Nothing
         '
-        'lblDayOfYear
+        'rdoOmitMissing
         '
-        Me.lblDayOfYear.AutoSize = True
-        Me.lblDayOfYear.Location = New System.Drawing.Point(299, 97)
-        Me.lblDayOfYear.Name = "lblDayOfYear"
-        Me.lblDayOfYear.Size = New System.Drawing.Size(65, 13)
-        Me.lblDayOfYear.TabIndex = 13
-        Me.lblDayOfYear.Text = "Day Of Year"
+        Me.rdoOmitMissing.Location = New System.Drawing.Point(0, 268)
+        Me.rdoOmitMissing.Name = "rdoOmitMissing"
+        Me.rdoOmitMissing.Size = New System.Drawing.Size(100, 20)
+        Me.rdoOmitMissing.TabIndex = 11
+        '
+        'UcrSelector1
+        '
+        Me.UcrSelector1.bShowHiddenColumns = False
+        Me.UcrSelector1.Location = New System.Drawing.Point(274, 156)
+        Me.UcrSelector1.Margin = New System.Windows.Forms.Padding(0)
+        Me.UcrSelector1.Name = "UcrSelector1"
+        Me.UcrSelector1.Size = New System.Drawing.Size(148, 130)
+        Me.UcrSelector1.TabIndex = 7
+        '
+        'UcrSelectorByDataFrameAddRemove2
+        '
+        Me.UcrSelectorByDataFrameAddRemove2.bDropUnusedFilterLevels = False
+        Me.UcrSelectorByDataFrameAddRemove2.bShowHiddenColumns = False
+        Me.UcrSelectorByDataFrameAddRemove2.bUseCurrentFilter = True
+        Me.UcrSelectorByDataFrameAddRemove2.Location = New System.Drawing.Point(0, 0)
+        Me.UcrSelectorByDataFrameAddRemove2.Margin = New System.Windows.Forms.Padding(0)
+        Me.UcrSelectorByDataFrameAddRemove2.Name = "UcrSelectorByDataFrameAddRemove2"
+        Me.UcrSelectorByDataFrameAddRemove2.Size = New System.Drawing.Size(210, 180)
+        Me.UcrSelectorByDataFrameAddRemove2.TabIndex = 6
+        '
+        'UcrReceiverMySecondDialog2
+        '
+        Me.UcrReceiverMySecondDialog2.frmParent = Me
+        Me.UcrReceiverMySecondDialog2.Location = New System.Drawing.Point(302, 77)
+        Me.UcrReceiverMySecondDialog2.Margin = New System.Windows.Forms.Padding(0)
+        Me.UcrReceiverMySecondDialog2.Name = "UcrReceiverMySecondDialog2"
+        Me.UcrReceiverMySecondDialog2.Selector = Nothing
+        Me.UcrReceiverMySecondDialog2.Size = New System.Drawing.Size(120, 20)
+        Me.UcrReceiverMySecondDialog2.strNcFilePath = ""
+        Me.UcrReceiverMySecondDialog2.TabIndex = 3
+        Me.UcrReceiverMySecondDialog2.ucrSelector = Nothing
+        '
+        'UcrReceiverMySecondDialog1
+        '
+        Me.UcrReceiverMySecondDialog1.frmParent = Me
+        Me.UcrReceiverMySecondDialog1.Location = New System.Drawing.Point(302, 34)
+        Me.UcrReceiverMySecondDialog1.Margin = New System.Windows.Forms.Padding(0)
+        Me.UcrReceiverMySecondDialog1.Name = "UcrReceiverMySecondDialog1"
+        Me.UcrReceiverMySecondDialog1.Selector = Nothing
+        Me.UcrReceiverMySecondDialog1.Size = New System.Drawing.Size(120, 20)
+        Me.UcrReceiverMySecondDialog1.strNcFilePath = ""
+        Me.UcrReceiverMySecondDialog1.TabIndex = 2
+        Me.UcrReceiverMySecondDialog1.ucrSelector = Nothing
+        '
+        'UcrSelectorByDataFrameAddRemove1
+        '
+        Me.UcrSelectorByDataFrameAddRemove1.bDropUnusedFilterLevels = False
+        Me.UcrSelectorByDataFrameAddRemove1.bShowHiddenColumns = False
+        Me.UcrSelectorByDataFrameAddRemove1.bUseCurrentFilter = True
+        Me.UcrSelectorByDataFrameAddRemove1.Location = New System.Drawing.Point(0, 0)
+        Me.UcrSelectorByDataFrameAddRemove1.Margin = New System.Windows.Forms.Padding(0)
+        Me.UcrSelectorByDataFrameAddRemove1.Name = "UcrSelectorByDataFrameAddRemove1"
+        Me.UcrSelectorByDataFrameAddRemove1.Size = New System.Drawing.Size(210, 180)
+        Me.UcrSelectorByDataFrameAddRemove1.TabIndex = 1
+        '
+        'UcrBase
+        '
+        Me.UcrBase.Location = New System.Drawing.Point(12, 348)
+        Me.UcrBase.Name = "UcrBase"
+        Me.UcrBase.Size = New System.Drawing.Size(410, 52)
+        Me.UcrBase.TabIndex = 0
         '
         'dlgMySecondDialog
         '
