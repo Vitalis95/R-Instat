@@ -25,171 +25,159 @@ Partial Class dlgMySecondDialog
         Me.lblStationData = New System.Windows.Forms.Label()
         Me.lblSatelliteData = New System.Windows.Forms.Label()
         Me.lblFactors = New System.Windows.Forms.Label()
-        Me.cblComparativeStatistics = New System.Windows.Forms.ComboBox()
+        Me.ucrComparativeStatistics = New System.Windows.Forms.ComboBox()
         Me.lblComparativeStatistics = New System.Windows.Forms.Label()
         Me.lblDayOfYear = New System.Windows.Forms.Label()
-        Me.UcrReceiverDayOfYear = New instat.ucrReceiverSingle()
-        Me.rdoOmitMissing = New instat.ucrRadio()
-        Me.UcrSelector1 = New instat.ucrSelector()
-        Me.UcrSelectorByDataFrameAddRemove2 = New instat.ucrSelectorByDataFrameAddRemove()
-        Me.UcrReceiverMySecondDialog2 = New instat.ucrReceiverSingle()
-        Me.UcrReceiverMySecondDialog1 = New instat.ucrReceiverSingle()
-        Me.UcrSelectorByDataFrameAddRemove1 = New instat.ucrSelectorByDataFrameAddRemove()
+        Me.ucrReceiverDayOfYear = New instat.ucrReceiverSingle()
+        Me.ucrSelectorFactors = New instat.ucrSelector()
+        Me.ucrReceiverSatelliteData = New instat.ucrReceiverSingle()
+        Me.ucrReceiverStationData = New instat.ucrReceiverSingle()
+        Me.ucrSelectorByDataFrame = New instat.ucrSelectorByDataFrameAddRemove()
         Me.UcrBase = New instat.ucrButtons()
+        Me.ucrChkOmitMissing = New instat.ucrCheck()
         Me.SuspendLayout()
         '
         'lblStationData
         '
         Me.lblStationData.AutoSize = True
-        Me.lblStationData.Location = New System.Drawing.Point(299, 21)
+        Me.lblStationData.Location = New System.Drawing.Point(296, 17)
         Me.lblStationData.Name = "lblStationData"
-        Me.lblStationData.Size = New System.Drawing.Size(66, 13)
+        Me.lblStationData.Size = New System.Drawing.Size(69, 13)
         Me.lblStationData.TabIndex = 4
-        Me.lblStationData.Text = "Station Data"
+        Me.lblStationData.Text = "Station Data:"
         '
         'lblSatelliteData
         '
         Me.lblSatelliteData.AutoSize = True
         Me.lblSatelliteData.Location = New System.Drawing.Point(299, 64)
         Me.lblSatelliteData.Name = "lblSatelliteData"
-        Me.lblSatelliteData.Size = New System.Drawing.Size(68, 13)
+        Me.lblSatelliteData.Size = New System.Drawing.Size(71, 13)
         Me.lblSatelliteData.TabIndex = 5
-        Me.lblSatelliteData.Text = "Satelite Data"
+        Me.lblSatelliteData.Text = "Satelite Data:"
         '
         'lblFactors
         '
         Me.lblFactors.AutoSize = True
-        Me.lblFactors.Location = New System.Drawing.Point(271, 143)
+        Me.lblFactors.Location = New System.Drawing.Point(304, 155)
         Me.lblFactors.Name = "lblFactors"
-        Me.lblFactors.Size = New System.Drawing.Size(42, 13)
+        Me.lblFactors.Size = New System.Drawing.Size(45, 13)
         Me.lblFactors.TabIndex = 8
-        Me.lblFactors.Text = "Factors"
+        Me.lblFactors.Text = "Factors:"
         '
-        'cblComparativeStatistics
+        'ucrComparativeStatistics
         '
-        Me.cblComparativeStatistics.FormattingEnabled = True
-        Me.cblComparativeStatistics.Location = New System.Drawing.Point(274, 302)
-        Me.cblComparativeStatistics.Name = "cblComparativeStatistics"
-        Me.cblComparativeStatistics.Size = New System.Drawing.Size(121, 21)
-        Me.cblComparativeStatistics.TabIndex = 9
+        Me.ucrComparativeStatistics.FormattingEnabled = True
+        Me.ucrComparativeStatistics.Location = New System.Drawing.Point(312, 337)
+        Me.ucrComparativeStatistics.Name = "ucrComparativeStatistics"
+        Me.ucrComparativeStatistics.Size = New System.Drawing.Size(121, 21)
+        Me.ucrComparativeStatistics.TabIndex = 9
         '
         'lblComparativeStatistics
         '
         Me.lblComparativeStatistics.AutoSize = True
-        Me.lblComparativeStatistics.Location = New System.Drawing.Point(271, 286)
+        Me.lblComparativeStatistics.Location = New System.Drawing.Point(309, 321)
         Me.lblComparativeStatistics.Name = "lblComparativeStatistics"
-        Me.lblComparativeStatistics.Size = New System.Drawing.Size(111, 13)
+        Me.lblComparativeStatistics.Size = New System.Drawing.Size(114, 13)
         Me.lblComparativeStatistics.TabIndex = 10
-        Me.lblComparativeStatistics.Text = "Comparative Statistics"
+        Me.lblComparativeStatistics.Text = "Comparative Statistics:"
         '
         'lblDayOfYear
         '
         Me.lblDayOfYear.AutoSize = True
-        Me.lblDayOfYear.Location = New System.Drawing.Point(299, 97)
+        Me.lblDayOfYear.Location = New System.Drawing.Point(299, 105)
         Me.lblDayOfYear.Name = "lblDayOfYear"
-        Me.lblDayOfYear.Size = New System.Drawing.Size(65, 13)
+        Me.lblDayOfYear.Size = New System.Drawing.Size(68, 13)
         Me.lblDayOfYear.TabIndex = 13
-        Me.lblDayOfYear.Text = "Day Of Year"
+        Me.lblDayOfYear.Text = "Day Of Year:"
         '
-        'UcrReceiverDayOfYear
+        'ucrReceiverDayOfYear
         '
-        Me.UcrReceiverDayOfYear.frmParent = Me
-        Me.UcrReceiverDayOfYear.Location = New System.Drawing.Point(302, 110)
-        Me.UcrReceiverDayOfYear.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrReceiverDayOfYear.Name = "UcrReceiverDayOfYear"
-        Me.UcrReceiverDayOfYear.Selector = Nothing
-        Me.UcrReceiverDayOfYear.Size = New System.Drawing.Size(120, 20)
-        Me.UcrReceiverDayOfYear.strNcFilePath = ""
-        Me.UcrReceiverDayOfYear.TabIndex = 12
-        Me.UcrReceiverDayOfYear.ucrSelector = Nothing
+        Me.ucrReceiverDayOfYear.frmParent = Me
+        Me.ucrReceiverDayOfYear.Location = New System.Drawing.Point(302, 120)
+        Me.ucrReceiverDayOfYear.Margin = New System.Windows.Forms.Padding(0)
+        Me.ucrReceiverDayOfYear.Name = "ucrReceiverDayOfYear"
+        Me.ucrReceiverDayOfYear.Selector = Nothing
+        Me.ucrReceiverDayOfYear.Size = New System.Drawing.Size(120, 20)
+        Me.ucrReceiverDayOfYear.strNcFilePath = ""
+        Me.ucrReceiverDayOfYear.TabIndex = 12
+        Me.ucrReceiverDayOfYear.ucrSelector = Nothing
         '
-        'rdoOmitMissing
+        'ucrSelectorFactors
         '
-        Me.rdoOmitMissing.Location = New System.Drawing.Point(0, 268)
-        Me.rdoOmitMissing.Name = "rdoOmitMissing"
-        Me.rdoOmitMissing.Size = New System.Drawing.Size(100, 20)
-        Me.rdoOmitMissing.TabIndex = 11
+        Me.ucrSelectorFactors.bShowHiddenColumns = False
+        Me.ucrSelectorFactors.Location = New System.Drawing.Point(307, 168)
+        Me.ucrSelectorFactors.Margin = New System.Windows.Forms.Padding(0)
+        Me.ucrSelectorFactors.Name = "ucrSelectorFactors"
+        Me.ucrSelectorFactors.Size = New System.Drawing.Size(148, 130)
+        Me.ucrSelectorFactors.TabIndex = 7
         '
-        'UcrSelector1
+        'ucrReceiverSatelliteData
         '
-        Me.UcrSelector1.bShowHiddenColumns = False
-        Me.UcrSelector1.Location = New System.Drawing.Point(274, 156)
-        Me.UcrSelector1.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrSelector1.Name = "UcrSelector1"
-        Me.UcrSelector1.Size = New System.Drawing.Size(148, 130)
-        Me.UcrSelector1.TabIndex = 7
+        Me.ucrReceiverSatelliteData.frmParent = Me
+        Me.ucrReceiverSatelliteData.Location = New System.Drawing.Point(301, 81)
+        Me.ucrReceiverSatelliteData.Margin = New System.Windows.Forms.Padding(0)
+        Me.ucrReceiverSatelliteData.Name = "ucrReceiverSatelliteData"
+        Me.ucrReceiverSatelliteData.Selector = Nothing
+        Me.ucrReceiverSatelliteData.Size = New System.Drawing.Size(120, 20)
+        Me.ucrReceiverSatelliteData.strNcFilePath = ""
+        Me.ucrReceiverSatelliteData.TabIndex = 3
+        Me.ucrReceiverSatelliteData.ucrSelector = Nothing
         '
-        'UcrSelectorByDataFrameAddRemove2
+        'ucrReceiverStationData
         '
-        Me.UcrSelectorByDataFrameAddRemove2.bDropUnusedFilterLevels = False
-        Me.UcrSelectorByDataFrameAddRemove2.bShowHiddenColumns = False
-        Me.UcrSelectorByDataFrameAddRemove2.bUseCurrentFilter = True
-        Me.UcrSelectorByDataFrameAddRemove2.Location = New System.Drawing.Point(0, 0)
-        Me.UcrSelectorByDataFrameAddRemove2.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrSelectorByDataFrameAddRemove2.Name = "UcrSelectorByDataFrameAddRemove2"
-        Me.UcrSelectorByDataFrameAddRemove2.Size = New System.Drawing.Size(210, 180)
-        Me.UcrSelectorByDataFrameAddRemove2.TabIndex = 6
+        Me.ucrReceiverStationData.frmParent = Me
+        Me.ucrReceiverStationData.Location = New System.Drawing.Point(302, 34)
+        Me.ucrReceiverStationData.Margin = New System.Windows.Forms.Padding(0)
+        Me.ucrReceiverStationData.Name = "ucrReceiverStationData"
+        Me.ucrReceiverStationData.Selector = Nothing
+        Me.ucrReceiverStationData.Size = New System.Drawing.Size(120, 20)
+        Me.ucrReceiverStationData.strNcFilePath = ""
+        Me.ucrReceiverStationData.TabIndex = 2
+        Me.ucrReceiverStationData.ucrSelector = Nothing
         '
-        'UcrReceiverMySecondDialog2
+        'ucrSelectorByDataFrame
         '
-        Me.UcrReceiverMySecondDialog2.frmParent = Me
-        Me.UcrReceiverMySecondDialog2.Location = New System.Drawing.Point(302, 77)
-        Me.UcrReceiverMySecondDialog2.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrReceiverMySecondDialog2.Name = "UcrReceiverMySecondDialog2"
-        Me.UcrReceiverMySecondDialog2.Selector = Nothing
-        Me.UcrReceiverMySecondDialog2.Size = New System.Drawing.Size(120, 20)
-        Me.UcrReceiverMySecondDialog2.strNcFilePath = ""
-        Me.UcrReceiverMySecondDialog2.TabIndex = 3
-        Me.UcrReceiverMySecondDialog2.ucrSelector = Nothing
-        '
-        'UcrReceiverMySecondDialog1
-        '
-        Me.UcrReceiverMySecondDialog1.frmParent = Me
-        Me.UcrReceiverMySecondDialog1.Location = New System.Drawing.Point(302, 34)
-        Me.UcrReceiverMySecondDialog1.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrReceiverMySecondDialog1.Name = "UcrReceiverMySecondDialog1"
-        Me.UcrReceiverMySecondDialog1.Selector = Nothing
-        Me.UcrReceiverMySecondDialog1.Size = New System.Drawing.Size(120, 20)
-        Me.UcrReceiverMySecondDialog1.strNcFilePath = ""
-        Me.UcrReceiverMySecondDialog1.TabIndex = 2
-        Me.UcrReceiverMySecondDialog1.ucrSelector = Nothing
-        '
-        'UcrSelectorByDataFrameAddRemove1
-        '
-        Me.UcrSelectorByDataFrameAddRemove1.bDropUnusedFilterLevels = False
-        Me.UcrSelectorByDataFrameAddRemove1.bShowHiddenColumns = False
-        Me.UcrSelectorByDataFrameAddRemove1.bUseCurrentFilter = True
-        Me.UcrSelectorByDataFrameAddRemove1.Location = New System.Drawing.Point(0, 0)
-        Me.UcrSelectorByDataFrameAddRemove1.Margin = New System.Windows.Forms.Padding(0)
-        Me.UcrSelectorByDataFrameAddRemove1.Name = "UcrSelectorByDataFrameAddRemove1"
-        Me.UcrSelectorByDataFrameAddRemove1.Size = New System.Drawing.Size(210, 180)
-        Me.UcrSelectorByDataFrameAddRemove1.TabIndex = 1
+        Me.ucrSelectorByDataFrame.bDropUnusedFilterLevels = False
+        Me.ucrSelectorByDataFrame.bShowHiddenColumns = False
+        Me.ucrSelectorByDataFrame.bUseCurrentFilter = True
+        Me.ucrSelectorByDataFrame.Location = New System.Drawing.Point(8, 6)
+        Me.ucrSelectorByDataFrame.Margin = New System.Windows.Forms.Padding(0)
+        Me.ucrSelectorByDataFrame.Name = "ucrSelectorByDataFrame"
+        Me.ucrSelectorByDataFrame.Size = New System.Drawing.Size(210, 180)
+        Me.ucrSelectorByDataFrame.TabIndex = 1
         '
         'UcrBase
         '
-        Me.UcrBase.Location = New System.Drawing.Point(12, 348)
+        Me.UcrBase.Location = New System.Drawing.Point(12, 393)
         Me.UcrBase.Name = "UcrBase"
-        Me.UcrBase.Size = New System.Drawing.Size(410, 52)
+        Me.UcrBase.Size = New System.Drawing.Size(409, 52)
         Me.UcrBase.TabIndex = 0
+        '
+        'ucrChkOmitMissing
+        '
+        Me.ucrChkOmitMissing.Checked = False
+        Me.ucrChkOmitMissing.Location = New System.Drawing.Point(8, 257)
+        Me.ucrChkOmitMissing.Name = "ucrChkOmitMissing"
+        Me.ucrChkOmitMissing.Size = New System.Drawing.Size(156, 20)
+        Me.ucrChkOmitMissing.TabIndex = 14
         '
         'dlgMySecondDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(500, 450)
+        Me.ClientSize = New System.Drawing.Size(465, 450)
+        Me.Controls.Add(Me.ucrChkOmitMissing)
         Me.Controls.Add(Me.lblDayOfYear)
-        Me.Controls.Add(Me.UcrReceiverDayOfYear)
-        Me.Controls.Add(Me.rdoOmitMissing)
+        Me.Controls.Add(Me.ucrReceiverDayOfYear)
         Me.Controls.Add(Me.lblComparativeStatistics)
-        Me.Controls.Add(Me.cblComparativeStatistics)
+        Me.Controls.Add(Me.ucrComparativeStatistics)
         Me.Controls.Add(Me.lblFactors)
-        Me.Controls.Add(Me.UcrSelector1)
-        Me.Controls.Add(Me.UcrSelectorByDataFrameAddRemove2)
+        Me.Controls.Add(Me.ucrSelectorFactors)
         Me.Controls.Add(Me.lblSatelliteData)
         Me.Controls.Add(Me.lblStationData)
-        Me.Controls.Add(Me.UcrReceiverMySecondDialog2)
-        Me.Controls.Add(Me.UcrReceiverMySecondDialog1)
-        Me.Controls.Add(Me.UcrSelectorByDataFrameAddRemove1)
+        Me.Controls.Add(Me.ucrReceiverSatelliteData)
+        Me.Controls.Add(Me.ucrReceiverStationData)
+        Me.Controls.Add(Me.ucrSelectorByDataFrame)
         Me.Controls.Add(Me.UcrBase)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.MaximizeBox = False
@@ -203,17 +191,16 @@ Partial Class dlgMySecondDialog
     End Sub
 
     Friend WithEvents UcrBase As ucrButtons
-    Friend WithEvents UcrSelectorByDataFrameAddRemove1 As ucrSelectorByDataFrameAddRemove
-    Friend WithEvents UcrReceiverMySecondDialog1 As ucrReceiverSingle
+    Friend WithEvents ucrSelectorByDataFrame As ucrSelectorByDataFrameAddRemove
+    Friend WithEvents ucrReceiverStationData As ucrReceiverSingle
     Friend WithEvents lblDayOfYear As Label
-    Friend WithEvents UcrReceiverDayOfYear As ucrReceiverSingle
-    Friend WithEvents rdoOmitMissing As ucrRadio
+    Friend WithEvents ucrReceiverDayOfYear As ucrReceiverSingle
     Friend WithEvents lblComparativeStatistics As Label
-    Friend WithEvents cblComparativeStatistics As ComboBox
+    Friend WithEvents ucrComparativeStatistics As ComboBox
     Friend WithEvents lblFactors As Label
-    Friend WithEvents UcrSelector1 As ucrSelector
-    Friend WithEvents UcrSelectorByDataFrameAddRemove2 As ucrSelectorByDataFrameAddRemove
+    Friend WithEvents ucrSelectorFactors As ucrSelector
     Friend WithEvents lblSatelliteData As Label
     Friend WithEvents lblStationData As Label
-    Friend WithEvents UcrReceiverMySecondDialog2 As ucrReceiverSingle
+    Friend WithEvents ucrReceiverSatelliteData As ucrReceiverSingle
+    Friend WithEvents ucrChkOmitMissing As ucrCheck
 End Class
