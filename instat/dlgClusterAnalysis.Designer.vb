@@ -26,18 +26,18 @@ Partial Class dlgClusterAnalysis
         Me.rdoPartitioningData = New System.Windows.Forms.RadioButton()
         Me.rdoNumericVariables = New System.Windows.Forms.RadioButton()
         Me.rdoDataFrame = New System.Windows.Forms.RadioButton()
+        Me.ucrNudPamCluster = New instat.ucrNud()
+        Me.ucrInputMethod = New instat.ucrInputComboBox()
+        Me.ucrInputMetric = New instat.ucrInputComboBox()
+        Me.ucrChkStand = New instat.ucrCheck()
+        Me.ucrChkMethod = New instat.ucrCheck()
+        Me.ucrChkCluster = New instat.ucrCheck()
+        Me.ucrChkMetric = New instat.ucrCheck()
         Me.ucrBase = New instat.ucrButtons()
         Me.ucrReceiverClusterData = New instat.ucrReceiverMultiple()
         Me.ucrSelectorClusterData = New instat.ucrSelectorByDataFrameAddRemove()
         Me.ucrPnlClusterData = New instat.UcrPanel()
         Me.ucrPnlSelectData = New instat.UcrPanel()
-        Me.ucrChkMetric = New instat.ucrCheck()
-        Me.ucrChkCluster = New instat.ucrCheck()
-        Me.ucrChkMethod = New instat.ucrCheck()
-        Me.ucrChkStand = New instat.ucrCheck()
-        Me.ucrInputMetric = New instat.ucrInputComboBox()
-        Me.ucrInputMethod = New instat.ucrInputComboBox()
-        Me.ucrNudPamCluster = New instat.ucrNud()
         Me.SuspendLayout()
         '
         'rdoHierarchicalData
@@ -94,6 +94,70 @@ Partial Class dlgClusterAnalysis
         Me.rdoDataFrame.Text = "Data Frame/Matrix"
         Me.rdoDataFrame.UseVisualStyleBackColor = True
         '
+        'ucrNudPamCluster
+        '
+        Me.ucrNudPamCluster.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.ucrNudPamCluster.Increment = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.ucrNudPamCluster.Location = New System.Drawing.Point(126, 296)
+        Me.ucrNudPamCluster.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
+        Me.ucrNudPamCluster.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.ucrNudPamCluster.Name = "ucrNudPamCluster"
+        Me.ucrNudPamCluster.Size = New System.Drawing.Size(50, 20)
+        Me.ucrNudPamCluster.TabIndex = 16
+        Me.ucrNudPamCluster.Value = New Decimal(New Integer() {0, 0, 0, 0})
+        '
+        'ucrInputMethod
+        '
+        Me.ucrInputMethod.AddQuotesIfUnrecognised = True
+        Me.ucrInputMethod.GetSetSelectedIndex = -1
+        Me.ucrInputMethod.IsReadOnly = False
+        Me.ucrInputMethod.Location = New System.Drawing.Point(127, 267)
+        Me.ucrInputMethod.Name = "ucrInputMethod"
+        Me.ucrInputMethod.Size = New System.Drawing.Size(137, 21)
+        Me.ucrInputMethod.TabIndex = 15
+        '
+        'ucrInputMetric
+        '
+        Me.ucrInputMetric.AddQuotesIfUnrecognised = True
+        Me.ucrInputMetric.GetSetSelectedIndex = -1
+        Me.ucrInputMetric.IsReadOnly = False
+        Me.ucrInputMetric.Location = New System.Drawing.Point(127, 224)
+        Me.ucrInputMetric.Name = "ucrInputMetric"
+        Me.ucrInputMetric.Size = New System.Drawing.Size(137, 21)
+        Me.ucrInputMetric.TabIndex = 14
+        '
+        'ucrChkStand
+        '
+        Me.ucrChkStand.Checked = False
+        Me.ucrChkStand.Location = New System.Drawing.Point(7, 246)
+        Me.ucrChkStand.Name = "ucrChkStand"
+        Me.ucrChkStand.Size = New System.Drawing.Size(100, 20)
+        Me.ucrChkStand.TabIndex = 13
+        '
+        'ucrChkMethod
+        '
+        Me.ucrChkMethod.Checked = False
+        Me.ucrChkMethod.Location = New System.Drawing.Point(7, 269)
+        Me.ucrChkMethod.Name = "ucrChkMethod"
+        Me.ucrChkMethod.Size = New System.Drawing.Size(100, 20)
+        Me.ucrChkMethod.TabIndex = 12
+        '
+        'ucrChkCluster
+        '
+        Me.ucrChkCluster.Checked = False
+        Me.ucrChkCluster.Location = New System.Drawing.Point(8, 295)
+        Me.ucrChkCluster.Name = "ucrChkCluster"
+        Me.ucrChkCluster.Size = New System.Drawing.Size(100, 20)
+        Me.ucrChkCluster.TabIndex = 11
+        '
+        'ucrChkMetric
+        '
+        Me.ucrChkMetric.Checked = False
+        Me.ucrChkMetric.Location = New System.Drawing.Point(7, 223)
+        Me.ucrChkMetric.Name = "ucrChkMetric"
+        Me.ucrChkMetric.Size = New System.Drawing.Size(100, 20)
+        Me.ucrChkMetric.TabIndex = 10
+        '
         'ucrBase
         '
         Me.ucrBase.Location = New System.Drawing.Point(7, 381)
@@ -118,17 +182,17 @@ Partial Class dlgClusterAnalysis
         Me.ucrSelectorClusterData.bDropUnusedFilterLevels = False
         Me.ucrSelectorClusterData.bShowHiddenColumns = False
         Me.ucrSelectorClusterData.bUseCurrentFilter = True
-        Me.ucrSelectorClusterData.Location = New System.Drawing.Point(7, 26)
+        Me.ucrSelectorClusterData.Location = New System.Drawing.Point(7, 39)
         Me.ucrSelectorClusterData.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrSelectorClusterData.Name = "ucrSelectorClusterData"
-        Me.ucrSelectorClusterData.Size = New System.Drawing.Size(210, 180)
+        Me.ucrSelectorClusterData.Size = New System.Drawing.Size(217, 182)
         Me.ucrSelectorClusterData.TabIndex = 0
         '
         'ucrPnlClusterData
         '
-        Me.ucrPnlClusterData.Location = New System.Drawing.Point(179, 2)
+        Me.ucrPnlClusterData.Location = New System.Drawing.Point(171, 2)
         Me.ucrPnlClusterData.Name = "ucrPnlClusterData"
-        Me.ucrPnlClusterData.Size = New System.Drawing.Size(206, 39)
+        Me.ucrPnlClusterData.Size = New System.Drawing.Size(214, 46)
         Me.ucrPnlClusterData.TabIndex = 4
         '
         'ucrPnlSelectData
@@ -137,70 +201,6 @@ Partial Class dlgClusterAnalysis
         Me.ucrPnlSelectData.Name = "ucrPnlSelectData"
         Me.ucrPnlSelectData.Size = New System.Drawing.Size(170, 52)
         Me.ucrPnlSelectData.TabIndex = 7
-        '
-        'ucrChkMetric
-        '
-        Me.ucrChkMetric.Checked = False
-        Me.ucrChkMetric.Location = New System.Drawing.Point(7, 220)
-        Me.ucrChkMetric.Name = "ucrChkMetric"
-        Me.ucrChkMetric.Size = New System.Drawing.Size(100, 20)
-        Me.ucrChkMetric.TabIndex = 10
-        '
-        'ucrChkCluster
-        '
-        Me.ucrChkCluster.Checked = False
-        Me.ucrChkCluster.Location = New System.Drawing.Point(8, 288)
-        Me.ucrChkCluster.Name = "ucrChkCluster"
-        Me.ucrChkCluster.Size = New System.Drawing.Size(100, 20)
-        Me.ucrChkCluster.TabIndex = 11
-        '
-        'ucrChkMethod
-        '
-        Me.ucrChkMethod.Checked = False
-        Me.ucrChkMethod.Location = New System.Drawing.Point(7, 265)
-        Me.ucrChkMethod.Name = "ucrChkMethod"
-        Me.ucrChkMethod.Size = New System.Drawing.Size(100, 20)
-        Me.ucrChkMethod.TabIndex = 12
-        '
-        'ucrChkStand
-        '
-        Me.ucrChkStand.Checked = False
-        Me.ucrChkStand.Location = New System.Drawing.Point(7, 243)
-        Me.ucrChkStand.Name = "ucrChkStand"
-        Me.ucrChkStand.Size = New System.Drawing.Size(100, 20)
-        Me.ucrChkStand.TabIndex = 13
-        '
-        'ucrInputMetric
-        '
-        Me.ucrInputMetric.AddQuotesIfUnrecognised = True
-        Me.ucrInputMetric.GetSetSelectedIndex = -1
-        Me.ucrInputMetric.IsReadOnly = False
-        Me.ucrInputMetric.Location = New System.Drawing.Point(127, 219)
-        Me.ucrInputMetric.Name = "ucrInputMetric"
-        Me.ucrInputMetric.Size = New System.Drawing.Size(137, 21)
-        Me.ucrInputMetric.TabIndex = 14
-        '
-        'ucrInputMethod
-        '
-        Me.ucrInputMethod.AddQuotesIfUnrecognised = True
-        Me.ucrInputMethod.GetSetSelectedIndex = -1
-        Me.ucrInputMethod.IsReadOnly = False
-        Me.ucrInputMethod.Location = New System.Drawing.Point(127, 263)
-        Me.ucrInputMethod.Name = "ucrInputMethod"
-        Me.ucrInputMethod.Size = New System.Drawing.Size(137, 21)
-        Me.ucrInputMethod.TabIndex = 15
-        '
-        'ucrNudPamCluster
-        '
-        Me.ucrNudPamCluster.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.ucrNudPamCluster.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.ucrNudPamCluster.Location = New System.Drawing.Point(126, 290)
-        Me.ucrNudPamCluster.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
-        Me.ucrNudPamCluster.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.ucrNudPamCluster.Name = "ucrNudPamCluster"
-        Me.ucrNudPamCluster.Size = New System.Drawing.Size(50, 20)
-        Me.ucrNudPamCluster.TabIndex = 16
-        Me.ucrNudPamCluster.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
         'dlgClusterAnalysis
         '
