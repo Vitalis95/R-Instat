@@ -75,10 +75,11 @@ Public Class dlgClusterAnalysis
         ucrChkStand.SetText("Stand:")
 
         ucrChkCluster.SetText("PAM Cluster")
-        ucrNudPamCluster.SetParameter(New RParameter("k", 1))
-        ucrNudPamCluster.SetMinMax(1, Integer.MaxValue)
+        'ucrNudPamCluster.SetParameter(New RParameter("k", 1))
+        ucrNudPamCluster.SetMinMax(2, Integer.MaxValue)
         ucrChkCluster.AddToLinkedControls(ucrLinked:=ucrNudPamCluster, objValues:={True}, bNewLinkedHideIfParameterMissing:=True)
-        ucrChkCluster.AddFunctionNamesCondition(False, "pam")
+        ucrChkCluster.AddParameterPresentCondition(True, "k")
+        ucrChkCluster.AddParameterPresentCondition(False, "k", False)
 
         ucrInputMethod.SetParameter(New RParameter("method", 4))
         dctMethod.Add("average", Chr(34) & "average" & Chr(34))
@@ -125,7 +126,7 @@ Public Class dlgClusterAnalysis
         ucrChkStand.SetRCode(clsPamFunction, bReset)
         ucrChkCluster.SetRCode(clsPamFunction, bReset)
         ucrChkMethod.SetRCode(clsAgnesFunction, bReset)
-        ucrNudPamCluster.SetRCode(clsPamFunction, bReset)
+        'ucrNudPamCluster.SetRCode(clsPamFunction, bReset)
         ucrInputMetric.SetRCode(clsPamFunction, bReset)
         ucrInputMethod.SetRCode(clsAgnesFunction, bReset)
 
@@ -142,7 +143,7 @@ Public Class dlgClusterAnalysis
     End Sub
     Private Sub TestOkEnabled()
         If ucrSelectorClusterData.ucrAvailableDataFrames.cboAvailableDataFrames.Text = "" _
-            OrElse (rdoNumericVariables.Checked AndAlso ucrReceiverClusterData.IsEmpty) Then
+            OrElse (rdoNumericVariables.Checked AndAlso ucrReceiverClusterData.IsEmpty) OrElse (rdoPartitioningData.Checked AndAlso Not ucrChkCluster.Checked) Then
             ucrBase.OKEnabled(False)
         Else
             ucrBase.OKEnabled(True)
@@ -174,12 +175,15 @@ Public Class dlgClusterAnalysis
             End If
         ElseIf rdoHierarchicalData.Checked Then
             If rdoDataFrame.Checked Then
+                clsDummyFunction.AddParameter("checked", "whole", iPosition:=0)
                 clsAgnesFunction.AddParameter("x", clsRFunctionParameter:=ucrSelectorClusterData.ucrAvailableDataFrames.clsCurrDataFrame, iPosition:=0)
 
             Else
+                clsDummyFunction.AddParameter("checked", "selected", iPosition:=0)
                 clsAgnesFunction.AddParameter("x", clsRFunctionParameter:=ucrReceiverClusterData.GetVariables, iPosition:=0)
             End If
         End If
+
     End Sub
 
     Private Sub ucrPnlSelectData_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrPnlSelectData.ControlValueChanged
@@ -197,5 +201,12 @@ Public Class dlgClusterAnalysis
 
     Private Sub ucrPnlClusterData_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrPnlClusterData.ControlValueChanged
         SetBaseFunction()
+        ChangeDataParameter()
+    End Sub
+
+    Private Sub ucrChkCluster_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkCluster.ControlValueChanged, ucrNudPamCluster.ControlValueChanged
+        If ucrChkCluster.Checked Then
+            clsPamFunction.AddParameter("k", ucrNudPamCluster.GetText, iPosition:=1)
+        End If
     End Sub
 End Class
