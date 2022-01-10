@@ -83,21 +83,21 @@ Partial Class dlgRandomSubsets
         '
         'ucrChkWithReplacement
         '
-        Me.ucrChkWithReplacement.Checked = False
         resources.ApplyResources(Me.ucrChkWithReplacement, "ucrChkWithReplacement")
+        Me.ucrChkWithReplacement.Checked = False
         Me.ucrChkWithReplacement.Name = "ucrChkWithReplacement"
         '
         'ucrChkSetSeed
         '
-        Me.ucrChkSetSeed.Checked = False
         resources.ApplyResources(Me.ucrChkSetSeed, "ucrChkSetSeed")
+        Me.ucrChkSetSeed.Checked = False
         Me.ucrChkSetSeed.Name = "ucrChkSetSeed"
         '
         'ucrNudSetSeed
         '
+        resources.ApplyResources(Me.ucrNudSetSeed, "ucrNudSetSeed")
         Me.ucrNudSetSeed.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudSetSeed.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        resources.ApplyResources(Me.ucrNudSetSeed, "ucrNudSetSeed")
         Me.ucrNudSetSeed.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudSetSeed.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudSetSeed.Name = "ucrNudSetSeed"
@@ -105,9 +105,9 @@ Partial Class dlgRandomSubsets
         '
         'ucrNudNumberOfColumns
         '
+        resources.ApplyResources(Me.ucrNudNumberOfColumns, "ucrNudNumberOfColumns")
         Me.ucrNudNumberOfColumns.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudNumberOfColumns.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        resources.ApplyResources(Me.ucrNudNumberOfColumns, "ucrNudNumberOfColumns")
         Me.ucrNudNumberOfColumns.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudNumberOfColumns.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudNumberOfColumns.Name = "ucrNudNumberOfColumns"
@@ -115,9 +115,9 @@ Partial Class dlgRandomSubsets
         '
         'ucrNudSampleSize
         '
+        resources.ApplyResources(Me.ucrNudSampleSize, "ucrNudSampleSize")
         Me.ucrNudSampleSize.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudSampleSize.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        resources.ApplyResources(Me.ucrNudSampleSize, "ucrNudSampleSize")
         Me.ucrNudSampleSize.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudSampleSize.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudSampleSize.Name = "ucrNudSampleSize"
@@ -125,16 +125,16 @@ Partial Class dlgRandomSubsets
         '
         'ucrSelectorRandomSubsets
         '
+        resources.ApplyResources(Me.ucrSelectorRandomSubsets, "ucrSelectorRandomSubsets")
         Me.ucrSelectorRandomSubsets.bDropUnusedFilterLevels = False
         Me.ucrSelectorRandomSubsets.bShowHiddenColumns = False
         Me.ucrSelectorRandomSubsets.bUseCurrentFilter = True
-        resources.ApplyResources(Me.ucrSelectorRandomSubsets, "ucrSelectorRandomSubsets")
         Me.ucrSelectorRandomSubsets.Name = "ucrSelectorRandomSubsets"
         '
         'ucrReceiverSubsets
         '
-        Me.ucrReceiverSubsets.frmParent = Me
         resources.ApplyResources(Me.ucrReceiverSubsets, "ucrReceiverSubsets")
+        Me.ucrReceiverSubsets.frmParent = Me
         Me.ucrReceiverSubsets.Name = "ucrReceiverSubsets"
         Me.ucrReceiverSubsets.Selector = Nothing
         Me.ucrReceiverSubsets.strNcFilePath = ""
@@ -145,9 +145,7 @@ Partial Class dlgRandomSubsets
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Controls.Add(Me.ucrReceiverSubsets)
-        Me.Controls.Add(Me.ucrChkSetSeed)
         Me.Controls.Add(Me.ucrChkWithReplacement)
-        Me.Controls.Add(Me.ucrNudSetSeed)
         Me.Controls.Add(Me.ucrNudNumberOfColumns)
         Me.Controls.Add(Me.ucrNudSampleSize)
         Me.Controls.Add(Me.lblNumberOfColumns)
@@ -156,6 +154,8 @@ Partial Class dlgRandomSubsets
         Me.Controls.Add(Me.ucrSelectorRandomSubsets)
         Me.Controls.Add(Me.ucrBase)
         Me.Controls.Add(Me.ucrNewDataFrame)
+        Me.Controls.Add(Me.ucrChkSetSeed)
+        Me.Controls.Add(Me.ucrNudSetSeed)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.MaximizeBox = False
         Me.MinimizeBox = False

@@ -46,6 +46,12 @@ Public Class dlgPermuteColumn
         ucrReceiverPermuteRows.Selector = ucrPermuteRowsSelector
         ucrReceiverPermuteRows.SetMeAsReceiver()
 
+        'Replace checkbox
+        ucrChkWithReplacement.SetParameter(New RParameter("replace", 1))
+        ucrChkWithReplacement.SetText("With Replacement")
+        ucrChkWithReplacement.SetValuesCheckedAndUnchecked("TRUE", "FALSE")
+        ucrChkWithReplacement.SetRDefault("FALSE")
+
         ucrNudNumberofColumns.SetParameter(New RParameter("n", 1))
         ucrNudNumberofColumns.Maximum = Integer.MaxValue
         ucrNudNumberofColumns.Minimum = 1
@@ -89,6 +95,7 @@ Public Class dlgPermuteColumn
     Private Sub SetRCodeForControls(bReset As Boolean)
         ucrNudNumberofColumns.SetRCode(clsOverallFunction, bReset)
         ucrReceiverPermuteRows.SetRCode(clsSetSampleFunction, bReset)
+        ucrChkWithReplacement.SetRCode(clsSetSampleFunction, bReset)
         ucrNudSetSeed.SetRCode(clsSetSeedFunction, bReset)
         ucrChkSetSeed.SetRCode(clsSetSeedFunction, bReset)
         ucrChkSetSeed.SetRSyntax(ucrBase.clsRsyntax, bReset)

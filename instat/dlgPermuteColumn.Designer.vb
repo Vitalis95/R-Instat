@@ -48,6 +48,7 @@ Partial Class dlgPermuteColumn
         Me.ucrReceiverPermuteRows = New instat.ucrReceiverSingle()
         Me.ucrPermuteRowsSelector = New instat.ucrSelectorByDataFrameAddRemove()
         Me.ucrBase = New instat.ucrButtons()
+        Me.ucrChkWithReplacement = New instat.ucrCheck()
         Me.SuspendLayout()
         '
         'lblSelected
@@ -64,15 +65,15 @@ Partial Class dlgPermuteColumn
         '
         'ucrChkSetSeed
         '
-        Me.ucrChkSetSeed.Checked = False
         resources.ApplyResources(Me.ucrChkSetSeed, "ucrChkSetSeed")
+        Me.ucrChkSetSeed.Checked = False
         Me.ucrChkSetSeed.Name = "ucrChkSetSeed"
         '
         'ucrNudSetSeed
         '
+        resources.ApplyResources(Me.ucrNudSetSeed, "ucrNudSetSeed")
         Me.ucrNudSetSeed.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudSetSeed.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        resources.ApplyResources(Me.ucrNudSetSeed, "ucrNudSetSeed")
         Me.ucrNudSetSeed.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudSetSeed.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudSetSeed.Name = "ucrNudSetSeed"
@@ -80,9 +81,9 @@ Partial Class dlgPermuteColumn
         '
         'ucrNudNumberofColumns
         '
+        resources.ApplyResources(Me.ucrNudNumberofColumns, "ucrNudNumberofColumns")
         Me.ucrNudNumberofColumns.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudNumberofColumns.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        resources.ApplyResources(Me.ucrNudNumberofColumns, "ucrNudNumberofColumns")
         Me.ucrNudNumberofColumns.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudNumberofColumns.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudNumberofColumns.Name = "ucrNudNumberofColumns"
@@ -95,8 +96,8 @@ Partial Class dlgPermuteColumn
         '
         'ucrReceiverPermuteRows
         '
-        Me.ucrReceiverPermuteRows.frmParent = Me
         resources.ApplyResources(Me.ucrReceiverPermuteRows, "ucrReceiverPermuteRows")
+        Me.ucrReceiverPermuteRows.frmParent = Me
         Me.ucrReceiverPermuteRows.Name = "ucrReceiverPermuteRows"
         Me.ucrReceiverPermuteRows.Selector = Nothing
         Me.ucrReceiverPermuteRows.strNcFilePath = ""
@@ -104,10 +105,10 @@ Partial Class dlgPermuteColumn
         '
         'ucrPermuteRowsSelector
         '
+        resources.ApplyResources(Me.ucrPermuteRowsSelector, "ucrPermuteRowsSelector")
         Me.ucrPermuteRowsSelector.bDropUnusedFilterLevels = False
         Me.ucrPermuteRowsSelector.bShowHiddenColumns = False
         Me.ucrPermuteRowsSelector.bUseCurrentFilter = True
-        resources.ApplyResources(Me.ucrPermuteRowsSelector, "ucrPermuteRowsSelector")
         Me.ucrPermuteRowsSelector.Name = "ucrPermuteRowsSelector"
         '
         'ucrBase
@@ -115,10 +116,17 @@ Partial Class dlgPermuteColumn
         resources.ApplyResources(Me.ucrBase, "ucrBase")
         Me.ucrBase.Name = "ucrBase"
         '
+        'ucrChkWithReplacement
+        '
+        resources.ApplyResources(Me.ucrChkWithReplacement, "ucrChkWithReplacement")
+        Me.ucrChkWithReplacement.Checked = False
+        Me.ucrChkWithReplacement.Name = "ucrChkWithReplacement"
+        '
         'dlgPermuteColumn
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.ucrChkWithReplacement)
         Me.Controls.Add(Me.ucrChkSetSeed)
         Me.Controls.Add(Me.ucrNudSetSeed)
         Me.Controls.Add(Me.ucrNudNumberofColumns)
@@ -147,4 +155,5 @@ Partial Class dlgPermuteColumn
     Friend WithEvents ucrNudNumberofColumns As ucrNud
     Friend WithEvents ucrNudSetSeed As ucrNud
     Friend WithEvents ucrChkSetSeed As ucrCheck
+    Friend WithEvents ucrChkWithReplacement As ucrCheck
 End Class
