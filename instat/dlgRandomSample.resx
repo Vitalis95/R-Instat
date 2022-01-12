@@ -145,7 +145,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblSampleSize.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="lblNumberofSamples.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -172,7 +172,58 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblNumberofSamples.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
+  </data>
+  <metadata name="ttRngKind.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="ucrInputRngKind.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="ucrInputRngKind.Location" type="System.Drawing.Point, System.Drawing">
+    <value>360, 75</value>
+  </data>
+  <data name="ucrInputRngKind.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 21</value>
+  </data>
+  <data name="ucrInputRngKind.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="&gt;&gt;ucrInputRngKind.Name" xml:space="preserve">
+    <value>ucrInputRngKind</value>
+  </data>
+  <data name="&gt;&gt;ucrInputRngKind.Type" xml:space="preserve">
+    <value>instat.ucrInputComboBox, instat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;ucrInputRngKind.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;ucrInputRngKind.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="ucrChkRngKind.Location" type="System.Drawing.Point, System.Drawing">
+    <value>276, 75</value>
+  </data>
+  <data name="ucrChkRngKind.Size" type="System.Drawing.Size, System.Drawing">
+    <value>118, 23</value>
+  </data>
+  <data name="ucrChkRngKind.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;ucrChkRngKind.Name" xml:space="preserve">
+    <value>ucrChkRngKind</value>
+  </data>
+  <data name="&gt;&gt;ucrChkRngKind.Type" xml:space="preserve">
+    <value>instat.ucrCheck, instat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;ucrChkRngKind.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;ucrChkRngKind.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ucrSaveRandomSample.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
   </data>
   <data name="ucrSaveRandomSample.Location" type="System.Drawing.Point, System.Drawing">
     <value>10, 219</value>
@@ -196,7 +247,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ucrSaveRandomSample.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
+  </data>
+  <data name="ucrNudNumberOfSamples.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="ucrNudNumberOfSamples.Location" type="System.Drawing.Point, System.Drawing">
     <value>400, 126</value>
@@ -217,7 +271,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ucrNudNumberOfSamples.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
+  </data>
+  <data name="ucrNudSeed.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="ucrNudSeed.Location" type="System.Drawing.Point, System.Drawing">
     <value>400, 100</value>
@@ -238,13 +295,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ucrNudSeed.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
+  </data>
+  <data name="ucrChkSetSeed.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="ucrChkSetSeed.Location" type="System.Drawing.Point, System.Drawing">
     <value>276, 101</value>
   </data>
   <data name="ucrChkSetSeed.Size" type="System.Drawing.Size, System.Drawing">
-    <value>118, 20</value>
+    <value>118, 23</value>
   </data>
   <data name="ucrChkSetSeed.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -259,7 +319,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ucrChkSetSeed.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
+  </data>
+  <data name="ucrSampleSize.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="ucrSampleSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>400, 152</value>
@@ -280,7 +343,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ucrSampleSize.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
+  </data>
+  <data name="ucrSelectorRandomSamples.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="ucrSelectorRandomSamples.Location" type="System.Drawing.Point, System.Drawing">
     <value>10, 10</value>
@@ -289,7 +355,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="ucrSelectorRandomSamples.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 40</value>
+    <value>153, 43</value>
   </data>
   <data name="ucrSelectorRandomSamples.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -304,13 +370,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ucrSelectorRandomSamples.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="ucrDistWithParameters.Location" type="System.Drawing.Point, System.Drawing">
     <value>10, 55</value>
   </data>
   <data name="ucrDistWithParameters.Size" type="System.Drawing.Size, System.Drawing">
-    <value>248, 156</value>
+    <value>1037, 156</value>
   </data>
   <data name="ucrDistWithParameters.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -325,16 +391,19 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ucrDistWithParameters.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>10</value>
   </data>
   <data name="ucrBase.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="ucrBase.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
   </data>
   <data name="ucrBase.Location" type="System.Drawing.Point, System.Drawing">
     <value>10, 248</value>
   </data>
   <data name="ucrBase.Size" type="System.Drawing.Size, System.Drawing">
-    <value>410, 52</value>
+    <value>405, 52</value>
   </data>
   <data name="ucrBase.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -349,7 +418,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ucrBase.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>11</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -357,17 +426,23 @@
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
   </data>
-  <data name="$this.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>479, 300</value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Random Samples</value>
+  </data>
+  <data name="&gt;&gt;ttRngKind.Name" xml:space="preserve">
+    <value>ttRngKind</value>
+  </data>
+  <data name="&gt;&gt;ttRngKind.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>dlgRandomSample</value>

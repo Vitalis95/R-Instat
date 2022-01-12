@@ -150,7 +150,7 @@ Public Class dlgPermuteColumn
         SetNewColumName()
     End Sub
 
-    Private Sub ucrReceiverPermuteRows_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrReceiverPermuteRows.ControlContentsChanged, ucrSavePermute.ControlContentsChanged
+    Private Sub ucrReceiverPermuteRows_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrReceiverPermuteRows.ControlContentsChanged, ucrSavePermute.ControlContentsChanged, ucrChkWithReplacement.ControlContentsChanged
         TestOkEnabled()
     End Sub
 End Class

@@ -19,7 +19,7 @@ Partial Class dlgRandomSample
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -36,11 +36,15 @@ Partial Class dlgRandomSample
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(dlgRandomSample))
         Me.lblSampleSize = New System.Windows.Forms.Label()
         Me.lblNumberofSamples = New System.Windows.Forms.Label()
+        Me.ttRngKind = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ucrInputRngKind = New instat.ucrInputComboBox()
+        Me.ucrChkRngKind = New instat.ucrCheck()
         Me.ucrSaveRandomSample = New instat.ucrSave()
         Me.ucrNudNumberOfSamples = New instat.ucrNud()
         Me.ucrNudSeed = New instat.ucrNud()
@@ -63,6 +67,20 @@ Partial Class dlgRandomSample
         Me.lblNumberofSamples.Name = "lblNumberofSamples"
         Me.lblNumberofSamples.Tag = "Number_of_Samples:"
         '
+        'ucrInputRngKind
+        '
+        Me.ucrInputRngKind.AddQuotesIfUnrecognised = True
+        resources.ApplyResources(Me.ucrInputRngKind, "ucrInputRngKind")
+        Me.ucrInputRngKind.GetSetSelectedIndex = -1
+        Me.ucrInputRngKind.IsReadOnly = False
+        Me.ucrInputRngKind.Name = "ucrInputRngKind"
+        '
+        'ucrChkRngKind
+        '
+        Me.ucrChkRngKind.Checked = False
+        resources.ApplyResources(Me.ucrChkRngKind, "ucrChkRngKind")
+        Me.ucrChkRngKind.Name = "ucrChkRngKind"
+        '
         'ucrSaveRandomSample
         '
         resources.ApplyResources(Me.ucrSaveRandomSample, "ucrSaveRandomSample")
@@ -70,9 +88,9 @@ Partial Class dlgRandomSample
         '
         'ucrNudNumberOfSamples
         '
+        resources.ApplyResources(Me.ucrNudNumberOfSamples, "ucrNudNumberOfSamples")
         Me.ucrNudNumberOfSamples.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudNumberOfSamples.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        resources.ApplyResources(Me.ucrNudNumberOfSamples, "ucrNudNumberOfSamples")
         Me.ucrNudNumberOfSamples.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudNumberOfSamples.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudNumberOfSamples.Name = "ucrNudNumberOfSamples"
@@ -80,9 +98,9 @@ Partial Class dlgRandomSample
         '
         'ucrNudSeed
         '
+        resources.ApplyResources(Me.ucrNudSeed, "ucrNudSeed")
         Me.ucrNudSeed.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudSeed.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        resources.ApplyResources(Me.ucrNudSeed, "ucrNudSeed")
         Me.ucrNudSeed.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudSeed.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudSeed.Name = "ucrNudSeed"
@@ -90,8 +108,8 @@ Partial Class dlgRandomSample
         '
         'ucrChkSetSeed
         '
-        Me.ucrChkSetSeed.Checked = False
         resources.ApplyResources(Me.ucrChkSetSeed, "ucrChkSetSeed")
+        Me.ucrChkSetSeed.Checked = False
         Me.ucrChkSetSeed.Name = "ucrChkSetSeed"
         '
         'ucrSampleSize
@@ -102,9 +120,9 @@ Partial Class dlgRandomSample
         '
         'ucrSelectorRandomSamples
         '
+        resources.ApplyResources(Me.ucrSelectorRandomSamples, "ucrSelectorRandomSamples")
         Me.ucrSelectorRandomSamples.bDropUnusedFilterLevels = False
         Me.ucrSelectorRandomSamples.bUseCurrentFilter = True
-        resources.ApplyResources(Me.ucrSelectorRandomSamples, "ucrSelectorRandomSamples")
         Me.ucrSelectorRandomSamples.Name = "ucrSelectorRandomSamples"
         '
         'ucrDistWithParameters
@@ -121,6 +139,8 @@ Partial Class dlgRandomSample
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.ucrInputRngKind)
+        Me.Controls.Add(Me.ucrChkRngKind)
         Me.Controls.Add(Me.ucrSaveRandomSample)
         Me.Controls.Add(Me.ucrNudNumberOfSamples)
         Me.Controls.Add(Me.ucrNudSeed)
@@ -150,4 +170,7 @@ Partial Class dlgRandomSample
     Friend WithEvents ucrNudSeed As ucrNud
     Friend WithEvents ucrNudNumberOfSamples As ucrNud
     Friend WithEvents ucrSaveRandomSample As ucrSave
+    Friend WithEvents ucrChkRngKind As ucrCheck
+    Friend WithEvents ucrInputRngKind As ucrInputComboBox
+    Friend WithEvents ttRngKind As ToolTip
 End Class
