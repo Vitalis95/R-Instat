@@ -53,6 +53,8 @@ Partial Class dlgPICSARainfall
         Me.ucrReceiverColourBy = New instat.ucrReceiverSingle()
         Me.ucrVariablesAsFactorForPicsa = New instat.ucrVariablesAsFactor()
         Me.ucrInputStation = New instat.ucrInputComboBox()
+        Me.ucrChkWithSE = New instat.ucrCheck()
+        Me.ucrChkLineofBestFit = New instat.ucrCheck()
         Me.SuspendLayout()
         '
         'lblFactorOptional
@@ -182,7 +184,7 @@ Partial Class dlgPICSARainfall
         Me.ucrBase.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ucrBase.Location = New System.Drawing.Point(9, 366)
         Me.ucrBase.Name = "ucrBase"
-        Me.ucrBase.Size = New System.Drawing.Size(405, 52)
+        Me.ucrBase.Size = New System.Drawing.Size(408, 52)
         Me.ucrBase.TabIndex = 26
         '
         'ucrReceiverColourBy
@@ -222,12 +224,32 @@ Partial Class dlgPICSARainfall
         Me.ucrInputStation.Size = New System.Drawing.Size(82, 21)
         Me.ucrInputStation.TabIndex = 33
         '
+        'ucrChkWithSE
+        '
+        Me.ucrChkWithSE.AutoSize = True
+        Me.ucrChkWithSE.Checked = False
+        Me.ucrChkWithSE.Location = New System.Drawing.Point(8, 284)
+        Me.ucrChkWithSE.Name = "ucrChkWithSE"
+        Me.ucrChkWithSE.Size = New System.Drawing.Size(135, 23)
+        Me.ucrChkWithSE.TabIndex = 35
+        '
+        'ucrChkLineofBestFit
+        '
+        Me.ucrChkLineofBestFit.AutoSize = True
+        Me.ucrChkLineofBestFit.Checked = False
+        Me.ucrChkLineofBestFit.Location = New System.Drawing.Point(9, 257)
+        Me.ucrChkLineofBestFit.Name = "ucrChkLineofBestFit"
+        Me.ucrChkLineofBestFit.Size = New System.Drawing.Size(151, 23)
+        Me.ucrChkLineofBestFit.TabIndex = 34
+        '
         'dlgPICSARainfall
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(463, 420)
+        Me.Controls.Add(Me.ucrChkWithSE)
+        Me.Controls.Add(Me.ucrChkLineofBestFit)
         Me.Controls.Add(Me.ucrInputStation)
         Me.Controls.Add(Me.ucrReceiverFacetBy)
         Me.Controls.Add(Me.lblFacetBy)
@@ -269,4 +291,6 @@ Partial Class dlgPICSARainfall
     Friend WithEvents ucrReceiverFacetBy As ucrReceiverSingle
     Friend WithEvents lblFacetBy As Label
     Friend WithEvents ucrInputStation As ucrInputComboBox
+    Friend WithEvents ucrChkWithSE As ucrCheck
+    Friend WithEvents ucrChkLineofBestFit As ucrCheck
 End Class
