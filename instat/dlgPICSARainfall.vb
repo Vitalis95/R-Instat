@@ -272,7 +272,6 @@ Public Class dlgPICSARainfall
         clsPasteUpperTercileY = New RFunction
         clsFormatUpperTercileY = New RFunction
         clsGeomSmoothFunc = New RFunction
-        clsGeomSmoothParameter = New RParameter
 
         ucrInputStation.SetName(strNone)
         ucrInputStation.bUpdateRCodeFromControl = True
