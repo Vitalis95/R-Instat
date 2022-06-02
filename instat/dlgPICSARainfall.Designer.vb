@@ -55,6 +55,7 @@ Partial Class dlgPICSARainfall
         Me.ucrInputStation = New instat.ucrInputComboBox()
         Me.ucrChkWithSE = New instat.ucrCheck()
         Me.ucrChkLineofBestFit = New instat.ucrCheck()
+        Me.ucrChkFitParellelLines = New instat.ucrCheck()
         Me.SuspendLayout()
         '
         'lblFactorOptional
@@ -242,12 +243,22 @@ Partial Class dlgPICSARainfall
         Me.ucrChkLineofBestFit.Size = New System.Drawing.Size(151, 23)
         Me.ucrChkLineofBestFit.TabIndex = 34
         '
+        'ucrChkFitParellelLines
+        '
+        Me.ucrChkFitParellelLines.AutoSize = True
+        Me.ucrChkFitParellelLines.Checked = False
+        Me.ucrChkFitParellelLines.Location = New System.Drawing.Point(309, 338)
+        Me.ucrChkFitParellelLines.Name = "ucrChkFitParellelLines"
+        Me.ucrChkFitParellelLines.Size = New System.Drawing.Size(151, 23)
+        Me.ucrChkFitParellelLines.TabIndex = 36
+        '
         'dlgPICSARainfall
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(463, 420)
+        Me.Controls.Add(Me.ucrChkFitParellelLines)
         Me.Controls.Add(Me.ucrChkWithSE)
         Me.Controls.Add(Me.ucrChkLineofBestFit)
         Me.Controls.Add(Me.ucrInputStation)
@@ -293,4 +304,5 @@ Partial Class dlgPICSARainfall
     Friend WithEvents ucrInputStation As ucrInputComboBox
     Friend WithEvents ucrChkWithSE As ucrCheck
     Friend WithEvents ucrChkLineofBestFit As ucrCheck
+    Friend WithEvents ucrChkFitParellelLines As ucrCheck
 End Class

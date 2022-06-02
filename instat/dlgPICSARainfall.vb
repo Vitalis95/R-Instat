@@ -109,6 +109,8 @@ Public Class dlgPICSARainfall
     Private clsFormatUpperTercileY As New RFunction
     Private clsGeomSmoothFunc As New RFunction
     Private clsGeomSmoothParameter As New RParameter
+    Private clsGeomParallelSlopeFunc As New RFunction
+    Private clsGeomParallelSlopeParameter As New RParameter
 
     Private strGeomSmoothParameterName As String = "geom_smooth"
     Private strGeomParameterNames() As String = {strGeomSmoothParameterName}
@@ -194,6 +196,13 @@ Public Class dlgPICSARainfall
         clsPointsFunc.AddParameter("colour", Chr(34) & "red" & Chr(34))
         ucrChkPoints.SetParameter(clsPointsParam, bNewChangeParameterValue:=False, bNewAddRemoveParameter:=True)
 
+        ucrChkFitParellelLines.SetText("Fit Parellel Slope")
+        clsGeomParallelSlopeParameter.SetArgumentName("parallel")
+
+        ucrChkFitParellelLines.AddParameterPresentCondition(True, "parallel")
+        ucrChkFitParellelLines.AddParameterPresentCondition(False, "parellel", False)
+        ucrChkFitParellelLines.SetParameter(clsGeomParallelSlopeParameter, bNewChangeParameterValue:=False, bNewAddRemoveParameter:=True)
+
         ucrInputStation.SetItems({strFacetWrap, strFacetRow, strFacetCol, strNone})
         ucrInputStation.SetDropDownStyleAsNonEditable()
 
@@ -272,6 +281,7 @@ Public Class dlgPICSARainfall
         clsPasteUpperTercileY = New RFunction
         clsFormatUpperTercileY = New RFunction
         clsGeomSmoothFunc = New RFunction
+        clsGeomParallelSlopeFunc = New RFunction
 
         ucrInputStation.SetName(strNone)
         ucrInputStation.bUpdateRCodeFromControl = True
@@ -351,6 +361,7 @@ Public Class dlgPICSARainfall
         clsGeomLine.AddParameter("colour", Chr(34) & "blue" & Chr(34))
         clsGeomLine.AddParameter("size", "0.8")
         clsBaseOperator.AddParameter(clsPointsParam)
+        clsBaseOperator.AddParameter(clsGeomParallelSlopeParameter)
 
         clsGeomSmoothFunc.SetPackageName("ggplot2")
         clsGeomSmoothFunc.SetRCommand("geom_smooth")
@@ -359,6 +370,12 @@ Public Class dlgPICSARainfall
 
         clsGeomSmoothParameter.SetArgumentName(strGeomSmoothParameterName)
         clsGeomSmoothParameter.SetArgument(clsGeomSmoothFunc)
+
+        clsGeomParallelSlopeFunc.SetPackageName("moderndive")
+        clsGeomParallelSlopeFunc.SetRCommand("geom_parallel_slopes")
+
+        clsGeomParallelSlopeParameter.SetArgumentName("parallel")
+        clsGeomParallelSlopeParameter.SetArgument(clsGeomParallelSlopeFunc)
 
         clsFacetFunction.SetPackageName("ggplot2")
         clsFacetRowOp.SetOperation("+")
@@ -647,6 +664,7 @@ Public Class dlgPICSARainfall
         ucrVariablesAsFactorForPicsa.SetRCode(clsAsNumeric, bReset)
         ucrChkWithSE.SetRCode(clsGeomSmoothFunc, bReset)
         ucrChkLineofBestFit.SetRCode(clsBaseOperator, bReset)
+        ucrChkFitParellelLines.SetRCode(clsBaseOperator, bReset)
         If bReset Then
             AutoFacetStation()
         End If
