@@ -165,6 +165,13 @@ Public Class dlgPICSARainfall
         ucrReceiverColourBy.bWithQuotes = False
         ucrReceiverColourBy.SetParameterIsString()
 
+        ucrReceiverGroupBy.SetParameter(New RParameter("group", 3))
+        ucrReceiverGroupBy.Selector = ucrSelectorPICSARainfall
+        ucrReceiverGroupBy.SetIncludedDataTypes({"factor"})
+        ucrReceiverGroupBy.strSelectorHeading = "Factors"
+        ucrReceiverGroupBy.bWithQuotes = False
+        ucrReceiverGroupBy.SetParameterIsString()
+
         ucrReceiverFacetBy.SetParameter(New RParameter(""))
         ucrReceiverFacetBy.Selector = ucrSelectorPICSARainfall
         ucrReceiverFacetBy.SetIncludedDataTypes({"factor"})
@@ -202,6 +209,9 @@ Public Class dlgPICSARainfall
         ucrChkFitParellelLines.AddParameterPresentCondition(True, "parallel")
         ucrChkFitParellelLines.AddParameterPresentCondition(False, "parellel", False)
         ucrChkFitParellelLines.SetParameter(clsGeomParallelSlopeParameter, bNewChangeParameterValue:=False, bNewAddRemoveParameter:=True)
+        ucrChkFitParellelLines.AddToLinkedControls(ucrReceiverGroupBy, {True}, bNewLinkedAddRemoveParameter:=True, bNewLinkedHideIfParameterMissing:=True)
+
+        ucrReceiverGroupBy.SetLinkedDisplayControl(lblGroupBy)
 
         ucrInputStation.SetItems({strFacetWrap, strFacetRow, strFacetCol, strNone})
         ucrInputStation.SetDropDownStyleAsNonEditable()
@@ -659,6 +669,7 @@ Public Class dlgPICSARainfall
         ucrSelectorPICSARainfall.SetRCode(clsPipeOperator, bReset)
         ucrReceiverX.SetRCode(clsRaesFunction, bReset)
         ucrReceiverColourBy.SetRCode(clsRaesFunction, bReset)
+        ucrReceiverGroupBy.SetRCode(clsRaesFunction, bReset)
         ucrSave.SetRCode(clsBaseOperator, bReset)
         ucrChkPoints.SetRCode(clsBaseOperator, bReset)
         ucrVariablesAsFactorForPicsa.SetRCode(clsAsNumeric, bReset)
@@ -836,6 +847,8 @@ Public Class dlgPICSARainfall
                 End If
             ElseIf clsParam.strArgumentName = "colour" Then
                 ucrReceiverColourBy.Add(clsParam.strArgumentValue)
+            ElseIf clsParam.strArgumentName = "group" Then
+                ucrReceiverGroupBy.Add(clsParam.strArgumentValue)
             End If
         Next
         TestOkEnabled()
@@ -867,7 +880,7 @@ Public Class dlgPICSARainfall
         End If
     End Sub
 
-    Private Sub ucrReceiverFacetBy_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrReceiverFacetBy.ControlValueChanged, ucrReceiverColourBy.ControlValueChanged, ucrReceiverX.ControlValueChanged
+    Private Sub ucrReceiverFacetBy_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrReceiverFacetBy.ControlValueChanged, ucrReceiverColourBy.ControlValueChanged, ucrReceiverX.ControlValueChanged, ucrReceiverGroupBy.ControlValueChanged
         AddRemoveFacets()
         AddRemoveGroupBy()
     End Sub
@@ -885,7 +898,7 @@ Public Class dlgPICSARainfall
         AddRemoveGroupBy()
     End Sub
 
-    Private Sub ucrVariablesAsFactorForPicsa_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrVariablesAsFactorForPicsa.ControlValueChanged, ucrReceiverColourBy.ControlValueChanged, ucrReceiverFacetBy.ControlValueChanged
+    Private Sub ucrVariablesAsFactorForPicsa_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrVariablesAsFactorForPicsa.ControlValueChanged, ucrReceiverColourBy.ControlValueChanged, ucrReceiverFacetBy.ControlValueChanged, ucrReceiverGroupBy.ControlValueChanged
         AddRemoveGroupBy()
     End Sub
 
@@ -924,7 +937,10 @@ Public Class dlgPICSARainfall
                 clsGroupByFunction.AddParameter(i, ucrReceiverColourBy.GetVariableNames(bWithQuotes:=False), bIncludeArgumentName:=False, iPosition:=0)
                 i = i + 1
             End If
-
+            If clsRaesFunction.ContainsParameter("group") Then
+                clsGroupByFunction.AddParameter(i, ucrReceiverGroupBy.GetVariableNames(bWithQuotes:=False), bIncludeArgumentName:=False, iPosition:=0)
+                i = i + 1
+            End If
             If clsGroupByFunction.iParameterCount > 0 Then
                 clsPipeOperator.AddParameter("group_by", clsRFunctionParameter:=clsGroupByFunction, iPosition:=1)
             Else
