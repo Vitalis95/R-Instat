@@ -43,7 +43,6 @@ Public Class dlgPICSARainfall
     Private bResetLineLayerSubdialog As Boolean = True
     Private clsLocalRaesFunction As New RFunction
     Private clsPointsFunc As New RFunction
-    Private clsPointsParam As New RParameter
     Private clsYLabsFunction, clsXLabsFunction, clsLabsFunction As RFunction
     Private clsFactorLevels As New RFunction
 
@@ -108,9 +107,6 @@ Public Class dlgPICSARainfall
     Private clsPasteUpperTercileY As New RFunction
     Private clsFormatUpperTercileY As New RFunction
     Private clsGeomSmoothFunc As New RFunction
-    Private clsGeomSmoothParameter As New RParameter
-    Private clsGeomParallelSlopeFunc As New RFunction
-    Private clsGeomParallelSlopeParameter As New RParameter
 
     Private strGeomSmoothParameterName As String = "geom_smooth"
     Private strGeomParameterNames() As String = {strGeomSmoothParameterName}
@@ -165,13 +161,6 @@ Public Class dlgPICSARainfall
         ucrReceiverColourBy.bWithQuotes = False
         ucrReceiverColourBy.SetParameterIsString()
 
-        ucrReceiverGroupBy.SetParameter(New RParameter("group", 3))
-        ucrReceiverGroupBy.Selector = ucrSelectorPICSARainfall
-        ucrReceiverGroupBy.SetIncludedDataTypes({"factor"})
-        ucrReceiverGroupBy.strSelectorHeading = "Factors"
-        ucrReceiverGroupBy.bWithQuotes = False
-        ucrReceiverGroupBy.SetParameterIsString()
-
         ucrReceiverFacetBy.SetParameter(New RParameter(""))
         ucrReceiverFacetBy.Selector = ucrSelectorPICSARainfall
         ucrReceiverFacetBy.SetIncludedDataTypes({"factor"})
@@ -180,11 +169,10 @@ Public Class dlgPICSARainfall
         ucrReceiverFacetBy.SetParameterIsString()
         ucrReceiverFacetBy.SetValuesToIgnore({"."})
 
-
-
         ucrChkLineofBestFit.SetText("Add Line of Best Fit")
+        ucrChkLineofBestFit.AddParameterPresentCondition(True, "geom_smooth")
+        ucrChkLineofBestFit.AddParameterPresentCondition(False, "geom_smooth", False)
         ucrChkLineofBestFit.AddToLinkedControls(ucrChkWithSE, {True}, bNewLinkedHideIfParameterMissing:=True)
-        ucrChkLineofBestFit.SetParameter(clsGeomSmoothParameter, bNewChangeParameterValue:=False, bNewAddRemoveParameter:=True)
 
         ucrChkWithSE.SetText("With Standard Error")
         ucrChkWithSE.SetParameter(New RParameter("se"), bNewAddRemoveParameter:=False, bNewChangeParameterValue:=True)
@@ -192,26 +180,8 @@ Public Class dlgPICSARainfall
         ucrChkWithSE.SetRDefault("TRUE")
 
         ucrChkPoints.SetText("Add Points")
-        ucrChkPoints.AddParameterPresentCondition(True, "points")
-        ucrChkPoints.AddParameterPresentCondition(False, "points", False)
-        clsPointsFunc.SetPackageName("ggplot2")
-        clsPointsFunc.SetRCommand("geom_point")
-        clsPointsParam.SetArgumentName("points")
-        clsPointsParam.SetArgument(clsPointsFunc)
-        clsPointsParam.Position = 3
-        clsPointsFunc.AddParameter("size", "3")
-        clsPointsFunc.AddParameter("colour", Chr(34) & "red" & Chr(34))
-        ucrChkPoints.SetParameter(clsPointsParam, bNewChangeParameterValue:=False, bNewAddRemoveParameter:=True)
-
-        ucrChkFitParellelLines.SetText("Fit Parellel Slope")
-        clsGeomParallelSlopeParameter.SetArgumentName("parallel")
-
-        ucrChkFitParellelLines.AddParameterPresentCondition(True, "parallel")
-        ucrChkFitParellelLines.AddParameterPresentCondition(False, "parellel", False)
-        ucrChkFitParellelLines.SetParameter(clsGeomParallelSlopeParameter, bNewChangeParameterValue:=False, bNewAddRemoveParameter:=True)
-        ucrChkFitParellelLines.AddToLinkedControls(ucrReceiverGroupBy, {True}, bNewLinkedAddRemoveParameter:=True, bNewLinkedHideIfParameterMissing:=True)
-
-        ucrReceiverGroupBy.SetLinkedDisplayControl(lblGroupBy)
+        ucrChkPoints.AddParameterPresentCondition(True, "geom_point")
+        ucrChkPoints.AddParameterPresentCondition(False, "geom_point", False)
 
         ucrInputStation.SetItems({strFacetWrap, strFacetRow, strFacetCol, strNone})
         ucrInputStation.SetDropDownStyleAsNonEditable()
@@ -291,7 +261,7 @@ Public Class dlgPICSARainfall
         clsPasteUpperTercileY = New RFunction
         clsFormatUpperTercileY = New RFunction
         clsGeomSmoothFunc = New RFunction
-        clsGeomParallelSlopeFunc = New RFunction
+        clsPointsFunc = New RFunction
 
         ucrInputStation.SetName(strNone)
         ucrInputStation.bUpdateRCodeFromControl = True
@@ -359,7 +329,6 @@ Public Class dlgPICSARainfall
         clsRggplotFunction.AddParameter("data", clsROperatorParameter:=clsPipeOperator, iPosition:=0)
         clsRggplotFunction.AddParameter("mapping", clsRFunctionParameter:=clsRaesFunction, iPosition:=1)
 
-
         clsAsFactorFunction = New RFunction
 
         clsRaesFunction.SetPackageName("ggplot2")
@@ -370,22 +339,16 @@ Public Class dlgPICSARainfall
         clsGeomLine.SetRCommand("geom_line")
         clsGeomLine.AddParameter("colour", Chr(34) & "blue" & Chr(34))
         clsGeomLine.AddParameter("size", "0.8")
-        clsBaseOperator.AddParameter(clsPointsParam)
-        clsBaseOperator.AddParameter(clsGeomParallelSlopeParameter)
 
         clsGeomSmoothFunc.SetPackageName("ggplot2")
         clsGeomSmoothFunc.SetRCommand("geom_smooth")
         clsGeomSmoothFunc.AddParameter("method", Chr(34) & "lm" & Chr(34), iPosition:=0)
         clsGeomSmoothFunc.AddParameter("se", "FALSE", iPosition:=1)
 
-        clsGeomSmoothParameter.SetArgumentName(strGeomSmoothParameterName)
-        clsGeomSmoothParameter.SetArgument(clsGeomSmoothFunc)
-
-        clsGeomParallelSlopeFunc.SetPackageName("moderndive")
-        clsGeomParallelSlopeFunc.SetRCommand("geom_parallel_slopes")
-
-        clsGeomParallelSlopeParameter.SetArgumentName("parallel")
-        clsGeomParallelSlopeParameter.SetArgument(clsGeomParallelSlopeFunc)
+        clsPointsFunc.SetPackageName("ggplot2")
+        clsPointsFunc.SetRCommand("geom_point")
+        clsPointsFunc.AddParameter("size", "3")
+        clsPointsFunc.AddParameter("colour", Chr(34) & "red" & Chr(34))
 
         clsFacetFunction.SetPackageName("ggplot2")
         clsFacetRowOp.SetOperation("+")
@@ -396,7 +359,6 @@ Public Class dlgPICSARainfall
         clsFacetOperator.bForceIncludeOperation = True
         clsFacetOperator.bBrackets = False
         clsFacetFunction.AddParameter("facets", clsROperatorParameter:=clsFacetOperator, iPosition:=0)
-
 
         'Mean Line
         clsGeomHlineMean.SetPackageName("ggplot2")
@@ -669,13 +631,11 @@ Public Class dlgPICSARainfall
         ucrSelectorPICSARainfall.SetRCode(clsPipeOperator, bReset)
         ucrReceiverX.SetRCode(clsRaesFunction, bReset)
         ucrReceiverColourBy.SetRCode(clsRaesFunction, bReset)
-        ucrReceiverGroupBy.SetRCode(clsRaesFunction, bReset)
         ucrSave.SetRCode(clsBaseOperator, bReset)
         ucrChkPoints.SetRCode(clsBaseOperator, bReset)
         ucrVariablesAsFactorForPicsa.SetRCode(clsAsNumeric, bReset)
         ucrChkWithSE.SetRCode(clsGeomSmoothFunc, bReset)
         ucrChkLineofBestFit.SetRCode(clsBaseOperator, bReset)
-        ucrChkFitParellelLines.SetRCode(clsBaseOperator, bReset)
         If bReset Then
             AutoFacetStation()
         End If
@@ -847,8 +807,6 @@ Public Class dlgPICSARainfall
                 End If
             ElseIf clsParam.strArgumentName = "colour" Then
                 ucrReceiverColourBy.Add(clsParam.strArgumentValue)
-            ElseIf clsParam.strArgumentName = "group" Then
-                ucrReceiverGroupBy.Add(clsParam.strArgumentValue)
             End If
         Next
         TestOkEnabled()
@@ -880,7 +838,7 @@ Public Class dlgPICSARainfall
         End If
     End Sub
 
-    Private Sub ucrReceiverFacetBy_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrReceiverFacetBy.ControlValueChanged, ucrReceiverColourBy.ControlValueChanged, ucrReceiverX.ControlValueChanged, ucrReceiverGroupBy.ControlValueChanged
+    Private Sub ucrReceiverFacetBy_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrReceiverFacetBy.ControlValueChanged, ucrReceiverColourBy.ControlValueChanged, ucrReceiverX.ControlValueChanged
         AddRemoveFacets()
         AddRemoveGroupBy()
     End Sub
@@ -898,7 +856,7 @@ Public Class dlgPICSARainfall
         AddRemoveGroupBy()
     End Sub
 
-    Private Sub ucrVariablesAsFactorForPicsa_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrVariablesAsFactorForPicsa.ControlValueChanged, ucrReceiverColourBy.ControlValueChanged, ucrReceiverFacetBy.ControlValueChanged, ucrReceiverGroupBy.ControlValueChanged
+    Private Sub ucrVariablesAsFactorForPicsa_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrVariablesAsFactorForPicsa.ControlValueChanged, ucrReceiverColourBy.ControlValueChanged, ucrReceiverFacetBy.ControlValueChanged
         AddRemoveGroupBy()
     End Sub
 
@@ -937,10 +895,6 @@ Public Class dlgPICSARainfall
                 clsGroupByFunction.AddParameter(i, ucrReceiverColourBy.GetVariableNames(bWithQuotes:=False), bIncludeArgumentName:=False, iPosition:=0)
                 i = i + 1
             End If
-            If clsRaesFunction.ContainsParameter("group") Then
-                clsGroupByFunction.AddParameter(i, ucrReceiverGroupBy.GetVariableNames(bWithQuotes:=False), bIncludeArgumentName:=False, iPosition:=0)
-                i = i + 1
-            End If
             If clsGroupByFunction.iParameterCount > 0 Then
                 clsPipeOperator.AddParameter("group_by", clsRFunctionParameter:=clsGroupByFunction, iPosition:=1)
             Else
@@ -958,6 +912,22 @@ Public Class dlgPICSARainfall
             clsPipeOperator.SetAssignTo(ucrSelectorPICSARainfall.ucrAvailableDataFrames.cboAvailableDataFrames.Text)
         Else
             clsPipeOperator.RemoveAssignTo()
+        End If
+    End Sub
+
+    Private Sub ucrChkLineofBestFit_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkLineofBestFit.ControlValueChanged
+        If ucrChkLineofBestFit.Checked Then
+            clsBaseOperator.AddParameter("geom_smooth", clsRFunctionParameter:=clsGeomSmoothFunc, iPosition:=4)
+        Else
+            clsBaseOperator.RemoveParameterByName("geom_smooth")
+        End If
+    End Sub
+
+    Private Sub ucrChkPoints_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkPoints.ControlValueChanged
+        If ucrChkPoints.Checked Then
+            clsBaseOperator.AddParameter("geom_point", clsRFunctionParameter:=clsPointsFunc, iPosition:=3)
+        Else
+            clsBaseOperator.RemoveParameterByName("geom_point")
         End If
     End Sub
 End Class

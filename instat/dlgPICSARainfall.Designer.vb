@@ -55,9 +55,6 @@ Partial Class dlgPICSARainfall
         Me.ucrInputStation = New instat.ucrInputComboBox()
         Me.ucrChkWithSE = New instat.ucrCheck()
         Me.ucrChkLineofBestFit = New instat.ucrCheck()
-        Me.ucrChkFitParellelLines = New instat.ucrCheck()
-        Me.ucrReceiverGroupBy = New instat.ucrReceiverSingle()
-        Me.lblGroupBy = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'lblFactorOptional
@@ -245,48 +242,12 @@ Partial Class dlgPICSARainfall
         Me.ucrChkLineofBestFit.Size = New System.Drawing.Size(151, 23)
         Me.ucrChkLineofBestFit.TabIndex = 34
         '
-        'ucrChkFitParellelLines
-        '
-        Me.ucrChkFitParellelLines.AutoSize = True
-        Me.ucrChkFitParellelLines.Checked = False
-        Me.ucrChkFitParellelLines.Location = New System.Drawing.Point(309, 338)
-        Me.ucrChkFitParellelLines.Name = "ucrChkFitParellelLines"
-        Me.ucrChkFitParellelLines.Size = New System.Drawing.Size(151, 23)
-        Me.ucrChkFitParellelLines.TabIndex = 36
-        '
-        'ucrReceiverGroupBy
-        '
-        Me.ucrReceiverGroupBy.AutoSize = True
-        Me.ucrReceiverGroupBy.frmParent = Me
-        Me.ucrReceiverGroupBy.Location = New System.Drawing.Point(243, 175)
-        Me.ucrReceiverGroupBy.Margin = New System.Windows.Forms.Padding(0)
-        Me.ucrReceiverGroupBy.Name = "ucrReceiverGroupBy"
-        Me.ucrReceiverGroupBy.Selector = Nothing
-        Me.ucrReceiverGroupBy.Size = New System.Drawing.Size(125, 26)
-        Me.ucrReceiverGroupBy.strNcFilePath = ""
-        Me.ucrReceiverGroupBy.TabIndex = 37
-        Me.ucrReceiverGroupBy.ucrSelector = Nothing
-        '
-        'lblGroupBy
-        '
-        Me.lblGroupBy.AutoSize = True
-        Me.lblGroupBy.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.lblGroupBy.Location = New System.Drawing.Point(247, 158)
-        Me.lblGroupBy.Name = "lblGroupBy"
-        Me.lblGroupBy.Size = New System.Drawing.Size(54, 13)
-        Me.lblGroupBy.TabIndex = 38
-        Me.lblGroupBy.Tag = "X_Variable:"
-        Me.lblGroupBy.Text = "Group By:"
-        '
         'dlgPICSARainfall
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(463, 420)
-        Me.Controls.Add(Me.lblGroupBy)
-        Me.Controls.Add(Me.ucrReceiverGroupBy)
-        Me.Controls.Add(Me.ucrChkFitParellelLines)
         Me.Controls.Add(Me.ucrChkWithSE)
         Me.Controls.Add(Me.ucrChkLineofBestFit)
         Me.Controls.Add(Me.ucrInputStation)
@@ -332,7 +293,4 @@ Partial Class dlgPICSARainfall
     Friend WithEvents ucrInputStation As ucrInputComboBox
     Friend WithEvents ucrChkWithSE As ucrCheck
     Friend WithEvents ucrChkLineofBestFit As ucrCheck
-    Friend WithEvents ucrChkFitParellelLines As ucrCheck
-    Friend WithEvents lblGroupBy As Label
-    Friend WithEvents ucrReceiverGroupBy As ucrReceiverSingle
 End Class
