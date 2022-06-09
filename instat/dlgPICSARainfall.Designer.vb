@@ -59,6 +59,8 @@ Partial Class dlgPICSARainfall
         Me.toolStripMenuItemLineOptions = New System.Windows.Forms.ToolStripMenuItem()
         Me.toolStripMenuItemPointOption = New System.Windows.Forms.ToolStripMenuItem()
         Me.ucrReceiverY = New instat.ucrReceiverSingle()
+        Me.ucrChkWithSE = New instat.ucrCheck()
+        Me.ucrChkLineofBestFit = New instat.ucrCheck()
         Me.contextMenuStripOptions.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -268,12 +270,32 @@ Partial Class dlgPICSARainfall
         Me.ucrReceiverY.TabIndex = 4
         Me.ucrReceiverY.ucrSelector = Nothing
         '
+        'ucrChkWithSE
+        '
+        Me.ucrChkWithSE.AutoSize = True
+        Me.ucrChkWithSE.Checked = False
+        Me.ucrChkWithSE.Location = New System.Drawing.Point(10, 282)
+        Me.ucrChkWithSE.Name = "ucrChkWithSE"
+        Me.ucrChkWithSE.Size = New System.Drawing.Size(135, 23)
+        Me.ucrChkWithSE.TabIndex = 37
+        '
+        'ucrChkLineofBestFit
+        '
+        Me.ucrChkLineofBestFit.AutoSize = True
+        Me.ucrChkLineofBestFit.Checked = False
+        Me.ucrChkLineofBestFit.Location = New System.Drawing.Point(11, 258)
+        Me.ucrChkLineofBestFit.Name = "ucrChkLineofBestFit"
+        Me.ucrChkLineofBestFit.Size = New System.Drawing.Size(151, 23)
+        Me.ucrChkLineofBestFit.TabIndex = 36
+        '
         'dlgPICSARainfall
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(463, 420)
+        Me.Controls.Add(Me.ucrChkWithSE)
+        Me.Controls.Add(Me.ucrChkLineofBestFit)
         Me.Controls.Add(Me.ucrReceiverY)
         Me.Controls.Add(Me.ucrVariablesAsFactorForPicsa)
         Me.Controls.Add(Me.cmdOptions)
@@ -322,4 +344,6 @@ Partial Class dlgPICSARainfall
     Friend WithEvents toolStripMenuItemLineOptions As ToolStripMenuItem
     Friend WithEvents toolStripMenuItemPointOption As ToolStripMenuItem
     Friend WithEvents ucrReceiverY As ucrReceiverSingle
+    Friend WithEvents ucrChkWithSE As ucrCheck
+    Friend WithEvents ucrChkLineofBestFit As ucrCheck
 End Class
