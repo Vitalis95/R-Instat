@@ -170,8 +170,11 @@ Partial Class sdgPICSARainfallGraph
         Me.ucrChkXaxis = New instat.ucrCheck()
         Me.ucrInputYaxisOptions = New instat.ucrInputComboBox()
         Me.ucrChkYaxis = New instat.ucrCheck()
+        Me.tbSlope = New System.Windows.Forms.TabPage()
+        Me.ucrChkRegEquation = New instat.ucrCheck()
         Me.ttPICSARainfallGraph = New System.Windows.Forms.ToolTip(Me.components)
         Me.ucrSdgPICSARainfalbuttons = New instat.ucrButtonsSubdialogue()
+        Me.ucrChkSignLevel = New instat.ucrCheck()
         Me.tbPICSA.SuspendLayout()
         Me.tpTitles.SuspendLayout()
         Me.grpGraphTitles.SuspendLayout()
@@ -188,6 +191,7 @@ Partial Class sdgPICSARainfallGraph
         Me.grpMajorGridLines.SuspendLayout()
         Me.grpPnlBackground.SuspendLayout()
         Me.tpRug.SuspendLayout()
+        Me.tbSlope.SuspendLayout()
         Me.SuspendLayout()
         '
         'lblXTo
@@ -228,6 +232,7 @@ Partial Class sdgPICSARainfallGraph
         Me.tbPICSA.Controls.Add(Me.tpLines)
         Me.tbPICSA.Controls.Add(Me.tpPanel)
         Me.tbPICSA.Controls.Add(Me.tpRug)
+        Me.tbPICSA.Controls.Add(Me.tbSlope)
         Me.tbPICSA.Location = New System.Drawing.Point(8, 6)
         Me.tbPICSA.Name = "tbPICSA"
         Me.tbPICSA.SelectedIndex = 0
@@ -1966,6 +1971,27 @@ Partial Class sdgPICSARainfallGraph
         Me.ucrChkYaxis.Size = New System.Drawing.Size(100, 23)
         Me.ucrChkYaxis.TabIndex = 0
         '
+        'tbSlope
+        '
+        Me.tbSlope.Controls.Add(Me.ucrChkSignLevel)
+        Me.tbSlope.Controls.Add(Me.ucrChkRegEquation)
+        Me.tbSlope.Location = New System.Drawing.Point(4, 22)
+        Me.tbSlope.Name = "tbSlope"
+        Me.tbSlope.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbSlope.Size = New System.Drawing.Size(581, 309)
+        Me.tbSlope.TabIndex = 6
+        Me.tbSlope.Text = "Slope"
+        Me.tbSlope.UseVisualStyleBackColor = True
+        '
+        'ucrChkRegEquation
+        '
+        Me.ucrChkRegEquation.AutoSize = True
+        Me.ucrChkRegEquation.Checked = False
+        Me.ucrChkRegEquation.Location = New System.Drawing.Point(9, 18)
+        Me.ucrChkRegEquation.Name = "ucrChkRegEquation"
+        Me.ucrChkRegEquation.Size = New System.Drawing.Size(212, 23)
+        Me.ucrChkRegEquation.TabIndex = 0
+        '
         'ttPICSARainfallGraph
         '
         Me.ttPICSARainfallGraph.AutoPopDelay = 10000
@@ -1980,6 +2006,15 @@ Partial Class sdgPICSARainfallGraph
         Me.ucrSdgPICSARainfalbuttons.Name = "ucrSdgPICSARainfalbuttons"
         Me.ucrSdgPICSARainfalbuttons.Size = New System.Drawing.Size(224, 30)
         Me.ucrSdgPICSARainfalbuttons.TabIndex = 0
+        '
+        'ucrChkSignLevel
+        '
+        Me.ucrChkSignLevel.AutoSize = True
+        Me.ucrChkSignLevel.Checked = False
+        Me.ucrChkSignLevel.Location = New System.Drawing.Point(9, 51)
+        Me.ucrChkSignLevel.Name = "ucrChkSignLevel"
+        Me.ucrChkSignLevel.Size = New System.Drawing.Size(212, 23)
+        Me.ucrChkSignLevel.TabIndex = 1
         '
         'sdgPICSARainfallGraph
         '
@@ -2023,6 +2058,8 @@ Partial Class sdgPICSARainfallGraph
         Me.grpPnlBackground.PerformLayout()
         Me.tpRug.ResumeLayout(False)
         Me.tpRug.PerformLayout()
+        Me.tbSlope.ResumeLayout(False)
+        Me.tbSlope.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2177,4 +2214,7 @@ Partial Class sdgPICSARainfallGraph
     Friend WithEvents lblXaxisOptions As Label
     Friend WithEvents ucrChkXaxis As ucrCheck
     Friend WithEvents ttPICSARainfallGraph As ToolTip
+    Friend WithEvents tbSlope As TabPage
+    Friend WithEvents ucrChkRegEquation As ucrCheck
+    Friend WithEvents ucrChkSignLevel As ucrCheck
 End Class
