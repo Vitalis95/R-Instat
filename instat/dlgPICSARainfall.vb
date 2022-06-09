@@ -43,7 +43,6 @@ Public Class dlgPICSARainfall
     Private bResetLineLayerSubdialog As Boolean = True
     Private clsLocalRaesFunction As New RFunction
     Private clsPointsFunc As New RFunction
-    Private clsPointsParam As New RParameter
     Private clsYLabsFunction, clsXLabsFunction, clsLabsFunction As RFunction
     Private clsFactorLevels As New RFunction
 
@@ -66,6 +65,8 @@ Public Class dlgPICSARainfall
     Private clsScaleFillViridisFunction As New RFunction
     Private clsScaleColourViridisFunction As New RFunction
     Private clsAnnotateFunction As New RFunction
+    Private clsGeomSmoothFunc As New RFunction
+
 
     Private strMeanName As String = ".mean_y"
     Private strMedianName As String = ".median_y"
@@ -82,6 +83,9 @@ Public Class dlgPICSARainfall
     Private clsGeomHlineAesMedian As New RFunction
     Private clsGeomHlineAesLowerTercile As New RFunction
     Private clsGeomHlineAesUpperTercile As New RFunction
+
+    Private clsStatRegEquation As New RFunction
+    Private clsStatsCorFunction As New RFunction
 
     Private ReadOnly strFacetWrap As String = "Facet Wrap"
     Private ReadOnly strFacetRow As String = "Facet Row"
@@ -174,17 +178,18 @@ Public Class dlgPICSARainfall
         ucrReceiverFacetBy.SetValuesToIgnore({"."})
 
         ucrChkPoints.SetText("Add Points")
-        ucrChkPoints.AddParameterPresentCondition(True, "points")
-        ucrChkPoints.AddParameterPresentCondition(False, "points", False)
-        clsPointsFunc.SetPackageName("ggplot2")
-        clsPointsFunc.SetRCommand("geom_point")
-        clsPointsParam.SetArgumentName("points")
-        clsPointsParam.SetArgument(clsPointsFunc)
-        clsPointsParam.Position = 3
-        clsPointsFunc.AddParameter("size", "3")
-        clsPointsFunc.AddParameter("colour", Chr(34) & "red" & Chr(34))
-        ucrChkPoints.SetParameter(clsPointsParam, bNewChangeParameterValue:=False, bNewAddRemoveParameter:=True)
+        ucrChkPoints.AddParameterPresentCondition(True, "geom_point")
+        ucrChkPoints.AddParameterPresentCondition(False, "geom_point", False)
 
+        ucrChkLineofBestFit.SetText("Add Line of Best Fit")
+        ucrChkLineofBestFit.AddParameterPresentCondition(True, "geom_smooth")
+        ucrChkLineofBestFit.AddParameterPresentCondition(False, "geom_smooth", False)
+        ucrChkLineofBestFit.AddToLinkedControls(ucrChkWithSE, {True}, bNewLinkedHideIfParameterMissing:=True)
+
+        ucrChkWithSE.SetText("With Standard Error")
+        ucrChkWithSE.SetParameter(New RParameter("se"), bNewAddRemoveParameter:=False, bNewChangeParameterValue:=True)
+        ucrChkWithSE.SetValuesCheckedAndUnchecked("TRUE", "FALSE")
+        ucrChkWithSE.SetRDefault("TRUE")
         ucrInputStation.SetItems({strFacetWrap, strFacetRow, strFacetCol, strNone})
         ucrInputStation.SetDropDownStyleAsNonEditable()
 
@@ -217,6 +222,8 @@ Public Class dlgPICSARainfall
 
         clsRggplotFunction = New RFunction
         clsGeomLine = New RFunction
+        clsStatRegEquation = New RFunction
+        clsStatsCorFunction = New RFunction
         clsRaesFunction = New RFunction
         clsPipeOperator = New ROperator
         clsFactorLevels = New RFunction
@@ -255,6 +262,9 @@ Public Class dlgPICSARainfall
         clsGeomTextLabelMeanLine = New RFunction
         clsPasteMeanY = New RFunction
         clsFormatMeanY = New RFunction
+        clsGeomSmoothFunc = New RFunction
+        clsPointsFunc = New RFunction
+
         clsGeomTextLabelMedianLine = New RFunction
         clsPasteMedianY = New RFunction
         clsFormatMedianY = New RFunction
@@ -334,6 +344,11 @@ Public Class dlgPICSARainfall
 
         clsAsFactorFunction = New RFunction
 
+        clsGeomSmoothFunc.SetPackageName("ggplot2")
+        clsGeomSmoothFunc.SetRCommand("geom_smooth")
+        clsGeomSmoothFunc.AddParameter("method", Chr(34) & "lm" & Chr(34), iPosition:=0)
+        clsGeomSmoothFunc.AddParameter("se", "FALSE", iPosition:=1)
+
         clsRaesFunction.SetPackageName("ggplot2")
         clsRaesFunction.SetRCommand("aes")
         clsAsFactorFunction.SetRCommand("as.factor")
@@ -342,8 +357,11 @@ Public Class dlgPICSARainfall
         clsGeomLine.SetRCommand("geom_line")
         clsGeomLine.AddParameter("colour", Chr(34) & "blue" & Chr(34))
         clsGeomLine.AddParameter("size", "0.8")
-        clsBaseOperator.AddParameter(clsPointsParam)
 
+        clsPointsFunc.SetPackageName("ggplot2")
+        clsPointsFunc.SetRCommand("geom_point")
+        clsPointsFunc.AddParameter("size", "3")
+        clsPointsFunc.AddParameter("colour", Chr(34) & "red" & Chr(34))
 
         clsFacetFunction.SetPackageName("ggplot2")
         clsFacetRowOp.SetOperation("+")
@@ -355,6 +373,14 @@ Public Class dlgPICSARainfall
         clsFacetOperator.bBrackets = False
         clsFacetFunction.AddParameter("facets", clsROperatorParameter:=clsFacetOperator, iPosition:=0)
 
+        'Regression Equation line
+        clsStatRegEquation.SetPackageName("ggpubr")
+        clsStatRegEquation.SetRCommand("stat_regline_equation")
+        clsStatRegEquation.AddParameter("label.y", "100", iPosition:=0)
+
+        'Significance level
+        clsStatsCorFunction.SetPackageName("ggpubr")
+        clsStatsCorFunction.SetRCommand("stat_cor")
 
         'Mean Line
         clsGeomHlineMean.SetPackageName("ggplot2")
@@ -633,7 +659,8 @@ Public Class dlgPICSARainfall
         ucrSave.SetRCode(clsBaseOperator, bReset)
         ucrChkPoints.SetRCode(clsBaseOperator, bReset)
         ucrVariablesAsFactorForPicsa.SetRCode(clsAsNumeric, bReset)
-
+        ucrChkLineofBestFit.SetRCode(clsBaseOperator, bReset)
+        ucrChkWithSE.SetRCode(clsGeomSmoothFunc, bReset)
         If bReset Then
             AutoFacetStation()
         End If
@@ -765,7 +792,15 @@ Public Class dlgPICSARainfall
 
     'add more functions 
     Private Sub cmdPICSAOptions_Click(sender As Object, e As EventArgs) Handles cmdPICSAOptions.Click
-        sdgPICSARainfallGraph.SetRCode(clsNewOperator:=ucrBase.clsRsyntax.clsBaseOperator, clsNewPipeOperator:=clsPipeOperator, dctNewThemeFunctions:=dctThemeFunctions, clsNewLabsFunction:=clsLabsFunction, clsNewThemeFunction:=clsThemeFunction, clsNewXScaleContinuousFunction:=clsXScalecontinuousFunction, clsNewYScaleContinuousFunction:=clsYScalecontinuousFunction, clsNewGeomhlineMean:=clsGeomHlineMean, clsNewGeomhlineMedian:=clsGeomHlineMedian, clsNewGeomhlineLowerTercile:=clsGeomHlineLowerTercile, clsNewGeomhlineUpperTercile:=clsGeomHlineUpperTercile, clsNewXLabsFunction:=clsXLabsFunction, clsNewYLabsFunction:=clsYLabsFunction, clsNewRaesFunction:=clsRaesFunction, clsNewAsDate:=clsAsDate, clsNewAsDateYLimit:=clsAsDateYLimit, clsNewAsNumeric:=clsAsNumeric, clsNewYScaleDateFunction:=clsYScaleDateFunction, clsNewDatePeriodOperator:=clsDatePeriodOperator, clsNewGeomTextLabelMeanLine:=clsGeomTextLabelMeanLine, clsNewRoundMeanY:=clsRoundMeanY, clsNewPasteMeanY:=clsPasteMeanY, clsNewGeomTextLabelMedianLine:=clsGeomTextLabelMedianLine, clsNewRoundMedianY:=clsRoundMedianY, clsNewPasteMedianY:=clsPasteMedianY, clsNewGeomTextLabelLowerTercileLine:=clsGeomTextLabelLowerTercileLine, clsNewRoundLowerTercileY:=clsRoundLowerTercileY, clsNewPasteLowerTercileY:=clsPasteLowerTercileY, clsNewGeomTextLabelUpperTercileLine:=clsGeomTextLabelUpperTercileLine, clsNewRoundUpperTercileY:=clsRoundUpperTercileY, clsNewPasteUpperTercileY:=clsPasteUpperTercileY, strXAxisType:=ucrReceiverX.strCurrDataType, clsNewMutateFunction:=clsMutateFunction, clsNewMeanFunction:=clsMeanFunction, clsNewMedianFunction:=clsMedianFunction, clsNewLowerTercileFunction:=clsLowerTercileFunction, clsNewUpperTercileFunction:=clsUpperTercileFunction, clsNewAsDateMeanY:=clsAsDateMeanY, clsNewAsDateMedianY:=clsAsDateMedianY, clsNewAsDateLowerTercileY:=clsAsDateLowerTercileY, clsNewAsDateUpperTercileY:=clsAsDateUpperTercileY, clsNewFormatMeanY:=clsFormatMeanY, clsNewFormatMedianY:=clsFormatMedianY, clsNewFormatLowerTercileY:=clsFormatLowerTercileY, clsNewFormatUpperTercileY:=clsFormatUpperTercileY, bReset:=bResetSubdialog)
+        sdgPICSARainfallGraph.SetRCode(clsNewOperator:=ucrBase.clsRsyntax.clsBaseOperator, clsNewPipeOperator:=clsPipeOperator, dctNewThemeFunctions:=dctThemeFunctions, clsNewLabsFunction:=clsLabsFunction,
+                                       clsNewThemeFunction:=clsThemeFunction, clsNewXScaleContinuousFunction:=clsXScalecontinuousFunction, clsNewYScaleContinuousFunction:=clsYScalecontinuousFunction, clsNewGeomhlineMean:=clsGeomHlineMean,
+                                       clsNewGeomhlineMedian:=clsGeomHlineMedian, clsNewGeomhlineLowerTercile:=clsGeomHlineLowerTercile, clsNewGeomhlineUpperTercile:=clsGeomHlineUpperTercile, clsNewStatRegEquation:=clsStatRegEquation, clsNewStatsCorFunction:=clsStatsCorFunction, clsNewXLabsFunction:=clsXLabsFunction,
+                                       clsNewYLabsFunction:=clsYLabsFunction, clsNewRaesFunction:=clsRaesFunction, clsNewAsDate:=clsAsDate, clsNewAsDateYLimit:=clsAsDateYLimit, clsNewAsNumeric:=clsAsNumeric, clsNewYScaleDateFunction:=clsYScaleDateFunction,
+                                       clsNewDatePeriodOperator:=clsDatePeriodOperator, clsNewGeomTextLabelMeanLine:=clsGeomTextLabelMeanLine, clsNewRoundMeanY:=clsRoundMeanY, clsNewPasteMeanY:=clsPasteMeanY, clsNewGeomTextLabelMedianLine:=clsGeomTextLabelMedianLine,
+                                       clsNewRoundMedianY:=clsRoundMedianY, clsNewPasteMedianY:=clsPasteMedianY, clsNewGeomTextLabelLowerTercileLine:=clsGeomTextLabelLowerTercileLine, clsNewRoundLowerTercileY:=clsRoundLowerTercileY, clsNewPasteLowerTercileY:=clsPasteLowerTercileY,
+                                       clsNewGeomTextLabelUpperTercileLine:=clsGeomTextLabelUpperTercileLine, clsNewRoundUpperTercileY:=clsRoundUpperTercileY, clsNewPasteUpperTercileY:=clsPasteUpperTercileY, strXAxisType:=ucrReceiverX.strCurrDataType, clsNewMutateFunction:=clsMutateFunction,
+                                       clsNewMeanFunction:=clsMeanFunction, clsNewMedianFunction:=clsMedianFunction, clsNewLowerTercileFunction:=clsLowerTercileFunction, clsNewUpperTercileFunction:=clsUpperTercileFunction, clsNewAsDateMeanY:=clsAsDateMeanY, clsNewAsDateMedianY:=clsAsDateMedianY,
+                                       clsNewAsDateLowerTercileY:=clsAsDateLowerTercileY, clsNewAsDateUpperTercileY:=clsAsDateUpperTercileY, clsNewFormatMeanY:=clsFormatMeanY, clsNewFormatMedianY:=clsFormatMedianY, clsNewFormatLowerTercileY:=clsFormatLowerTercileY, clsNewFormatUpperTercileY:=clsFormatUpperTercileY, bReset:=bResetSubdialog)
         sdgPICSARainfallGraph.ShowDialog()
         AddRemoveGroupBy()
         bResetSubdialog = False
@@ -939,9 +974,6 @@ Public Class dlgPICSARainfall
         'AddRemoveGroupByAndHlines()
     End Sub
 
-    Private Sub ucrChkLineofBestFit_ControlValueChanged(ucrChangedControl As ucrCore)
-
-    End Sub
 
     Private Sub PlotOptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PlotOptionsToolStripMenuItem.Click
         sdgPlots.SetRCode(clsNewOperator:=ucrBase.clsRsyntax.clsBaseOperator, clsNewCoordPolarFunction:=clsCoordPolarFunction, clsNewCoordPolarStartOperator:=clsCoordPolarStartOperator, clsNewXScaleDateFunction:=clsXScaleDateFunction, clsNewYScaleDateFunction:=clsYScaleDateFunction,
@@ -955,5 +987,21 @@ Public Class dlgPICSARainfall
 
     Private Sub toolStripMenuItemPointOption_Click(sender As Object, e As EventArgs) Handles toolStripMenuItemPointOption.Click
         openSdgLayerOptions(clsPointsFunc)
+    End Sub
+
+    Private Sub ucrChkLineofBestFit_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkLineofBestFit.ControlValueChanged
+        If ucrChkLineofBestFit.Checked Then
+            clsBaseOperator.AddParameter("geom_smooth", clsRFunctionParameter:=clsGeomSmoothFunc, iPosition:=4)
+        Else
+            clsBaseOperator.RemoveParameterByName("geom_smooth")
+        End If
+    End Sub
+
+    Private Sub ucrChkPoints_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkPoints.ControlValueChanged
+        If ucrChkPoints.Checked Then
+            clsBaseOperator.AddParameter("geom_point", clsRFunctionParameter:=clsPointsFunc, iPosition:=3)
+        Else
+            clsBaseOperator.RemoveParameterByName("geom_point")
+        End If
     End Sub
 End Class
