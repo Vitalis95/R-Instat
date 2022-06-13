@@ -170,11 +170,11 @@ Partial Class sdgPICSARainfallGraph
         Me.ucrChkXaxis = New instat.ucrCheck()
         Me.ucrInputYaxisOptions = New instat.ucrInputComboBox()
         Me.ucrChkYaxis = New instat.ucrCheck()
-        Me.ttPICSARainfallGraph = New System.Windows.Forms.ToolTip(Me.components)
-        Me.ucrSdgPICSARainfalbuttons = New instat.ucrButtonsSubdialogue()
         Me.tbSlope = New System.Windows.Forms.TabPage()
         Me.ucrChkSignLevel = New instat.ucrCheck()
         Me.ucrChkRegEquation = New instat.ucrCheck()
+        Me.ttPICSARainfallGraph = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ucrSdgPICSARainfalbuttons = New instat.ucrButtonsSubdialogue()
         Me.tbPICSA.SuspendLayout()
         Me.tpTitles.SuspendLayout()
         Me.grpGraphTitles.SuspendLayout()
@@ -1971,21 +1971,6 @@ Partial Class sdgPICSARainfallGraph
         Me.ucrChkYaxis.Size = New System.Drawing.Size(100, 23)
         Me.ucrChkYaxis.TabIndex = 0
         '
-        'ttPICSARainfallGraph
-        '
-        Me.ttPICSARainfallGraph.AutoPopDelay = 10000
-        Me.ttPICSARainfallGraph.InitialDelay = 500
-        Me.ttPICSARainfallGraph.ReshowDelay = 100
-        '
-        'ucrSdgPICSARainfalbuttons
-        '
-        Me.ucrSdgPICSARainfalbuttons.AutoSize = True
-        Me.ucrSdgPICSARainfalbuttons.Location = New System.Drawing.Point(217, 338)
-        Me.ucrSdgPICSARainfalbuttons.Margin = New System.Windows.Forms.Padding(4)
-        Me.ucrSdgPICSARainfalbuttons.Name = "ucrSdgPICSARainfalbuttons"
-        Me.ucrSdgPICSARainfalbuttons.Size = New System.Drawing.Size(224, 30)
-        Me.ucrSdgPICSARainfalbuttons.TabIndex = 0
-        '
         'tbSlope
         '
         Me.tbSlope.Controls.Add(Me.ucrChkSignLevel)
@@ -2015,6 +2000,21 @@ Partial Class sdgPICSARainfallGraph
         Me.ucrChkRegEquation.Name = "ucrChkRegEquation"
         Me.ucrChkRegEquation.Size = New System.Drawing.Size(212, 23)
         Me.ucrChkRegEquation.TabIndex = 2
+        '
+        'ttPICSARainfallGraph
+        '
+        Me.ttPICSARainfallGraph.AutoPopDelay = 10000
+        Me.ttPICSARainfallGraph.InitialDelay = 500
+        Me.ttPICSARainfallGraph.ReshowDelay = 100
+        '
+        'ucrSdgPICSARainfalbuttons
+        '
+        Me.ucrSdgPICSARainfalbuttons.AutoSize = True
+        Me.ucrSdgPICSARainfalbuttons.Location = New System.Drawing.Point(217, 338)
+        Me.ucrSdgPICSARainfalbuttons.Margin = New System.Windows.Forms.Padding(4)
+        Me.ucrSdgPICSARainfalbuttons.Name = "ucrSdgPICSARainfalbuttons"
+        Me.ucrSdgPICSARainfalbuttons.Size = New System.Drawing.Size(224, 30)
+        Me.ucrSdgPICSARainfalbuttons.TabIndex = 0
         '
         'sdgPICSARainfallGraph
         '

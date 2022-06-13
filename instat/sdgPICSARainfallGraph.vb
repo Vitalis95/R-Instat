@@ -46,6 +46,7 @@ Public Class sdgPICSARainfallGraph
     Public dctRugSidesX As New Dictionary(Of String, String)
     Public dctRugSidesY As New Dictionary(Of String, String)
 
+
     Private clsPlotElementTitle As New RFunction
     Private clsPlotElementSubTitle As New RFunction
     Private clsPlotElementCaption As New RFunction
@@ -99,6 +100,7 @@ Public Class sdgPICSARainfallGraph
     Private clsRugParam As New RParameter
 
     Private Sub sdgPICSARainfallGraph_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        OpeningMode()
         autoTranslate(Me)
         ' Hide the rug tab
         tbPICSA.TabPages.Remove(tpRug)
@@ -1312,6 +1314,14 @@ Public Class sdgPICSARainfallGraph
 
     Private Sub ucrNudXAxisAngle_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrNudXAxisAngle.ControlValueChanged
         XAxisAngleJust()
+    End Sub
+
+    Private Sub OpeningMode()
+        Dim tbPageSlope As TabPage = tbSlope
+        tbPICSA.TabPages.Remove(tbSlope)
+        If dlgPICSARainfall.strPICSAMode = "temperature" OrElse dlgPICSARainfall.strPICSAMode = "general" Then
+            tbPICSA.TabPages.Add(tbPageSlope)
+        End If
     End Sub
 
     Private Sub XAxisAngleJust()
