@@ -1318,8 +1318,15 @@ Public Class sdgPICSARainfallGraph
 
     Private Sub OpeningMode()
         Dim tbPageSlope As TabPage = tbSlope
+        Dim tbPageLines As TabPage = tpLines
         tbPICSA.TabPages.Remove(tbSlope)
-        If dlgPICSARainfall.strPICSAMode = "temperature" OrElse dlgPICSARainfall.strPICSAMode = "general" Then
+        tbPICSA.TabPages.Remove(tpLines)
+        If dlgPICSARainfall.strPICSAMode = "temperature" Then
+            tbPICSA.TabPages.Add(tbPageSlope)
+        ElseIf dlgPICSARainfall.strPICSAMode = "rainfall" Then
+            tbPICSA.TabPages.Add(tbPageLines)
+        ElseIf dlgPICSARainfall.strPICSAMode = "general" Then
+            tbPICSA.TabPages.Add(tbPageLines)
             tbPICSA.TabPages.Add(tbPageSlope)
         End If
     End Sub
