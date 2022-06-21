@@ -20,7 +20,7 @@ Public Class dlgPrincipalComponentAnalysis
     Private bReset As Boolean = True
     Private bResetSubdialog As Boolean = False
     Private clsPCAFunction As New RFunction
-    Private clsREigenValues, clsREigenVectors, clsRRotation, clsRRotationCoord, clsRRotationEig As New RFunction
+    Private clsREigenValues, clsREigenVectors, clsRRotation, clsRRotationCoord, clsRRotationEig, clsDummyFunction As New RFunction
     Private clsRScreePlotFunction, clsRThemeMinimal, clsRVariablesPlotFunction, clsRVariablesPlotTheme, clsRIndividualsPlotFunction, clsRIndividualsPlotTheme, clsRBiplotFunction, clsRBiplotTheme, clsRBarPlotFunction As New RFunction
     Private clsRFactor, clsRMelt, clsRBarPlotGeom, clsRBarPlotAes, clsRBarPlotFacet, clsRVariablesPlotFunctionValue, clsRIndividualsFunctionValue, clsRBiplotFunctionValue As New RFunction
     Private clsRScreePlot, clsRVariablesPlot, clsRIndividualsPlot, clsRBiplot As New RSyntax
@@ -52,6 +52,18 @@ Public Class dlgPrincipalComponentAnalysis
         ucrReceiverMultiplePCA.Selector = ucrSelectorPCA
         ucrReceiverMultiplePCA.SetDataType("numeric")
         ucrReceiverMultiplePCA.SetMeAsReceiver()
+
+        ucrReceiverSuppNumeric.SetParameter(New RParameter("quanti.sup", 4))
+        ucrReceiverSuppNumeric.SetParameterIsRFunction()
+        ucrReceiverSuppNumeric.Selector = ucrSelectorPCA
+        ucrReceiverSuppNumeric.SetDataType("numeric")
+        ucrReceiverSuppNumeric.SetLinkedDisplayControl(lblSupplNumeric)
+        'ucrReceiverSuppNumeric.SetMeAsReceiver()
+
+        ucrChkExtraVariables.SetText("Extra Variables")
+        ucrChkExtraVariables.SetParameter(New RParameter("checked", iNewPosition:=0))
+        ucrChkExtraVariables.SetValuesCheckedAndUnchecked("TRUE", "FALSE")
+        ucrChkExtraVariables.AddToLinkedControls(ucrReceiverSuppNumeric, {True}, bNewLinkedHideIfParameterMissing:=True)
 
         'ucrCheckBox
         ucrChkScaleData.SetParameter(New RParameter("scale.unit", 2))
@@ -102,10 +114,13 @@ Public Class dlgPrincipalComponentAnalysis
         clsRVariablesPlotFunctionValue = New RFunction
         clsRIndividualsFunctionValue = New RFunction
         clsRBiplotFunctionValue = New RFunction
+        clsDummyFunction = New RFunction
         ' package name, r command and defaults for sdg
 
         ucrSelectorPCA.Reset()
         ucrSaveResult.Reset()
+
+        clsDummyFunction.AddParameter("checked", "FALSE", iPosition:=0)
 
         clsPCAFunction.SetPackageName("FactoMineR")
         clsPCAFunction.SetRCommand("PCA")
@@ -227,8 +242,10 @@ Public Class dlgPrincipalComponentAnalysis
 
         ucrSelectorPCA.SetRCode(clsREigenValues, bReset)
         ucrReceiverMultiplePCA.SetRCode(clsPCAFunction, bReset)
+        ucrReceiverSuppNumeric.SetRCode(clsPCAFunction, bReset)
         ucrSaveResult.SetRCode(clsPCAFunction, bReset)
         ucrChkScaleData.SetRCode(clsPCAFunction, bReset)
+        ucrChkExtraVariables.SetRCode(clsDummyFunction, bReset)
         ucrNudNumberOfComp.SetRCode(clsPCAFunction, bReset)
     End Sub
 
@@ -282,6 +299,13 @@ Public Class dlgPrincipalComponentAnalysis
         End If
     End Sub
 
+    'Private Sub GetVariables()
+    '    If ucrChkExtraVariables.Checked Then
+    '        ucrReceiverSuppNumeric.SetMeAsReceiver()
+    '        clsPCAFunction.AddParameter("quanti.sup", clsRFunctionParameter:=ucrSelectorPCA.ucrAvailableDataFrames.clsCurrDataFrame, iPosition:=4)
+    '    End If
+    'End Sub
+
     Private Sub ucrSelectorPCA_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrSelectorPCA.ControlValueChanged
         clsRRotationEig.AddParameter("data_name", Chr(34) & ucrSelectorPCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
         clsRRotation.AddParameter("STATS", "sqrt(" & clsRRotationEig.ToScript.ToString & "[,1])")
@@ -295,5 +319,9 @@ Public Class dlgPrincipalComponentAnalysis
 
     Private Sub CoreControls_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrSaveResult.ControlContentsChanged, ucrReceiverMultiplePCA.ControlContentsChanged, ucrNudNumberOfComp.ControlContentsChanged
         TestOKEnabled()
+    End Sub
+
+    Private Sub ucrChkExtraVariables_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkExtraVariables.ControlValueChanged, ucrReceiverSuppNumeric.ControlValueChanged
+        ucrReceiverSuppNumeric.SetMeAsReceiver()
     End Sub
 End Class
