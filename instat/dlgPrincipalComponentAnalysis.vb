@@ -19,12 +19,12 @@ Public Class dlgPrincipalComponentAnalysis
     Public bFirstLoad As Boolean = True
     Private bReset As Boolean = True
     Private bResetSubdialog As Boolean = False
-    Private clsPCAFunction As New RFunction
+    Private clsPCAFunction, clsWhichFunction, clsNamesFunction As New RFunction
     Private clsREigenValues, clsREigenVectors, clsRRotation, clsRRotationCoord, clsRRotationEig, clsDummyFunction As New RFunction
     Private clsRScreePlotFunction, clsRThemeMinimal, clsRVariablesPlotFunction, clsRVariablesPlotTheme, clsRIndividualsPlotFunction, clsRIndividualsPlotTheme, clsRBiplotFunction, clsRBiplotTheme, clsRBarPlotFunction As New RFunction
     Private clsRFactor, clsRMelt, clsRBarPlotGeom, clsRBarPlotAes, clsRBarPlotFacet, clsRVariablesPlotFunctionValue, clsRIndividualsFunctionValue, clsRBiplotFunctionValue As New RFunction
     Private clsRScreePlot, clsRVariablesPlot, clsRIndividualsPlot, clsRBiplot As New RSyntax
-    Dim clsRBarPlot, clsRBarPlot0, clsBaseOperator As New ROperator
+    Dim clsRBarPlot, clsRBarPlot0, clsBaseOperator, clsBinaryOperator As New ROperator
     ' call all classes in the sub dialog
 
     Private Sub dlgPrincipalComponentAnalysis_oad(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -46,6 +46,7 @@ Public Class dlgPrincipalComponentAnalysis
         ucrSelectorPCA.SetParameter(New RParameter("data_name", 0))
         ucrSelectorPCA.SetParameterIsString()
 
+
         'ucrReceiver
         ucrReceiverMultiplePCA.SetParameter(New RParameter("X", 1))
         ucrReceiverMultiplePCA.SetParameterIsRFunction()
@@ -53,8 +54,8 @@ Public Class dlgPrincipalComponentAnalysis
         ucrReceiverMultiplePCA.SetDataType("numeric")
         ucrReceiverMultiplePCA.SetMeAsReceiver()
 
-        ucrReceiverSuppNumeric.SetParameter(New RParameter("quanti.sup", 4))
-        ucrReceiverSuppNumeric.SetParameterIsRFunction()
+        ucrReceiverSuppNumeric.SetParameter(New RParameter("cols", 1))
+        ucrReceiverSuppNumeric.SetParameterIsString()
         ucrReceiverSuppNumeric.Selector = ucrSelectorPCA
         ucrReceiverSuppNumeric.SetDataType("numeric")
         ucrReceiverSuppNumeric.SetLinkedDisplayControl(lblSupplNumeric)
@@ -115,12 +116,26 @@ Public Class dlgPrincipalComponentAnalysis
         clsRIndividualsFunctionValue = New RFunction
         clsRBiplotFunctionValue = New RFunction
         clsDummyFunction = New RFunction
+        clsNamesFunction = New RFunction
+        clsWhichFunction = New RFunction
+        clsBinaryOperator = New ROperator
         ' package name, r command and defaults for sdg
 
         ucrSelectorPCA.Reset()
         ucrSaveResult.Reset()
 
         clsDummyFunction.AddParameter("checked", "FALSE", iPosition:=0)
+
+        clsWhichFunction.SetRCommand("which")
+        clsWhichFunction.AddParameter("x", clsROperatorParameter:=clsBinaryOperator, iPosition:=0)
+
+        clsNamesFunction.SetRCommand("names")
+        clsNamesFunction.AddParameter("x", ucrSelectorPCA.ucrAvailableDataFrames.cboAvailableDataFrames.Text, iPosition:=0)
+
+        clsBinaryOperator.SetOperation("%in%")
+        clsBinaryOperator.AddParameter("names", clsRFunctionParameter:=clsNamesFunction, iPosition:=0)
+
+        'clsBinaryOperator.AddParameter("left", clsRFunctionParameter:=clsWhichFunction, iPosition:=0)
 
         clsPCAFunction.SetPackageName("FactoMineR")
         clsPCAFunction.SetRCommand("PCA")
@@ -238,11 +253,13 @@ Public Class dlgPrincipalComponentAnalysis
         ucrSelectorPCA.AddAdditionalCodeParameterPair(clsREigenVectors, ucrSelectorPCA.GetParameter, iAdditionalPairNo:=1)
         ucrSelectorPCA.AddAdditionalCodeParameterPair(clsRRotationCoord, ucrSelectorPCA.GetParameter, iAdditionalPairNo:=2)
         ucrSelectorPCA.AddAdditionalCodeParameterPair(clsRRotationEig, ucrSelectorPCA.GetParameter, iAdditionalPairNo:=3)
+        'ucrSelectorPCA.AddAdditionalCodeParameterPair(clsNamesFunction, ucrSelectorPCA.GetParameter, iAdditionalPairNo:=4)
+
         '        ucrSaveResult.AddAdditionalCodeParameterPair(clsRRotationEig, New RParameter("model_name", 0), iAdditionalPairNo:=1)
 
         ucrSelectorPCA.SetRCode(clsREigenValues, bReset)
         ucrReceiverMultiplePCA.SetRCode(clsPCAFunction, bReset)
-        ucrReceiverSuppNumeric.SetRCode(clsPCAFunction, bReset)
+        ucrReceiverSuppNumeric.SetRCode(clsBinaryOperator, bReset)
         ucrSaveResult.SetRCode(clsPCAFunction, bReset)
         ucrChkScaleData.SetRCode(clsPCAFunction, bReset)
         ucrChkExtraVariables.SetRCode(clsDummyFunction, bReset)
@@ -309,6 +326,8 @@ Public Class dlgPrincipalComponentAnalysis
     Private Sub ucrSelectorPCA_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrSelectorPCA.ControlValueChanged
         clsRRotationEig.AddParameter("data_name", Chr(34) & ucrSelectorPCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
         clsRRotation.AddParameter("STATS", "sqrt(" & clsRRotationEig.ToScript.ToString & "[,1])")
+
+        clsNamesFunction.AddParameter("x", ucrSelectorPCA.ucrAvailableDataFrames.cboAvailableDataFrames.Text, iPosition:=0)
         ModelName()
     End Sub
 
@@ -323,5 +342,10 @@ Public Class dlgPrincipalComponentAnalysis
 
     Private Sub ucrChkExtraVariables_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkExtraVariables.ControlValueChanged, ucrReceiverSuppNumeric.ControlValueChanged
         ucrReceiverSuppNumeric.SetMeAsReceiver()
+        If ucrChkExtraVariables.Checked AndAlso Not ucrReceiverSuppNumeric.IsEmpty Then
+            clsPCAFunction.AddParameter("quanti.sup", clsRFunctionParameter:=clsWhichFunction, iPosition:=4)
+        Else
+            clsPCAFunction.RemoveParameterByName("quanti.sup")
+        End If
     End Sub
 End Class
