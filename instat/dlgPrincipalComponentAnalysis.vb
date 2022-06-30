@@ -59,12 +59,18 @@ Public Class dlgPrincipalComponentAnalysis
         ucrReceiverSuppNumeric.Selector = ucrSelectorPCA
         ucrReceiverSuppNumeric.SetDataType("numeric")
         ucrReceiverSuppNumeric.SetLinkedDisplayControl(lblSupplNumeric)
+
+        ucrReceiverSupplFactors.SetParameter(New RParameter("cols", 1))
+        ucrReceiverSupplFactors.SetParameterIsString()
+        ucrReceiverSupplFactors.Selector = ucrSelectorPCA
+        ucrReceiverSupplFactors.SetDataType("factor")
+        ucrReceiverSupplFactors.SetLinkedDisplayControl(lblSupplFactors)
         'ucrReceiverSuppNumeric.SetMeAsReceiver()
 
         ucrChkExtraVariables.SetText("Extra Variables")
         ucrChkExtraVariables.SetParameter(New RParameter("checked", iNewPosition:=0))
         ucrChkExtraVariables.SetValuesCheckedAndUnchecked("TRUE", "FALSE")
-        ucrChkExtraVariables.AddToLinkedControls(ucrReceiverSuppNumeric, {True}, bNewLinkedHideIfParameterMissing:=True)
+        ucrChkExtraVariables.AddToLinkedControls({ucrReceiverSuppNumeric, ucrReceiverSupplFactors}, {True}, bNewLinkedHideIfParameterMissing:=True)
 
         'ucrCheckBox
         ucrChkScaleData.SetParameter(New RParameter("scale.unit", 2))
@@ -159,12 +165,12 @@ Public Class dlgPrincipalComponentAnalysis
         clsRRotationEig.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_from_model")
         clsRRotationEig.AddParameter("value1", Chr(34) & "eig" & Chr(34))
 
-        clsRRotation.SetRCommand("sweep")
-        clsRRotation.AddParameter("x", clsRFunctionParameter:=clsRRotationCoord)
-        clsRRotation.AddParameter("MARGIN", 2)
-        clsRRotation.AddParameter("STATS", "sqrt(" & clsRRotationEig.ToScript.ToString & "[,1])")
-        clsRRotation.AddParameter("FUN", " '/'")
-        clsRRotation.iCallType = 2
+        'clsRRotation.SetRCommand("sweep")
+        'clsRRotation.AddParameter("x", clsRFunctionParameter:=clsRRotationCoord)
+        'clsRRotation.AddParameter("MARGIN", 2)
+        'clsRRotation.AddParameter("STATS", "sqrt(" & clsRRotationEig.ToScript.ToString & "[,1])")
+        'clsRRotation.AddParameter("FUN", " '/'")
+        'clsRRotation.iCallType = 2
 
         ' Scree Function
         clsBaseOperator.SetOperation("+")
@@ -243,7 +249,7 @@ Public Class dlgPrincipalComponentAnalysis
         ucrBase.clsRsyntax.SetBaseRFunction(clsPCAFunction)
         ucrBase.clsRsyntax.AddToAfterCodes(clsREigenValues, iPosition:=1)
         ucrBase.clsRsyntax.AddToAfterCodes(clsREigenVectors, iPosition:=2)
-        ucrBase.clsRsyntax.AddToAfterCodes(clsRRotation, iPosition:=3)
+        'ucrBase.clsRsyntax.AddToAfterCodes(clsRRotation, iPosition:=3)
         ucrBase.clsRsyntax.AddToAfterCodes(clsBaseOperator, iPosition:=4)
         ModelName()
         bResetSubdialog = True
@@ -324,17 +330,17 @@ Public Class dlgPrincipalComponentAnalysis
     'End Sub
 
     Private Sub ucrSelectorPCA_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrSelectorPCA.ControlValueChanged
-        clsRRotationEig.AddParameter("data_name", Chr(34) & ucrSelectorPCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
-        clsRRotation.AddParameter("STATS", "sqrt(" & clsRRotationEig.ToScript.ToString & "[,1])")
+        'clsRRotationEig.AddParameter("data_name", Chr(34) & ucrSelectorPCA.ucrAvailableDataFrames.cboAvailableDataFrames.SelectedItem & Chr(34))
+        'clsRRotation.AddParameter("STATS", "sqrt(" & clsRRotationEig.ToScript.ToString & "[,1])")
 
         clsNamesFunction.AddParameter("x", ucrSelectorPCA.ucrAvailableDataFrames.cboAvailableDataFrames.Text, iPosition:=0)
-        clsPCAFunction.AddParameter("x", clsRFunctionParameter:=ucrSelectorPCA.ucrAvailableDataFrames.clsCurrDataFrame, iPosition:=0)
+        clsPCAFunction.AddParameter("X", clsRFunctionParameter:=ucrSelectorPCA.ucrAvailableDataFrames.clsCurrDataFrame, iPosition:=0)
 
         ModelName()
     End Sub
 
     Private Sub ucrSaveResult_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrSaveResult.ControlValueChanged
-        clsRRotation.AddParameter("STATS", "sqrt(" & clsRRotationEig.ToScript.ToString & "[,1])")
+        'clsRRotation.AddParameter("STATS", "sqrt(" & clsRRotationEig.ToScript.ToString & "[,1])")
         ModelName()
     End Sub
 
