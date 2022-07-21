@@ -88,6 +88,13 @@ Public Class ucrInputComboBox
         FillItemTypes()
     End Sub
 
+    Public Sub SetItemsTypeAsColumnSelection()
+        strItemsType = "Column Selection"
+
+        FillItemTypes()
+    End Sub
+
+
     Public Sub SetItemsTypeAsKeys()
         strItemsType = "Keys"
         FillItemTypes()
@@ -136,10 +143,15 @@ Public Class ucrInputComboBox
                     cboInput.Items.Clear()
                     cboInput.Items.AddRange(frmMain.clsRLink.GetFilterNames(ucrDataFrameSelector.cboAvailableDataFrames.Text).ToArray())
                 End If
+            Case "Column Selection"
+                If ucrDataFrameSelector IsNot Nothing Then
+                    cboInput.Items.Clear()
+                    cboInput.Items.AddRange(frmMain.clsRLink.GetColumnSelectionNames(ucrDataFrameSelector.cboAvailableDataFrames.Text).ToArray())
+                End If
         End Select
     End Sub
 
-    Public Sub ucrDataFrameSelector_DataFrameChanged() Handles ucrDataFrameSelector.DataFrameChanged
+    Public Sub ucrDataFrameSelector_ControlValueChanged() Handles ucrDataFrameSelector.ControlValueChanged
         FillItemTypes()
     End Sub
 
@@ -278,7 +290,8 @@ Public Class ucrInputComboBox
     End Sub
 
     Private Sub cboInput_TextChanged(sender As Object, e As EventArgs) Handles cboInput.TextChanged
-        OnContentsChanged()
+        'shouldn't we be raising OnControlValueChanged instead? see issue #7367
+        OnControlContentsChanged()
     End Sub
     Private Sub cboInput_Click(sender As Object, e As EventArgs) Handles cboInput.Click
         OnControlClicked()

@@ -23,7 +23,7 @@ Imports System.ComponentModel
 Imports System.Runtime.Serialization.Formatters.Binary
 
 Public Class frmMain
-    Public clsRLink As New RLink
+    Public clsRLink As RLink
     Public clsGrids As New clsGridLink
     Public strStaticPath As String
     Public strHelpFilePath As String = "Help\R-Instat.chm"
@@ -31,13 +31,20 @@ Public Class frmMain
     Public strInstatOptionsFile As String = "Options.bin"
     Public clsInstatOptions As InstatOptions
     Public clsRecentItems As clsRecentFiles
-    Public strCurrentDataFrame As String
+    'Public strCurrentDataFrame As String
     Public dlgLastDialog As Form
     Public strSaveFilePath As String = ""
+    Public clsOutputLogger As clsOutputLogger
     Private mnuItems As New List(Of Form)
     Private ctrActive As Control
     Private WithEvents timer As New System.Windows.Forms.Timer
     Private iAutoSaveDataMilliseconds As Integer
+    Private clsDataBook As clsDataBook
+    Public ReadOnly Property DataBook As clsDataBook
+        Get
+            Return clsDataBook
+        End Get
+    End Property
 
     Public strAutoSaveDataFolderPath As String = Path.Combine(Path.GetTempPath, "R-Instat_data_auto_save")
     Public strAutoSaveLogFolderPath As String = Path.Combine(Path.GetTempPath, "R-Instat_log_auto_save")
@@ -73,14 +80,13 @@ Public Class frmMain
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        clsOutputLogger = New clsOutputLogger
+        clsRLink = New RLink(clsOutputLogger)
     End Sub
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim prdCustom As New clsCustomRenderer(New clsCustomColourTable)
         Dim bClose As Boolean = False
-
-        ' Note: this must change when R version changes
-        Dim strRPackagesPath As String = Path.Combine(My.Computer.FileSystem.SpecialDirectories.MyDocuments, "R\win-library\3.6")
 
         mnuBar.Renderer = prdCustom
         Tool_strip.Renderer = prdCustom
@@ -95,12 +101,15 @@ Public Class frmMain
         Thread.CurrentThread.CurrentCulture = New CultureInfo("en-GB")
 
         ucrDataViewer.StartupMenuItemsVisibility(False)
-        InitialiseOutputWindow()
-        clsGrids.SetDataViewer(ucrDataViewer)
-        clsGrids.SetMetadata(ucrDataFrameMeta.grdMetaData)
-        clsGrids.SetVariablesMetadata(ucrColumnMeta.grdVariables)
+        clsDataBook = New clsDataBook(clsRLink)
+
+        ucrDataViewer.DataBook = clsDataBook
+        ucrColumnMeta.DataBook = clsDataBook
+        ucrDataFrameMeta.DataBook = clsDataBook
 
         clsRLink.SetLog(ucrLogWindow.txtLog)
+
+        ucrOutput.SetLogger(clsOutputLogger)
 
         SetToDefaultLayout()
 
@@ -113,18 +122,6 @@ Public Class frmMain
         strStaticPath = String.Concat(Application.StartupPath, "\static")
 
         strAppDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RInstat\")
-        ' We need to create the likely R package installation directory before R.NET connection is initialised
-        ' because of a bug in R.NET 1.8.2 where pop ups to create directories do not appear.
-        ' This assumes that R packages will be installed in "Documents" folder and also that 
-        ' this is detected by "SpecialDirectories.MyDocuments".
-        ' If either of these fail then R packages will need to be installed from R/RStudio first.
-        Try
-            If Not Directory.Exists(strRPackagesPath) Then
-                System.IO.Directory.CreateDirectory(strRPackagesPath)
-            End If
-        Catch ex As Exception
-            ' This may fail for many reasons. We may want to inform users this may lead to packages not installing.
-        End Try
 
         bClose = AutoRecoverAndStartREngine()
         If bClose Then
@@ -144,7 +141,7 @@ Public Class frmMain
 
             'Sets up the Recent items
             clsRecentItems = New clsRecentFiles(strAppDataPath)
-            clsRecentItems.setToolStripItems(mnuFile, mnuTbOpen, mnuTbLast10Dialogs, sepStart, sepEnd)
+            clsRecentItems.SetToolStripItems(mnuFile, mnuTbOpen, mnuTbLast10Dialogs)
             clsRecentItems.SetDataViewWindow(ucrDataViewer)
             'checks existence of MRU list
             clsRecentItems.checkOnLoad()
@@ -176,7 +173,26 @@ Public Class frmMain
             strCurrLang = Me.clsInstatOptions.strLanguageCultureCode
         End If
 
+        ucrOutput.SetInstatOptions(clsInstatOptions)
         isMaximised = True 'Need to get the windowstate when the application is loaded
+    End Sub
+
+    ''' <summary>
+    ''' Updates data view, column meta and data frame meta grids.
+    ''' </summary>
+    Public Sub UpdateAllGrids()
+        ucrDataViewer.RefreshGridData()
+        ucrColumnMeta.RefreshGridData()
+        ucrDataFrameMeta.RefreshGridData()
+    End Sub
+
+    ''' <summary>
+    ''' Updates styles on data view, column meta and data frame meta grids.
+    ''' </summary>
+    Public Sub UpdateFontsOnlyOnAllGrids()
+        ucrDataViewer.UpdateAllWorksheetStyles()
+        ucrColumnMeta.UpdateAllWorksheetStyles()
+        ucrDataFrameMeta.UpdateAllWorksheetStyles()
     End Sub
 
     ' TODO This is used instead of autoTranslate so that split container isn't shifted
@@ -286,12 +302,6 @@ Public Class frmMain
         Return bClose
     End Function
 
-    Private Sub InitialiseOutputWindow()
-        clsRLink.SetOutput(ucrOutput.ucrRichTextBox)
-        'TEST temporary : creating the temporary graphs 
-        clsRLink.rtbOutput.CreateTempDirectory()
-    End Sub
-
     Private Sub LoadInstatOptions()
         If File.Exists(Path.Combine(strAppDataPath, strInstatOptionsFile)) Then
             LoadInstatOptionsFromFile(Path.Combine(strAppDataPath, strInstatOptionsFile))
@@ -392,13 +402,9 @@ Public Class frmMain
         dlgNewDataFrame.ShowDialog()
     End Sub
 
-    Private Sub RegularSequenceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnGenerateRegularSequence.Click
-        dlgRegularSequence.bNumericIsDefault = True
+    Private Sub mnuPrepareColumnNumericRegularSequence_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnNumericRegularSequence.Click
+        dlgRegularSequence.SetNumericSequenceAsDefaultOption()
         dlgRegularSequence.ShowDialog()
-    End Sub
-
-    Private Sub FrequencyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles mnuDescribeSpecificFrequency.Click
-        dlgFrequency.ShowDialog()
     End Sub
 
     Private Sub SummaryToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles mnuDescribeSpecificSummary.Click
@@ -417,7 +423,7 @@ Public Class frmMain
         dlgRecodeNumeric.ShowDialog()
     End Sub
 
-    Private Sub RandomSamplesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnGenerateRandomSamples.Click
+    Private Sub mnuPrepareColumnNumericRandomSamples_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnNumericRandomSamples.Click
         dlgRandomSample.ShowDialog()
     End Sub
 
@@ -465,7 +471,7 @@ Public Class frmMain
         dlgName.ShowDialog()
     End Sub
 
-    Private Sub UpdateLayout()
+    Public Sub UpdateLayout()
         If Not mnuViewDataView.Checked AndAlso Not mnuViewOutputWindow.Checked AndAlso Not mnuViewColumnMetadata.Checked AndAlso Not mnuViewDataFrameMetadata.Checked AndAlso Not mnuViewLog.Checked AndAlso Not mnuViewScriptWindow.Checked AndAlso Not mnuViewSwapDataAndMetadata.Checked Then
             splOverall.Hide()
         Else
@@ -496,20 +502,23 @@ Public Class frmMain
             Else
                 splOverall.Panel1Collapsed = True
             End If
-            If mnuViewSwapDataAndMetadata.Checked AndAlso mnuViewDataView.Checked Then
-                splDataOutput.Panel1.Controls.Add(ucrColumnMeta)
-                splMetadata.Panel1.Controls.Add(ucrDataViewer)
-                If Not mnuViewColumnMetadata.Checked Then
-                    mnuViewColumnMetadata.Checked = True
-                    mnuViewDataView.Checked = False
-                End If
-            Else
-                splDataOutput.Panel1.Controls.Add(ucrDataViewer)
-                splMetadata.Panel1.Controls.Add(ucrColumnMeta)
-            End If
         End If
         mnuTbDataView.Checked = mnuViewDataView.Checked
         mnuTbOutput.Checked = mnuViewOutputWindow.Checked
+    End Sub
+
+    Private Sub UpdateSwapDataAndMetadata()
+        If mnuViewSwapDataAndMetadata.Checked Then
+            splDataOutput.Panel1.Controls.Add(ucrColumnMeta)
+            splMetadata.Panel1.Controls.Add(ucrDataViewer)
+            mnuViewColumnMetadata.Text = "Data View"
+            mnuViewDataView.Text = "Column Metadata"
+        Else
+            splDataOutput.Panel1.Controls.Add(ucrDataViewer)
+            splMetadata.Panel1.Controls.Add(ucrColumnMeta)
+            mnuViewColumnMetadata.Text = "Column Metadata"
+            mnuViewDataView.Text = "Data View"
+        End If
     End Sub
 
     Private Sub mnuWindowVariable_Click(sender As Object, e As EventArgs) Handles mnuViewColumnMetadata.Click
@@ -566,7 +575,7 @@ Public Class frmMain
         dlgInsertColumn.ShowDialog()
     End Sub
 
-    Private Sub mnuPrepareAddColumnPermuteRows_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnGeneratePermuteRows.Click
+    Private Sub mnuPrepareColumnNumericPermuteRows_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnNumericPermuteRows.Click
         dlgPermuteColumn.ShowDialog()
     End Sub
     Private Sub mnuPrepareDataFileDeleteSheets_Click(sender As Object, e As EventArgs) Handles mnuPrepareDataObjectDeleteDataFrame.Click
@@ -578,7 +587,7 @@ Public Class frmMain
         dlgDeleteRowsOrColums.ShowDialog()
     End Sub
 
-    Private Sub EditLastDialogueToolStrip_Click(sender As Object, e As EventArgs) Handles mnuTbEditLastDialog.Click
+    Private Sub mnuTbLast10Dialogs_ButtonClick(sender As Object, e As EventArgs) Handles mnuTbLast10Dialogs.ButtonClick
         If clsRecentItems.lstRecentDialogs.Count > 0 Then
             clsRecentItems.lstRecentDialogs.Last.ShowDialog()
         End If
@@ -642,10 +651,6 @@ Public Class frmMain
         dlgLabelsLevels.ShowDialog()
     End Sub
 
-    Private Sub mnuPrepareFactorViewLabels_Click(sender As Object, e As EventArgs) Handles mnuPrepareFactorViewLabels.Click
-        dlgViewFactorLabels.ShowDialog()
-    End Sub
-
     Private Sub mnuPrepareFactorConvertToFactor_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnFactorConvertToFactor.Click
         dlgConvertColumns.bToFactorOnly = True
         dlgConvertColumns.ShowDialog()
@@ -694,7 +699,7 @@ Public Class frmMain
         dlgCombineText.ShowDialog()
     End Sub
 
-    Private Sub mnuPrepareDataFilter_Click(sender As Object, e As EventArgs) Handles mnuPrepareDataFrameFilter.Click
+    Private Sub mnuPrepareDataFilter_Click(sender As Object, e As EventArgs) Handles mnuPrepareDataFrameFilterRows.Click
         dlgRestrict.bIsSubsetDialog = False
         dlgRestrict.strDefaultDataframe = ""
         dlgRestrict.ShowDialog()
@@ -737,8 +742,6 @@ Public Class frmMain
         If ctrActive IsNot Nothing Then
             If ctrActive.Equals(ucrDataViewer) Then
                 ucrDataViewer.SelectAllText()
-            ElseIf ctrActive.Equals(ucrOutput) Then
-                ucrOutput.SelectAllText()
             ElseIf ctrActive.Equals(ucrColumnMeta) Then
                 ucrColumnMeta.SelectAllText()
             ElseIf ctrActive.Equals(ucrDataFrameMeta) Then
@@ -812,7 +815,7 @@ Public Class frmMain
         Dim rstResponse As DialogResult
         rstResponse = MessageBox.Show("Are you sure you want to clear the Output Window?", "Clear Output Window", MessageBoxButtons.YesNo)
         If rstResponse = DialogResult.Yes Then
-            ucrOutput.ucrRichTextBox.rtbOutput.Document.Blocks.Clear() 'To b checked
+            ucrOutput.UcrOutputPages.ClearOutputWindow()
         End If
     End Sub
 
@@ -979,26 +982,7 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuFileSaveAsOutputAs_Click(sender As Object, e As EventArgs) Handles mnuFileSaveAsOutputAs.Click
-        'Saves the content of the output window in RichTextFormat.
-        Using dlgSaveFile As New SaveFileDialog
-            dlgSaveFile.Title = "Save Output Window"
-            dlgSaveFile.Filter = "Rich Text Format (*.rtf)|*.rtf"
-            If Not String.IsNullOrEmpty(strCurrentOutputFileName) Then
-                dlgSaveFile.FileName = Path.GetFileName(strCurrentOutputFileName)
-                dlgSaveFile.InitialDirectory = Path.GetDirectoryName(strCurrentOutputFileName)
-            Else
-                dlgSaveFile.InitialDirectory = clsInstatOptions.strWorkingDirectory
-            End If
-            If DialogResult.OK = dlgSaveFile.ShowDialog() Then
-                Try
-                    'Send file name string specifying the location to save the rtf in.
-                    ucrOutput.ucrRichTextBox.SaveRtf(dlgSaveFile.FileName)
-                    strCurrentOutputFileName = dlgSaveFile.FileName
-                Catch
-                    MsgBox("Could not save the output window." & Environment.NewLine & "The file may be in use by another program or you may not have access to write to the specified location.", MsgBoxStyle.Critical)
-                End Try
-            End If
-        End Using
+        ucrOutput.UcrOutputPages.SaveTab()
     End Sub
 
     Private Sub mnuFileSaveAsLogAs_Click(sender As Object, e As EventArgs) Handles mnuFileSaveAsLogAs.Click
@@ -1043,10 +1027,6 @@ Public Class frmMain
         End Using
     End Sub
 
-    Private Sub mnuOrganiseDataFrameColumnStructure_Click(sender As Object, e As EventArgs) Handles mnuPrepareDataFrameColumnStructure.Click
-        dlgColumnStructure.ShowDialog()
-    End Sub
-
     Private Sub mnuDescribeTwoVariablesGraph_Click(sender As Object, e As EventArgs) Handles mnuDescribeTwoVariablesGraph.Click
         dlgDescribeTwoVarGraph.ShowDialog()
     End Sub
@@ -1059,7 +1039,7 @@ Public Class frmMain
         dlgImportFromODK.ShowDialog()
     End Sub
 
-    Private Sub mnuOrganiseColumnGenerateEnter_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnGenerateEnter.Click
+    Private Sub mnuPrepareColumnNumericEnter_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnNumericEnter.Click
         dlgEnter.ShowDialog()
     End Sub
 
@@ -1068,7 +1048,7 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuDescribeUseGraph_Click(sender As Object, e As EventArgs) Handles mnuDescribeUseGraph.Click
-        dlgUseGraph.ShowDialog()
+        dlgRenameGraph.ShowDialog()
     End Sub
 
     Private Sub mnuDescribeCombineGraph_Click(sender As Object, e As EventArgs) Handles mnuDescribeCombineGraph.Click
@@ -1080,6 +1060,7 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuDescribeMultivariateCorrelations_Click(sender As Object, e As EventArgs) Handles mnuDescribeMultivariateCorrelations.Click
+        dlgCorrelation.SetMultipleSequenceAsDefaultOption()
         dlgCorrelation.ShowDialog()
     End Sub
 
@@ -1111,7 +1092,7 @@ Public Class frmMain
         dlgScatterPlot.ShowDialog()
     End Sub
 
-    Private Sub mnuDescribeSpecificLinePlot_Click(sender As Object, e As EventArgs) Handles mnuDescribeSpecificLinePlot.Click
+    Private Sub mnuDescribeSpecificLinePlot_Click(sender As Object, e As EventArgs) Handles mnuDescribeSpecificLineSmoothPlot.Click
         dlgLinePlot.ShowDialog()
     End Sub
 
@@ -1127,8 +1108,8 @@ Public Class frmMain
         dlgDotPlot.ShowDialog()
     End Sub
 
-    Private Sub mnuDescribeSpecificRugPlot_Click(sender As Object, e As EventArgs) Handles mnuDescribeSpecificRugPlot.Click
-        dlgRugPlot.ShowDialog()
+    Private Sub mnuDescribeSpecificRugPlot_Click(sender As Object, e As EventArgs) Handles mnuDescribeSpecificMapPlot.Click
+        dlgHeatMapPlot.ShowDialog()
     End Sub
 
     Private Sub mnuDescribeSpecificBarChart_Click(sender As Object, e As EventArgs) Handles mnuDescribeSpecificBarPieChart.Click
@@ -1284,12 +1265,14 @@ Public Class frmMain
         dlgSunshine.ShowDialog()
     End Sub
 
-    Private Sub mnuClimaticPICSARainfall_Click(sender As Object, e As EventArgs) Handles mnuClimaticPICSARainfall.Click
+    Private Sub mnuClimaticPICSARainfall_Click(sender As Object, e As EventArgs) Handles mnuClimaticPICSARainfallGraph.Click
+        dlgPICSARainfall.enumPICSAMode = dlgPICSARainfall.PICSAMode.Rainfall
         dlgPICSARainfall.ShowDialog()
     End Sub
 
-    Private Sub mnuClimaticPICSATemperature_Click(sender As Object, e As EventArgs) Handles mnuClimaticPICSATemperature.Click
-        dlgPICSATemperature.ShowDialog()
+    Private Sub mnuClimaticPICSATemperature_Click(sender As Object, e As EventArgs) Handles mnuClimaticPICSATemperatureGraph.Click
+        dlgPICSARainfall.enumPICSAMode = dlgPICSARainfall.PICSAMode.Temperature
+        dlgPICSARainfall.ShowDialog()
     End Sub
 
     Private Sub mnuClimaticPICSACrops_Click(sender As Object, e As EventArgs) Handles mnuClimaticPICSACrops.Click
@@ -1305,6 +1288,7 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuClimaticSCFSupportCorrelations_Click(sender As Object, e As EventArgs) Handles mnuClimaticSCFSupportCorrelations.Click
+        dlgCorrelation.SetMultipleSequenceAsDefaultOption()
         dlgCorrelation.ShowDialog()
     End Sub
 
@@ -1349,7 +1333,7 @@ Public Class frmMain
         dlgDefineRedFlags.ShowDialog()
     End Sub
 
-    Private Sub mnuDescribeTwoVariablesFrequencies_Click(sender As Object, e As EventArgs) Handles mnuDescribeTwoVariablesFrequencies.Click
+    Private Sub mnuDescribeTwoVariablesFrequencies_Click(sender As Object, e As EventArgs) Handles mnuDescribeTwoThreeVariablesTwoWayFrequencies.Click
         dlgTwoWayFrequencies.ShowDialog()
     End Sub
 
@@ -1473,10 +1457,6 @@ Public Class frmMain
         dlgStringDistance.ShowDialog()
     End Sub
 
-    Private Sub mnuDescribeThreeVariableFrequencies_Click(sender As Object, e As EventArgs) Handles mnuDescribeThreeVariableFrequencies.Click
-        dlgThreeVariableFrequencies.ShowDialog()
-    End Sub
-
     Private Sub mnuDescribeViewGraph_Click(sender As Object, e As EventArgs) Handles mnuDescribeViewGraph.Click
         dlgViewGraph.ShowDialog()
     End Sub
@@ -1513,11 +1493,10 @@ Public Class frmMain
     End Sub
 
     Public Function GetDataFrameCount() As Integer
-        If ucrDataViewer IsNot Nothing AndAlso ucrDataViewer.grdData IsNot Nothing Then
-            Return ucrDataViewer.grdData.Worksheets.Count
-        Else
-            Return 0
+        If clsDataBook IsNot Nothing Then
+            Return clsDataBook.DataFrames.Count
         End If
+        Return 0
     End Function
 
     Public Sub SetCurrentDataFrame(strDataName As String)
@@ -1528,6 +1507,11 @@ Public Class frmMain
     Public Sub SetCurrentDataFrame(iIndex As Integer)
         ucrDataViewer.SetCurrentDataFrame(iIndex)
         ucrColumnMeta.SetCurrentDataFrame(iIndex)
+    End Sub
+
+    Public Sub ReOrderWorkSheets()
+        ucrDataViewer.ReOrderWorkSheets()
+        ucrColumnMeta.ReOrderWorkSheets()
     End Sub
 
     Private Sub CummulativeDistributionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles mnuDescribeSpecificCummulativeDistribution.Click
@@ -1591,19 +1575,23 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuFileCloseData_Click(sender As Object, e As EventArgs) Handles mnuFileCloseData.Click
-        If Not bDataSaved Then
-            If DialogResult.No = MsgBox("Are you sure you want to close you data?" &
-                                         Environment.NewLine & "Any unsaved changes will be lost.",
-                                         MessageBoxButtons.YesNo, "Close Data") Then
-                Exit Sub
-            End If
+        If ucrDataViewer.GetWorkSheetCount() <= 0 Then
+            Exit Sub
         End If
+
+        If Not bDataSaved _
+                AndAlso DialogResult.No = MsgBox("Are you sure you want to close your data?" &
+                                    Environment.NewLine & "Any unsaved changes will be lost.",
+                                    MessageBoxButtons.YesNo, "Close Data") Then
+            Exit Sub
+        End If
+
         clsRLink.CloseData()
         strSaveFilePath = ""
     End Sub
 
     Private Sub mnuPrepareCheckDataDuplicates_Click(sender As Object, e As EventArgs) Handles mnuPrepareCheckDataDuplicates.Click
-        dlgDuplicates.ShowDialog()
+        dlgDuplicateRows.ShowDialog()
     End Sub
 
     Private Sub mnuClimaticCheckDataBoxplot_Click_1(sender As Object, e As EventArgs) Handles mnuClimaticCheckDataBoxplot.Click
@@ -1836,12 +1824,12 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuPrepareColumnGenerateDate_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnDateGenerateDate.Click
-        dlgRegularSequence.bNumericIsDefault = False
+        dlgRegularSequence.SetDateSequenceAsDefaultOption()
         dlgRegularSequence.ShowDialog()
     End Sub
 
     Private Sub mnuClimaticDatesGenerateDates_Click(sender As Object, e As EventArgs) Handles mnuClimaticDatesGenerateDates.Click
-        dlgRegularSequence.bNumericIsDefault = False
+        dlgRegularSequence.SetDateSequenceAsDefaultOption()
         dlgRegularSequence.ShowDialog()
     End Sub
 
@@ -1853,16 +1841,12 @@ Public Class frmMain
         dlgCompareColumns.ShowDialog()
     End Sub
 
-    Private Sub mnuDefineOptionsByContexts_Click(sender As Object, e As EventArgs) Handles mnuOptionsByContextDefineOptionsByContexts.Click
-        dlgDefineOptionsByContext.ShowDialog()
-    End Sub
-
     Private Sub MergeAdditionalDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles mnuOptionsByContextMergeAdditionalData.Click
         dlgMergeAdditionalData.ShowDialog()
     End Sub
 
-    Private Sub mnuOptionsByContextsCheckDataDuplicates_Click(sender As Object, e As EventArgs) Handles mnuOptionsByContextCheckDataDuplicates.Click
-        dlgDuplicates.ShowDialog()
+    Private Sub mnuOptionsByContextsCheckDataDuplicates_Click(sender As Object, e As EventArgs) Handles mnuOptionsByContextCheckDataDuplicateRows.Click
+        dlgDuplicateRows.ShowDialog()
     End Sub
 
     Private Sub mnuOptionsByContextsCheckDataCompareColumns_Click(sender As Object, e As EventArgs) Handles mnuOptionsByContextCheckDataCompareColumns.Click
@@ -2024,8 +2008,8 @@ Public Class frmMain
         dlgOneWayFrequencies.ShowDialog()
     End Sub
 
-    Private Sub mnuClimaticTidyandExamineDuplicates_Click(sender As Object, e As EventArgs) Handles mnuClimaticTidyandExamineDuplicates.Click
-        dlgDuplicates.ShowDialog()
+    Private Sub mnuClimaticTidyandExamineDuplicates_Click(sender As Object, e As EventArgs) Handles mnuClimaticTidyandExamineDuplicateRows.Click
+        dlgDuplicateRows.ShowDialog()
     End Sub
 
     Private Sub mnuCumExeedenceGraph_Click(sender As Object, e As EventArgs) Handles mnuClimaticPICSACumExeedenceGraph.Click
@@ -2049,19 +2033,19 @@ Public Class frmMain
         dlgInstallRPackage.ShowDialog()
     End Sub
 
-    Private Sub mnuPrepareColumnGenerateDuplicateColumn_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnGenerateDuplicateColumn.Click
+    Private Sub mnuPrepareDataFrameDuplicateColumn_Click(sender As Object, e As EventArgs) Handles mnuPrepareDataFrameDuplicateColumn.Click
         dlgDuplicateColumns.ShowDialog()
     End Sub
 
-    Private Sub mnuPrepareColumnGenerateRowSummaries_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnGenerateRowSummaries.Click
+    Private Sub mnuPrepareColumnNumericRowSummaries_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnNumericRowSummaries.Click
         dlgRowSummary.ShowDialog()
     End Sub
 
-    Private Sub mnuPrepareColumnGenerateRank_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnGenerateRank.Click
-        dlgRank.ShowDialog()
+    Private Sub mnuPrepareColumnNumericTransform_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnNumericTransform.Click
+        dlgTransform.ShowDialog()
     End Sub
 
-    Private Sub mnuPrepareColumnPrpareColumnGeneratePolynomials_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnPrpareColumnGeneratePolynomials.Click
+    Private Sub mnuPrepareColumnNumericPolynomials_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnNumericPolynomials.Click
         dlgPolynomials.ShowDialog()
     End Sub
 
@@ -2069,7 +2053,7 @@ Public Class frmMain
         dlgCalculator.ShowDialog()
     End Sub
 
-    Private Sub mnuPrepareColumnGenerateCountInFactor_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnFactorCountInFactor.Click
+    Private Sub mnuPrepareColumnFactorCountInFactor_Click(sender As Object, e As EventArgs) Handles mnuPrepareColumnFactorCountInFactor.Click
         dlgCountinFactor.ShowDialog()
     End Sub
 
@@ -2230,6 +2214,7 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuClimaticCompareCorrelations_Click(sender As Object, e As EventArgs) Handles mnuClimaticCompareCorrelations.Click
+        dlgCorrelation.SetMultipleSequenceAsDefaultOption()
         dlgCorrelation.ShowDialog()
     End Sub
 
@@ -2309,6 +2294,7 @@ Public Class frmMain
 
     Private Sub mnuViewSwapDataAndMetadata_Click(sender As Object, e As EventArgs) Handles mnuViewSwapDataAndMetadata.Click
         mnuViewSwapDataAndMetadata.Checked = Not mnuViewSwapDataAndMetadata.Checked
+        UpdateSwapDataAndMetadata()
         UpdateLayout()
     End Sub
 
@@ -2383,8 +2369,6 @@ Public Class frmMain
     Private Sub mnuEditCopy_Click(sender As Object, e As EventArgs) Handles mnuEditCopy.Click, mnuTbCopy.ButtonClick, mnuSubTbCopy.Click
         If ctrActive.Equals(ucrDataViewer) Then
             ucrDataViewer.CopyRange()
-        ElseIf ctrActive.Equals(ucrOutput) Then
-            ucrOutput.CopyContent()
         ElseIf ctrActive.Equals(ucrColumnMeta) Then
             ucrColumnMeta.CopyRange()
         ElseIf ctrActive.Equals(ucrDataFrameMeta) Then
@@ -2405,7 +2389,81 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuPasteSpecial_Click(sender As Object, e As EventArgs) Handles mnuPasteSpecial.Click, mnuSubTbPasteSpecial.Click
-        dlgPasteSpecial.ShowDialog()
+        dlgPasteNewColumns.ShowDialog()
     End Sub
 
+    Private Sub mnuEditScript_Click(sender As Object, e As EventArgs) Handles mnuEditScript.Click
+        dlgScript.ShowDialog()
+    End Sub
+
+    Private Sub mnuPrepareDataFrameSelectColumns_Click(sender As Object, e As EventArgs) Handles mnuPrepareDataFrameSelectColumns.Click
+        dlgSelect.ShowDialog()
+    End Sub
+
+    Private Sub mnuClimaticFileExportToClimsoft_Click(sender As Object, e As EventArgs) Handles mnuClimaticFileExportToClimsoft.Click
+        dlgExportToClimsoft.ShowDialog()
+    End Sub
+
+    Private Sub mnuClimaticTidyandExamineCompareColumns_Click(sender As Object, e As EventArgs) Handles mnuClimaticTidyandExamineCompareColumns.Click
+        dlgCompareColumns.ShowDialog()
+    End Sub
+
+    Private Sub mnuPrepareDataReshapeScaleOrDistance_Click(sender As Object, e As EventArgs) Handles mnuPrepareDataReshapeScaleOrDistance.Click
+        dlgCluster.ShowDialog()
+    End Sub
+
+    Private Sub mnuDescribeOneVariableVisualiseData_Click(sender As Object, e As EventArgs) Handles mnuDescribeOneVariableVisualiseData.Click
+        dlgVisualizeData.ShowDialog()
+    End Sub
+
+    Private Sub mnuModelFitModelMachineLearning_Click(sender As Object, e As EventArgs) Handles mnuModelFitModelMachineLearning.Click
+        dlgMachineLearning.ShowDialog()
+    End Sub
+
+    Private Sub mnuDescribeMultivariateClusterAnalysis_Click(sender As Object, e As EventArgs) Handles mnuDescribeMultivariateClusterAnalysis.Click
+        dlgClusterAnalysis.ShowDialog()
+    End Sub
+
+    Private Sub mnuOptionsByContextDefineOnStation_Click(sender As Object, e As EventArgs) Handles mnuOptionsByContextDefineOnStation.Click
+        dlgColumnStructure.ShowDialog()
+    End Sub
+
+    Private Sub mnuOptionsByContextDefineOnFarm_Click(sender As Object, e As EventArgs) Handles mnuOptionsByContextDefineOnFarm.Click
+        dlgDefineOptionsByContext.ShowDialog()
+    End Sub
+
+    Private Sub mnuDescribeTwoThreeVariablesCorrelations_Click(sender As Object, e As EventArgs) Handles mnuDescribeTwoThreeVariablesCorrelations.Click
+        dlgCorrelation.mnuCurrent = mnuDescribeTwoThreeVariablesCorrelations
+        dlgCorrelation.SetTwoVariableSequenceAsDefaultOption()
+        dlgCorrelation.ShowDialog()
+    End Sub
+
+    Private Sub mnuDescribeTwoThreeVariablesThreeWayFrequencies_Click(sender As Object, e As EventArgs) Handles mnuDescribeTwoThreeVariablesThreeWayFrequencies.Click
+        dlgThreeVariableFrequencies.ShowDialog()
+    End Sub
+
+    Private Sub mnuDescribeTwoThreeVariablesPivotTableSummaries_Click(sender As Object, e As EventArgs) Handles mnuDescribeTwoThreeVariablesPivotTable.Click
+        dlgThreeVariablePivotTable.ShowDialog()
+    End Sub
+
+    Private Sub mnuPrepareDataFrameAddMergeColumns_Click(sender As Object, e As EventArgs) Handles mnuPrepareDataFrameAddMergeColumns.Click
+        dlgMergeAdditionalData.ShowDialog()
+    End Sub
+
+    Private Sub mnuPrepareCheckDataViewDeleteLabels_Click(sender As Object, e As EventArgs) Handles mnuPrepareCheckDataViewDeleteLabels.Click
+        dlgViewFactorLabels.ShowDialog()
+    End Sub
+
+    Private Sub RandomSplitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles mnuPrepareDataReshapeRandomSplit.Click
+        dlgRandomSplit.ShowDialog()
+    End Sub
+
+    Private Sub mnuClimaticPICSAGeneralGraph_Click(sender As Object, e As EventArgs) Handles mnuClimaticPICSAGeneralGraph.Click
+        dlgPICSARainfall.enumPICSAMode = dlgPICSARainfall.PICSAMode.General
+        dlgPICSARainfall.ShowDialog()
+    End Sub
+
+    Private Sub mnuOptionsByContextApsimxExamples_Click(sender As Object, e As EventArgs) Handles mnuOptionsByContextApsimxExamples.Click
+        dlgApsimx.ShowDialog()
+    End Sub
 End Class

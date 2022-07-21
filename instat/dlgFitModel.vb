@@ -27,8 +27,8 @@ Public Class dlgFitModel
 
     Public clsRestpvalFunction, clsFamilyFunction, clsRCIFunction, clsRConvert, clsAutoPlot, clsVisReg As New RFunction
     Public bResetModelOptions As Boolean = False
-    Public clsRSingleModelFunction, clsFormulaFunction, clsAnovaFunction, clsSummaryFunction, clsConfint As RFunction
-    Public clsGLM, clsLM, clsLMOrGLM, clsAsNumeric As RFunction
+    Public clsRSingleModelFunction, clsFormulaFunction, clsAnovaFunction, clsSummaryFunction, clsConfint As New RFunction
+    Public clsGLM, clsLM, clsLMOrGLM, clsAsNumeric As New RFunction
 
     'Saving Operators/Functions
     Private clsRstandardFunction, clsHatvaluesFunction, clsResidualFunction, clsFittedValuesFunction As New RFunction
@@ -88,7 +88,6 @@ Public Class dlgFitModel
     Private Sub SetDefaults()
         clsFormulaOperator = New ROperator
 
-        ucrBase.clsRsyntax.ClearCodes()
         clsRCIFunction = New RFunction
         clsRConvert = New RFunction
         clsSummaryFunction = New RFunction
@@ -108,6 +107,7 @@ Public Class dlgFitModel
         clsFittedValuesFunction = New RFunction
 
         ucrSelectorByDataFrameAddRemoveForFitModel.Reset()
+        ucrModelName.Reset()
         ucrReceiverResponseVar.SetMeAsReceiver()
         ucrSelectorByDataFrameAddRemoveForFitModel.Focus()
 
@@ -132,6 +132,7 @@ Public Class dlgFitModel
         clsLM = clsRegressionDefaults.clsDefaultLmFunction.Clone
         clsLM.AddParameter("formula", clsROperatorParameter:=clsFormulaOperator, iPosition:=1)
         clsLM.AddParameter("na.action", "na.exclude", iPosition:=4)
+        clsLM.SetAssignTo("last_model", strTempDataframe:=ucrSelectorByDataFrameAddRemoveForFitModel.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempModel:="last_model", bAssignToIsPrefix:=True)
 
         'Residual Plots
         dctPlotFunctions = New Dictionary(Of String, RFunction)(clsRegressionDefaults.dctModelPlotFunctions)
@@ -172,10 +173,7 @@ Public Class dlgFitModel
         clsRstandardFunction.SetRCommand("rstandard")
         clsHatvaluesFunction.SetRCommand("hatvalues")
 
-        clsLM.SetAssignTo(ucrModelName.GetText, strTempDataframe:=ucrSelectorByDataFrameAddRemoveForFitModel.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempModel:="last_model", bAssignToIsPrefix:=True)
-
-        clsGLM.SetAssignTo(ucrModelName.GetText, strTempDataframe:=ucrSelectorByDataFrameAddRemoveForFitModel.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempModel:="last_model", bAssignToIsPrefix:=True)
-
+        ucrBase.clsRsyntax.ClearCodes()
         ucrBase.clsRsyntax.SetBaseRFunction(clsLM)
         ucrBase.clsRsyntax.AddToAfterCodes(clsAnovaFunction, 1)
         ucrBase.clsRsyntax.AddToAfterCodes(clsSummaryFunction, 2)

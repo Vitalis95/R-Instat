@@ -13,15 +13,21 @@ convert_to_character_matrix <- function(data, format_decimal_places = TRUE, deci
     if(!format_decimal_places) decimal_places=rep(NA, ncol(data))
     else if(missing(decimal_places)) decimal_places = sapply(data, get_default_significant_figures)
     i = 1
-    for(curr_col in colnames(data)) {
-      if(is.na(decimal_places[i])) {
-        out[,i] <- as.character(data[[i]])
+    for (curr_col in colnames(data)) {
+      #if its a geometry list-column then convert to text using sf package.
+      #see issue #7165
+      if ("sfc" %in% class(data[[i]])) {
+        out[, i] <- sf::st_as_text(data[[i]])
+      } else if (is.na(decimal_places[i])) {
+        #use as.character() for non numeric column vales because format() adds extra spaces to the text
+        #which are recognised oddly by the R.Net
+        out[, i] <- as.character(data[[i]])
+      } else {
+        out[, i] <-
+          format(data[[i]], digits = decimal_places[i], scientific = is_scientific[i])
       }
-      else {
-        out[,i] <- format(data[[i]], digits = decimal_places[i], scientific = is_scientific[i])
-      }
-      if(!is.null(na_display)) {
-        out[is.na(data[[i]]),i] <- na_display
+      if (!is.null(na_display)) {
+        out[is.na(data[[i]]), i] <- na_display
       }
       i = i + 1
     }
@@ -611,16 +617,17 @@ multiple_nc_as_data_frame <- function(path, vars, keep_raw_time = TRUE, include_
   nc_list <- list()
   
   n_files <- length(filepaths)
-  pb <- winProgressBar(title = "Reading files", min = 0, max = n_files)
+  is_win <- Sys.info()['sysname'] == "Windows"
+  if (is_win) pb <- winProgressBar(title = "Reading files", min = 0, max = n_files)
   for(i in seq_along(filepaths)) {
     nc <- ncdf4::nc_open(filename = filepaths[i])
     dat <- nc_as_data_frame(nc = nc, vars = vars, keep_raw_time = keep_raw_time, include_metadata = include_metadata, boundary = boundary, lon_points = lon_points, lat_points = lat_points, id_points = id_points, show_requested_points = show_requested_points, great_circle_dist = great_circle_dist)
     nc_list[[length(nc_list) + 1]] <- dat
     ncdf4::nc_close(nc)
     info <- paste0("Reading file ", i, " of ", n_files, " - ", round(100*i/n_files), "%")
-    setWinProgressBar(pb, value = i, title = info, label = info)
+    if (is_win) setWinProgressBar(pb, value = i, title = info, label = info)
   }
-  close(pb)
+  if (is_win) close(pb)
   names(nc_list) <- tools::file_path_sans_ext(filenames)
   merged_data <- dplyr::bind_rows(nc_list, .id = id)
   return(merged_data)
@@ -1232,6 +1239,11 @@ convert_to_dec_deg <- function (dd, mm = 0 , ss = 0, dir) {
   return(decdeg)
 }
 
+convert_yy_to_yyyy <- function (x, base) {
+    if(missing(base))  stop("base year must be supplied")
+    dplyr::if_else(x+2000 <= base, x+2000, x+1900)
+}
+
 create_av_packs <- function() {
   av_packs <<- available.packages(repos = "https://cran.rstudio.com/")
   av_packs <<- data.frame(av_packs)
@@ -1593,9 +1605,7 @@ wwr_export <- function(data, year, month, mean_station_pressure, mean_sea_level_
          paste(which(!unique(data[[link]]) %in% station_data[[wmo_number]]), collapse = ", "))
   }
   if (!missing(wmo_number)) {
-    print(station_data[[wmo_number]])
     station_data[[wmo_number]] <- as.numeric(station_data[[wmo_number]])
-    print(station_data[[wmo_number]])
     station_data[[wmo_number]] <- ifelse(is.na(station_data[[wmo_number]]),
                                          "", sprintf("%05d", station_data[[wmo_number]]))
   } else {
@@ -1733,8 +1743,8 @@ wwr_export <- function(data, year, month, mean_station_pressure, mean_sea_level_
                                   station_data[[height_barometer]][i]))
     lines <- append(lines, paste0("WIGOS Station Identifier (WSI):", strrep(" ", 8),
                                   station_data[[wigos_identifier]][i]))
-    lines <- append(lines, "")
     if (!missing(mean_station_pressure)) {
+      lines <- append(lines, "")
       lines <- append(lines, "(2) Mean Station Pressure (precision to tenths of hPa)")
       lines <- append(lines, "")
       lines <- append(lines, month_header)
@@ -1748,6 +1758,7 @@ wwr_export <- function(data, year, month, mean_station_pressure, mean_sea_level_
       lines <- append(lines, vals)
     }
     if (!missing(mean_sea_level_pressure)) {
+      lines <- append(lines, "")
       lines <- append(lines, "(3) Mean Sea Level Pressure (precision to tenths of hPa)")
       lines <- append(lines, "")
       lines <- append(lines, month_header)
@@ -1761,6 +1772,7 @@ wwr_export <- function(data, year, month, mean_station_pressure, mean_sea_level_
       lines <- append(lines, vals)
     }
     if (!missing(mean_temp)) {
+      lines <- append(lines, "")
       lines <- append(lines, "(4) Mean Daily Air Temperature (precision to tenths of degrees Celsius)")
       lines <- append(lines, "")
       lines <- append(lines, month_header)
@@ -1774,6 +1786,7 @@ wwr_export <- function(data, year, month, mean_station_pressure, mean_sea_level_
       lines <- append(lines, vals)
     }
     if (!missing(total_precip)) {
+      lines <- append(lines, "")
       lines <- append(lines, "(5) Total Precipitation (precision to tenths of mm)")
       lines <- append(lines, "")
       lines <- append(lines, month_header)
@@ -1787,6 +1800,7 @@ wwr_export <- function(data, year, month, mean_station_pressure, mean_sea_level_
       lines <- append(lines, vals)
     }
     if (!missing(mean_max_temp)) {
+      lines <- append(lines, "")
       lines <- append(lines, "(6) Mean Daily Maximum Air Temperature (precision to tenths of degree Celsius)")
       lines <- append(lines, "")
       lines <- append(lines, month_header)
@@ -1800,6 +1814,7 @@ wwr_export <- function(data, year, month, mean_station_pressure, mean_sea_level_
       lines <- append(lines, vals)
     }
     if (!missing(mean_min_temp)) {
+      lines <- append(lines, "")
       lines <- append(lines, "(7) Mean Daily Minimum Air Temperature (precision to tenths of degree Celsius)")
       lines <- append(lines, "")
       lines <- append(lines, month_header)
@@ -1813,6 +1828,7 @@ wwr_export <- function(data, year, month, mean_station_pressure, mean_sea_level_
       lines <- append(lines, vals)
     }
     if (!missing(mean_rel_hum)) {
+      lines <- append(lines, "")
       lines <- append(lines, "(8) Mean of the Daily Relative Humidity (whole percent)")
       lines <- append(lines, "")
       lines <- append(lines, month_header)
@@ -2359,4 +2375,224 @@ record_graph <- function(x) {
   # turn off the new graphics device
   dev.off(which = d2)
   return(y)
+}
+# this is a "theme" essentially. So we can create it as a theme and add that
+slopegraph_theme <- function(x_text_size = 12){
+  list(scale_x_discrete(position = "top"), 
+                  ggplot2::theme(legend.position = "none"),
+                  ggplot2::theme(axis.text.y = ggplot2::element_blank()),
+                  ggplot2::theme(panel.border = ggplot2::element_blank()), 
+                  ggplot2::theme(panel.grid.major.y = ggplot2::element_blank()),
+                  ggplot2::theme(panel.grid.minor.y = ggplot2::element_blank()), 
+                  ggplot2::theme(axis.title.x = ggplot2::element_blank()),
+                  ggplot2::theme(panel.grid.major.x = ggplot2::element_blank()), 
+                  ggplot2::theme(axis.text.x.top = ggplot2::element_text(size = x_text_size, face = "bold")),
+                  ggplot2::theme(axis.ticks = ggplot2::element_blank()))
+}
+
+
+# slightly amended the "newggslopegraph" function in the CGPfunctions package
+slopegraph <- function(data, x, y, colour, data_label = NULL, 
+          y_text_size = 3, 
+          line_thickness = 1, line_colour = "ByGroup", 
+          data_text_size = 2.5, data_text_colour = "black", data_label_padding = 0.05, 
+          data_label_line_size = 0, data_label_fill_colour = "white", 
+          reverse_x_axis = FALSE, 
+          remove_missing = TRUE){
+  
+  
+  if (length(match.call()) <= 4) {
+    stop("Not enough arguments passed requires a dataframe, plus at least three variables")
+  }
+  argList <- as.list(match.call()[-1])
+  if (!hasArg(data)) {
+    stop("You didn't specify a dataframe to use", call. = FALSE)
+  }
+  Nx <- deparse(substitute(x))
+  Ny <- deparse(substitute(y))
+  Ncolour <- deparse(substitute(colour))
+  if (is.null(argList$data_label)) {
+    Ndata_label <- deparse(substitute(y))
+    data_label <- argList$y
+  }
+  else {
+    Ndata_label <- deparse(substitute(data_label))
+  }
+  Ndata <- argList$data
+  if (!is(data, "data.frame")) {
+    stop(paste0("'", Ndata, "' does not appear to be a data frame"))
+  }
+  if (!Nx %in% names(data)) {
+    stop(paste0("'", Nx, "' is not the name of a variable in the dataframe"), 
+         call. = FALSE)
+  }
+  if (anyNA(data[[Nx]])) {
+    stop(paste0("'", Nx, "' can not have missing data please remove those rows"), 
+         call. = FALSE)
+  }
+  if (!Ny %in% names(data)) {
+    stop(paste0("'", Ny, "' is not the name of a variable in the dataframe"), 
+         call. = FALSE)
+  }
+  if (!Ncolour %in% names(data)) {
+    stop(paste0("'", Ncolour, "' is not the name of a variable in the dataframe"), 
+         call. = FALSE)
+  }
+  if (!Ndata_label %in% names(data)) {
+    stop(paste0("'", Ndata_label, "' is not the name of a variable in the dataframe"), 
+         call. = FALSE)
+  }
+  if (anyNA(data[[Ncolour]])) {
+    stop(paste0("'", Ncolour, "' can not have missing data please remove those rows"), 
+         call. = FALSE)
+  }
+  if (!class(data[[Ny]]) %in% c("integer", "numeric")) {
+    stop(paste0("Variable '", 
+                Ny, "' needs to be numeric"), call. = FALSE)
+  }
+  if (!"ordered" %in% class(data[[Nx]])) {
+    if (!"character" %in% class(data[[Nx]])) {
+      if ("factor" %in% class(data[[Nx]])) {
+        message(paste0("\nConverting '", Nx, 
+                       "' to an ordered factor\n"))
+        data[[Nx]] <- factor(data[[Nx]], 
+                                      ordered = TRUE)
+      }
+      else {
+        stop(paste0("Variable '", 
+                    Nx, "' needs to be of class character, factor or ordered"), 
+             call. = FALSE)
+      }
+    }
+  }
+  data_label <- enquo(data_label)
+  if (reverse_x_axis) {
+    data[[Nx]] <- forcats::fct_rev(data[[Nx]])
+  }
+  NumbOfLevels <- nlevels(factor(data[[Nx]]))
+  if (length(line_colour) > 1) {
+    if (length(line_colour) < length(unique(data[[Ncolour]]))) {
+      message(paste0("\nGiven ", length(line_colour), 
+                     " colours. Recycling colours because there are ", 
+                     length(unique(data[[Ncolour]])), " ", 
+                     Ncolour, "s\n"))
+      line_colour <- rep(line_colour, length.out = length(unique(data[[Ncolour]])))
+    }
+    LineGeom <- list(ggplot2::geom_line(ggplot2::aes(colour = {{colour}}), size = line_thickness), 
+                     scale_colour_manual(values = line_colour))
+  }
+  else {
+    if (line_colour == "ByGroup") {
+      LineGeom <- list(ggplot2::geom_line(ggplot2::aes(colour = {{colour}}, 
+                                      alpha = 1), size = line_thickness))
+    }
+    else {
+      LineGeom <- list(ggplot2::geom_line(ggplot2::aes_(), size = line_thickness, 
+                                 colour = line_colour))
+    }
+  }
+  if (anyNA(data[[Ny]])) {
+    if (remove_missing) {
+      data <- data %>% group_by({{colour}}) %>% 
+        dplyr::filter(!anyNA({{y}})) %>% droplevels()
+    }
+    else {
+      data <- data %>% dplyr::filter(!is.na({{y}}))
+    }
+  }
+  data %>% ggplot2::ggplot(ggplot2::aes(group = {{colour}}, y = {{y}}, x = {{x}})) +
+    LineGeom +
+    
+    # note: this may conflict with other label in R, in which case we need to rewrite this
+    ggrepel::geom_text_repel(data = . %>% dplyr::filter({{x}} == min({{x}})), ggplot2::aes(label = {{colour}}),
+                    hjust = "left", box.padding = 0.1, point.padding = 0.1, 
+                    segment.colour = "gray", segment.alpha = 0.6, fontface = "bold", 
+                    size = y_text_size, nudge_x = -1.95, direction = "y", 
+                    force = 0.5, max.iter = 3000) +
+    ggrepel::geom_text_repel(data = . %>% dplyr::filter({{x}} == max({{x}})), ggplot2::aes(label = {{colour}}),
+                    hjust = "right", box.padding = 0.1, point.padding = 0.1, 
+                    segment.colour = "gray", segment.alpha = 0.6, fontface = "bold", 
+                    size = y_text_size, nudge_x = 1.95, direction = "y",
+                    force = 0.5, max.iter = 3000) +
+    ggplot2::geom_label(ggplot2::aes_string(label = Ndata_label), size = data_text_size, label.padding = unit(data_label_padding, "lines"),
+               label.size = data_label_line_size, colour = data_text_colour, fill = data_label_fill_colour)
+}
+
+# Returns a three-letter string representing a specific quarter in a year (e.g. "JFM", "AMJ" etc.). 
+get_quarter_label <-   function(quarter, start_month){
+  if (!start_month %in% 1:12) stop(start_month, " is an invalid start month, must be in range of 1:12")
+  if (!all(quarter %in% 1:4)) stop(quarter, " is an invalid quarter, must be in range of 1:4")
+  mabb <- rep(substr(month.abb, 1, 1), times = 2)[start_month:(11 + start_month)]
+  qtr <- sapply(quarter, function(x){start_pos <- 1 + ((x-1) * 3)
+  paste(mabb[start_pos:(start_pos+2)], collapse = "")})
+  return(factor(x = qtr, levels = unique(qtr)))
+}
+
+is.containVariableLabel <- function(x){
+  return(isTRUE(sjlabelled::get_label(x) != ""))
+}
+
+is.emptyvariable <- function(x){
+ return(isTRUE(length(x) == sum(x == "")))
+}
+
+is.NAvariable <- function(x){
+  return(isTRUE(length(x) == sum(is.na(x))))
+}
+
+is.levelscount <- function(x, n){
+ return(isTRUE(sum(levels(x)) == n))
+}
+
+is.containValueLabel <- function(x){
+  return(labels_label %in% names(attributes(x)))
+}
+
+read_corpora <- function(data){
+  data_all <- NULL
+  description <- NULL
+  # check different data types that are in the rcorpora package
+  # first check if it is a data frame outright. If it is, then we just need to return the data
+  if (is.data.frame(data)){
+    return(data)
+  } 
+  # If it isn't a data frame, we check each element of the `data` argument
+  data_unlist <- NULL
+  for (i in 1:length(data)){
+  # first, check for description and metadata
+    if (!is.null(names(data[i])) && names(data[i]) == "description") {
+      description <- data[i][[1]]
+    } else if (!is.null(names(data[i])) && names(data[i]) == "meta"){
+      data_unlist[[i]] <- NULL
+      # then check if the element is a vector, matrix, data frame, or list.
+    } else if (class(data[[i]]) %in% c("character", "factor", "logical", "numeric", "integer")){
+      data_unlist[[i]] <- data.frame(list = data[[i]])
+    } else if ("matrix" %in% class(data[[i]])){
+      data_unlist[[i]] <- data.frame(list = do.call(paste, c(data.frame(data[[i]]), sep="-")))
+    } else if (class(data[[i]]) == "data.frame"){
+      data_unlist[[i]] <- data.frame(list = data[[i]])
+    } else if (class(data[[i]]) == "list"){
+      if (length(data[[i]]) == 0) {
+        data_unlist[[i]] <- data.frame(NA)
+        } else {
+          # unlist the list, to create a data frame with two elements: list name ("rowname") and value
+	     # if there are nested lists, the "rowname" variable combines the different lists together.
+	     # We want to separate these into separate variables to make the data more usable and readable.
+	     # We do this by `str_split_fixed`, and `gsub`.
+          new_data <- tidyr::as_tibble(unlist(data), rownames = "rowname")
+          split <- stringr::str_split_fixed(string=new_data$rowname, pattern=stringr::coll(pattern="."), n=Inf)
+          split <- gsub("[0-9]$|[0-9][0-9]$","",split)
+	     # add in the separated list to the value variable, and rename the variables
+          data_unlist[[i]] <- cbind(data.frame(split), value = new_data$value)
+          names(data_unlist[[i]]) <- c(paste0("variable", 1:(length(data_unlist[[i]])-1)), "list")
+        } # end of ifelse lists
+      } # end of list
+    } # end of for loop
+  names(data_unlist) <- names(data[1:length(data_unlist)])
+  data_all <- plyr::ldply(data_unlist, .id = "variable1")
+  
+  if (!is.null(description)){
+    return (data.frame(description = description, data_all))
+  } 
+  return (data.frame(data_all))
 }
