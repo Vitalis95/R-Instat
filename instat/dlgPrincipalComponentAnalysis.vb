@@ -62,7 +62,7 @@ Public Class dlgPrincipalComponentAnalysis
         ucrReceiverSuppNumeric.Selector = ucrSelectorPCA
         ucrReceiverSuppNumeric.SetDataType("numeric")
         ucrReceiverSuppNumeric.SetLinkedDisplayControl(lblSupplNumeric)
-        ucrReceiverSuppNumeric.bExcludeFromSelector = True
+        'ucrReceiverSuppNumeric.bExcludeFromSelector = True
 
         ucrReceiverSupplFactors.SetParameter(New RParameter("right", 1))
         ucrReceiverSupplFactors.SetParameterIsString()
