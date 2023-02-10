@@ -774,7 +774,7 @@ Partial Class dlgLinePlot
         Me.ucrChkAddLine.Checked = False
         Me.ucrChkAddLine.Location = New System.Drawing.Point(133, 337)
         Me.ucrChkAddLine.Name = "ucrChkAddLine"
-        Me.ucrChkAddLine.Size = New System.Drawing.Size(77, 24)
+        Me.ucrChkAddLine.Size = New System.Drawing.Size(114, 24)
         Me.ucrChkAddLine.TabIndex = 24
         '
         'ucrPnlOptions
@@ -802,6 +802,15 @@ Partial Class dlgLinePlot
         Me.ucrChkPathOrStep.Size = New System.Drawing.Size(148, 23)
         Me.ucrChkPathOrStep.TabIndex = 32
         '
+        'ucrChkValley
+        '
+        Me.ucrChkValley.AutoSize = True
+        Me.ucrChkValley.Checked = False
+        Me.ucrChkValley.Location = New System.Drawing.Point(247, 389)
+        Me.ucrChkValley.Name = "ucrChkValley"
+        Me.ucrChkValley.Size = New System.Drawing.Size(146, 23)
+        Me.ucrChkValley.TabIndex = 27
+        '
         'ucrChkPeak
         '
         Me.ucrChkPeak.AutoSize = True
@@ -817,7 +826,7 @@ Partial Class dlgLinePlot
         Me.ucrChkWithSE.Checked = False
         Me.ucrChkWithSE.Location = New System.Drawing.Point(248, 362)
         Me.ucrChkWithSE.Name = "ucrChkWithSE"
-        Me.ucrChkWithSE.Size = New System.Drawing.Size(72, 23)
+        Me.ucrChkWithSE.Size = New System.Drawing.Size(90, 23)
         Me.ucrChkWithSE.TabIndex = 26
         '
         'ucrChkLineofBestFit
@@ -1148,11 +1157,11 @@ Partial Class dlgLinePlot
         Me.Controls.Add(Me.ucrNudSlopeLineThickness)
         Me.Controls.Add(Me.grpSmoothOptions)
         Me.Controls.Add(Me.ucrInputSlopeLabelColour)
-        Me.Controls.Add(Me.ucrChkValley)
         Me.Controls.Add(Me.lblSopeTextColour)
         Me.Controls.Add(Me.lblSlopeLabelColour)
         Me.Controls.Add(Me.ucrReceiverXEnd)
         Me.Controls.Add(Me.ucrReceiverSlopeColour)
+        Me.Controls.Add(Me.ucrChkValley)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.MaximizeBox = False
         Me.MinimizeBox = False
