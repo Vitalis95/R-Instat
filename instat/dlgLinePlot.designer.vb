@@ -774,7 +774,7 @@ Partial Class dlgLinePlot
         Me.ucrChkAddLine.Checked = False
         Me.ucrChkAddLine.Location = New System.Drawing.Point(133, 337)
         Me.ucrChkAddLine.Name = "ucrChkAddLine"
-        Me.ucrChkAddLine.Size = New System.Drawing.Size(77, 24)
+        Me.ucrChkAddLine.Size = New System.Drawing.Size(114, 24)
         Me.ucrChkAddLine.TabIndex = 24
         '
         'ucrPnlOptions
