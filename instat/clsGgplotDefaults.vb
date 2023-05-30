@@ -114,6 +114,17 @@ Public Class GgplotDefaults
         End Get
     End Property
 
+    Public Shared ReadOnly Property clsYScaleDiscreteFunction As RFunction
+        Get
+            Dim clsYlabScalesTempFunc As New RFunction
+
+            clsYlabScalesTempFunc.SetPackageName("ggplot2")
+            clsYlabScalesTempFunc.SetRCommand("scale_y_discrete")
+
+            Return clsYlabScalesTempFunc
+        End Get
+    End Property
+
     Public Shared ReadOnly Property clsXScaleDateFunction As RFunction
         Get
             Dim clsXScaleDateFunctionTemp As New RFunction
