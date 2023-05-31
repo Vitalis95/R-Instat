@@ -103,12 +103,34 @@ Public Class GgplotDefaults
         End Get
     End Property
 
+    Public Shared ReadOnly Property clsXScaleDiscreteFunction As RFunction
+        Get
+            Dim clsXlabScalesTempFunc As New RFunction
+
+            clsXlabScalesTempFunc.SetPackageName("ggplot2")
+
+            clsXlabScalesTempFunc.SetRCommand("scale_x_discrete")
+            Return clsXlabScalesTempFunc
+        End Get
+    End Property
+
     Public Shared ReadOnly Property clsYScalecontinuousFunction As RFunction
         Get
             Dim clsYlabScalesTempFunc As New RFunction
 
             clsYlabScalesTempFunc.SetPackageName("ggplot2")
             clsYlabScalesTempFunc.SetRCommand("scale_y_continuous")
+
+            Return clsYlabScalesTempFunc
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property clsYScaleDiscreteFunction As RFunction
+        Get
+            Dim clsYlabScalesTempFunc As New RFunction
+
+            clsYlabScalesTempFunc.SetPackageName("ggplot2")
+            clsYlabScalesTempFunc.SetRCommand("scale_y_discrete")
 
             Return clsYlabScalesTempFunc
         End Get
@@ -422,6 +444,14 @@ Public Class GgplotDefaults
         End Get
     End Property
 
+    Public Shared ReadOnly Property dctDropUnusedLevels As Dictionary(Of String, String)
+        Get
+            Dim dcttempDropUnusedLevels As New Dictionary(Of String, String)
+            dcttempDropUnusedLevels.Add("TRUE", Chr(34) & "TRUE" & Chr(34))
+            dcttempDropUnusedLevels.Add("FALSE", Chr(34) & "FALSE" & Chr(34))
+            Return dcttempDropUnusedLevels
+        End Get
+    End Property
 
     Public Shared ReadOnly Property dctXPosition As Dictionary(Of String, String)
         Get

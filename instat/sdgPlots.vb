@@ -31,7 +31,9 @@ Public Class sdgPlots
     Public clsFacetFunction As New RFunction
     Public clsXLabFunction As New RFunction
     Public clsXScalecontinuousFunction As New RFunction
+    Public clsXScaleDiscreteFunction As New RFunction
     Public clsYScalecontinuousFunction As New RFunction
+    Public clsYScaleDiscreteFunction As New RFunction
     Public clsXScaleDateFunction As New RFunction
     Public clsYScaleDateFunction As New RFunction
     Public clsYLabFunction As New RFunction
@@ -579,7 +581,7 @@ Public Class sdgPlots
         grpColourScale.Visible = False
     End Sub
 
-    Public Sub SetRCode(clsNewOperator As ROperator, clsNewCoordPolarFunction As RFunction, clsNewCoordPolarStartOperator As ROperator, clsNewYScalecontinuousFunction As RFunction, clsNewXScalecontinuousFunction As RFunction, clsNewLabsFunction As RFunction,
+    Public Sub SetRCode(clsNewOperator As ROperator, clsNewCoordPolarFunction As RFunction, clsNewCoordPolarStartOperator As ROperator, clsNewYScalecontinuousFunction As RFunction, clsNewYScaleDiscreteFunction As RFunction, clsNewXScalecontinuousFunction As RFunction, clsNewXScaleDiscreteFunction As RFunction, clsNewLabsFunction As RFunction,
                         clsNewXLabsTitleFunction As RFunction, clsNewYLabTitleFunction As RFunction, clsNewFacetFunction As RFunction, clsNewThemeFunction As RFunction, dctNewThemeFunctions As Dictionary(Of String, RFunction), ucrNewBaseSelector As ucrSelector,
                         bReset As Boolean, Optional clsNewGlobalAesFunction As RFunction = Nothing, Optional clsNewXScaleDateFunction As RFunction = Nothing, Optional clsNewYScaleDateFunction As RFunction = Nothing,
                         Optional clsNewScaleFillViridisFunction As RFunction = Nothing, Optional clsNewScaleColourViridisFunction As RFunction = Nothing, Optional strMainDialogGeomParameterNames() As String = Nothing, Optional clsNewAnnotateFunction As RFunction = Nothing,
@@ -603,7 +605,9 @@ Public Class sdgPlots
         clsXLabFunction = clsNewXLabsTitleFunction
         clsYLabFunction = clsNewYLabTitleFunction
         clsXScalecontinuousFunction = clsNewXScalecontinuousFunction
+        clsXScaleDiscreteFunction = clsNewXScaleDiscreteFunction
         clsYScalecontinuousFunction = clsNewYScalecontinuousFunction
+        clsYScaleDiscreteFunction = clsNewYScaleDiscreteFunction
         clsFacetFunction = clsNewFacetFunction
         clsThemeFunction = clsNewThemeFunction
         clsCoordPolarFunc = clsNewCoordPolarFunction
@@ -681,8 +685,8 @@ Public Class sdgPlots
         ucrInputYmax.SetRCode(clsAnnotateFunction, bReset, bCloneIfNeeded:=True)
         ucrInputAnnotationGeoms.SetRCode(clsAnnotateFunction, bReset, bCloneIfNeeded:=True)
         'axis controls
-        ucrXAxis.SetRCodeForControl(bIsXAxis:=True, strNewAxisType:=GetAxisType(True), clsNewXYlabTitleFunction:=clsXLabFunction, clsNewXYScaleContinuousFunction:=clsXScalecontinuousFunction, clsNewXYScaleDateFunction:=clsXScaleDateFunction, clsNewBaseOperator:=clsBaseOperator, bReset:=bReset, bCloneIfNeeded:=True)
-        ucrYAxis.SetRCodeForControl(bIsXAxis:=False, strNewAxisType:=GetAxisType(False), clsNewXYlabTitleFunction:=clsYLabFunction, clsNewXYScaleContinuousFunction:=clsYScalecontinuousFunction, clsNewBaseOperator:=clsBaseOperator, clsNewXYScaleDateFunction:=clsYScaleDateFunction, bReset:=bReset, bCloneIfNeeded:=True)
+        ucrXAxis.SetRCodeForControl(bIsXAxis:=True, strNewAxisType:=GetAxisType(True), clsNewXYlabTitleFunction:=clsXLabFunction, clsNewXYScaleContinuousFunction:=clsXScalecontinuousFunction, clsNewXYScaleDiscreteFunction:=clsXScaleDiscreteFunction, clsNewXYScaleDateFunction:=clsXScaleDateFunction, clsNewBaseOperator:=clsBaseOperator, bReset:=bReset, bCloneIfNeeded:=True)
+        ucrYAxis.SetRCodeForControl(bIsXAxis:=False, strNewAxisType:=GetAxisType(False), clsNewXYlabTitleFunction:=clsYLabFunction, clsNewXYScaleContinuousFunction:=clsYScalecontinuousFunction, clsNewXYScaleDiscreteFunction:=clsYScaleDiscreteFunction, clsNewBaseOperator:=clsBaseOperator, clsNewXYScaleDateFunction:=clsYScaleDateFunction, bReset:=bReset, bCloneIfNeeded:=True)
 
         'Themes tab
         SetRcodeForCommonThemesControls(bReset)
