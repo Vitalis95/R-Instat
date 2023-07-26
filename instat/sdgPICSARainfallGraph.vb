@@ -95,13 +95,19 @@ Public Class sdgPICSARainfallGraph
     Private clsAsDate As New RFunction
     Private clsAsDateYLimit As New RFunction
     Private clsAsNumeric As New RFunction
+    Private bReset As Boolean
+
 
     Private clsGeomRug As New RFunction
     Private Sub sdgPICSARainfallGraph_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        OpeningMode()
         autoTranslate(Me)
         ' Hide the rug tab
         tbPICSA.TabPages.Remove(tpRug)
+
+        If bReset Then
+            OpeningMode()
+        End If
+        bReset = False
     End Sub
 
     Public Sub InitialiseControls()
@@ -466,8 +472,8 @@ Public Class sdgPICSARainfallGraph
 
         ucrInputLabelXReg.SetDropDownStyleAsNonEditable()
         ucrInputLabelXReg.SetParameter(New RParameter("label.x.npc"))
-        dctLegendXPosition.Add("Middle", Chr(34) & "middle" & Chr(34))
         dctLegendXPosition.Add("Left", Chr(34) & "left" & Chr(34))
+        dctLegendXPosition.Add("Middle", Chr(34) & "middle" & Chr(34))
         dctLegendXPosition.Add("Centre", Chr(34) & "centre" & Chr(34))
         dctLegendXPosition.Add("Center", Chr(34) & "center" & Chr(34))
         dctLegendXPosition.Add("Right", 0.7)
@@ -476,18 +482,18 @@ Public Class sdgPICSARainfallGraph
 
         ucrInputLabelYReg.SetDropDownStyleAsNonEditable()
         ucrInputLabelYReg.SetParameter(New RParameter("label.y.npc"))
+        dctLegendYPosition.Add("Top", Chr(34) & "top" & Chr(34))
         dctLegendYPosition.Add("Middle", Chr(34) & "middle" & Chr(34))
         dctLegendYPosition.Add("Centre", Chr(34) & "centre" & Chr(34))
         dctLegendYPosition.Add("Center", Chr(34) & "center" & Chr(34))
-        dctLegendYPosition.Add("Top", Chr(34) & "top" & Chr(34))
         dctLegendYPosition.Add("Bottom", Chr(34) & "bottom" & Chr(34))
         ucrInputLabelYReg.SetItems(dctLegendYPosition)
         ucrInputLabelYReg.SetLinkedDisplayControl(lblLabelYReg)
 
         ucrInputLabelXCor.SetDropDownStyleAsNonEditable()
         ucrInputLabelXCor.SetParameter(New RParameter("label.x.npc"))
-        dctLegendXPositionSig.Add("Middle", Chr(34) & "middle" & Chr(34))
         dctLegendXPositionSig.Add("Left", Chr(34) & "left" & Chr(34))
+        dctLegendXPositionSig.Add("Middle", Chr(34) & "middle" & Chr(34))
         dctLegendXPositionSig.Add("Centre", Chr(34) & "centre" & Chr(34))
         dctLegendXPositionSig.Add("Center", Chr(34) & "center" & Chr(34))
         dctLegendXPositionSig.Add("Right", 0.7)
@@ -496,10 +502,10 @@ Public Class sdgPICSARainfallGraph
 
         ucrInputLabelYCor.SetDropDownStyleAsNonEditable()
         ucrInputLabelYCor.SetParameter(New RParameter("label.y.npc"))
+        dctLegendYPositionSig.Add("Top", Chr(34) & "top" & Chr(34))
         dctLegendYPositionSig.Add("Middle", Chr(34) & "middle" & Chr(34))
         dctLegendYPositionSig.Add("Centre", Chr(34) & "centre" & Chr(34))
         dctLegendYPositionSig.Add("Center", Chr(34) & "center" & Chr(34))
-        dctLegendYPositionSig.Add("Top", Chr(34) & "top" & Chr(34))
         dctLegendYPositionSig.Add("Bottom", Chr(34) & "bottom" & Chr(34))
         ucrInputLabelYCor.SetItems(dctLegendYPositionSig)
         ucrInputLabelYCor.SetLinkedDisplayControl(lblLabelYCor)
@@ -1059,6 +1065,7 @@ Public Class sdgPICSARainfallGraph
             ucrNudUpperLimit.Value = 31
             ucrInputYSpecifyLowerLimitDateMonth.SetName("January")
             ucrInputYSpecifyUpperLimitDateMonth.SetName("December")
+            tbPICSA.SelectedIndex = 0
         End If
     End Sub
 
