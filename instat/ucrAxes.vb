@@ -479,6 +479,20 @@ Public Class ucrAxes
             clsMajorBreaksSeqFunction.SetRCommand("seq")
         End If
 
+        If clsXYScaleDiscreteFunction.ContainsParameter("breaks") Then
+            clsTempBreaksParam = clsXYScaleDiscreteFunction.GetParameter("breaks")
+            If clsTempBreaksParam.clsArgumentCodeStructure IsNot Nothing Then
+                clsMajorBreaksSeqDiscreteFunction = clsTempBreaksParam.clsArgumentCodeStructure
+            Else
+                'TODO move to ggplot defaults
+                clsMajorBreaksSeqDiscreteFunction = New RFunction
+                clsMajorBreaksSeqDiscreteFunction.SetRCommand("seq")
+            End If
+        Else
+            clsMajorBreaksSeqDiscreteFunction = New RFunction
+            clsMajorBreaksSeqDiscreteFunction.SetRCommand("seq")
+        End If
+
         If clsXYScaleContinuousFunction.ContainsParameter("minor_breaks") Then
             clsTempMinorBreaksParam = clsXYScaleContinuousFunction.GetParameter("minor_breaks")
             If clsTempMinorBreaksParam.clsArgumentCodeStructure IsNot Nothing Then
