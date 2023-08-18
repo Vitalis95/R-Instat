@@ -114,6 +114,8 @@ Partial Class ucrAxes
         Me.ucrChkSecondaryAxis = New instat.ucrCheck()
         Me.ucrChkOffset = New instat.ucrCheck()
         Me.grpScaleDiscrete = New System.Windows.Forms.GroupBox()
+        Me.lblTo = New System.Windows.Forms.Label()
+        Me.lblFrom = New System.Windows.Forms.Label()
         Me.ucrNudTo = New instat.ucrNud()
         Me.ucrNudFrom = New instat.ucrNud()
         Me.ucrChkLimitsFrom = New instat.ucrCheck()
@@ -133,8 +135,6 @@ Partial Class ucrAxes
         Me.ucrChkLabelsDiscrete = New instat.ucrCheck()
         Me.ucrInputMajorBreaksLabelsDiscrete = New instat.ucrInputTextBox()
         Me.UcrPanel1 = New instat.UcrPanel()
-        Me.lblFrom = New System.Windows.Forms.Label()
-        Me.lblTo = New System.Windows.Forms.Label()
         Me.grpAxisTitle.SuspendLayout()
         Me.grpMajorBreaks.SuspendLayout()
         Me.grpScales.SuspendLayout()
@@ -989,17 +989,35 @@ Partial Class ucrAxes
         Me.grpScaleDiscrete.Controls.Add(Me.ucrChkDropUnusedLevels)
         Me.grpScaleDiscrete.Location = New System.Drawing.Point(9, 96)
         Me.grpScaleDiscrete.Name = "grpScaleDiscrete"
-        Me.grpScaleDiscrete.Size = New System.Drawing.Size(274, 228)
+        Me.grpScaleDiscrete.Size = New System.Drawing.Size(289, 176)
         Me.grpScaleDiscrete.TabIndex = 36
         Me.grpScaleDiscrete.TabStop = False
         Me.grpScaleDiscrete.Text = "Scales"
+        '
+        'lblTo
+        '
+        Me.lblTo.AutoSize = True
+        Me.lblTo.Location = New System.Drawing.Point(199, 22)
+        Me.lblTo.Name = "lblTo"
+        Me.lblTo.Size = New System.Drawing.Size(23, 13)
+        Me.lblTo.TabIndex = 34
+        Me.lblTo.Text = "To:"
+        '
+        'lblFrom
+        '
+        Me.lblFrom.AutoSize = True
+        Me.lblFrom.Location = New System.Drawing.Point(98, 24)
+        Me.lblFrom.Name = "lblFrom"
+        Me.lblFrom.Size = New System.Drawing.Size(33, 13)
+        Me.lblFrom.TabIndex = 33
+        Me.lblFrom.Text = "From:"
         '
         'ucrNudTo
         '
         Me.ucrNudTo.AutoSize = True
         Me.ucrNudTo.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudTo.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.ucrNudTo.Location = New System.Drawing.Point(131, 20)
+        Me.ucrNudTo.Location = New System.Drawing.Point(229, 19)
         Me.ucrNudTo.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudTo.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudTo.Name = "ucrNudTo"
@@ -1012,7 +1030,7 @@ Partial Class ucrAxes
         Me.ucrNudFrom.AutoSize = True
         Me.ucrNudFrom.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudFrom.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.ucrNudFrom.Location = New System.Drawing.Point(214, 20)
+        Me.ucrNudFrom.Location = New System.Drawing.Point(143, 19)
         Me.ucrNudFrom.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudFrom.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudFrom.Name = "ucrNudFrom"
@@ -1035,7 +1053,7 @@ Partial Class ucrAxes
         Me.ucrInputNaValueDiscrete.AutoSize = True
         Me.ucrInputNaValueDiscrete.IsMultiline = False
         Me.ucrInputNaValueDiscrete.IsReadOnly = False
-        Me.ucrInputNaValueDiscrete.Location = New System.Drawing.Point(191, 103)
+        Me.ucrInputNaValueDiscrete.Location = New System.Drawing.Point(191, 51)
         Me.ucrInputNaValueDiscrete.Name = "ucrInputNaValueDiscrete"
         Me.ucrInputNaValueDiscrete.Size = New System.Drawing.Size(78, 22)
         Me.ucrInputNaValueDiscrete.TabIndex = 27
@@ -1046,7 +1064,7 @@ Partial Class ucrAxes
         Me.ucrInputExpandDiscrete.AutoSize = True
         Me.ucrInputExpandDiscrete.IsMultiline = False
         Me.ucrInputExpandDiscrete.IsReadOnly = False
-        Me.ucrInputExpandDiscrete.Location = New System.Drawing.Point(191, 188)
+        Me.ucrInputExpandDiscrete.Location = New System.Drawing.Point(191, 136)
         Me.ucrInputExpandDiscrete.Name = "ucrInputExpandDiscrete"
         Me.ucrInputExpandDiscrete.Size = New System.Drawing.Size(78, 23)
         Me.ucrInputExpandDiscrete.TabIndex = 27
@@ -1057,7 +1075,7 @@ Partial Class ucrAxes
         Me.ucrInputPositionDiscrete.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ucrInputPositionDiscrete.GetSetSelectedIndex = -1
         Me.ucrInputPositionDiscrete.IsReadOnly = False
-        Me.ucrInputPositionDiscrete.Location = New System.Drawing.Point(191, 131)
+        Me.ucrInputPositionDiscrete.Location = New System.Drawing.Point(191, 79)
         Me.ucrInputPositionDiscrete.Name = "ucrInputPositionDiscrete"
         Me.ucrInputPositionDiscrete.Size = New System.Drawing.Size(78, 23)
         Me.ucrInputPositionDiscrete.TabIndex = 26
@@ -1066,7 +1084,7 @@ Partial Class ucrAxes
         '
         Me.ucrChkExpandDiscrete.AutoSize = True
         Me.ucrChkExpandDiscrete.Checked = False
-        Me.ucrChkExpandDiscrete.Location = New System.Drawing.Point(6, 188)
+        Me.ucrChkExpandDiscrete.Location = New System.Drawing.Point(6, 136)
         Me.ucrChkExpandDiscrete.Name = "ucrChkExpandDiscrete"
         Me.ucrChkExpandDiscrete.Size = New System.Drawing.Size(202, 23)
         Me.ucrChkExpandDiscrete.TabIndex = 23
@@ -1075,7 +1093,7 @@ Partial Class ucrAxes
         '
         Me.ucrChkPositionDiscrete.AutoSize = True
         Me.ucrChkPositionDiscrete.Checked = False
-        Me.ucrChkPositionDiscrete.Location = New System.Drawing.Point(6, 131)
+        Me.ucrChkPositionDiscrete.Location = New System.Drawing.Point(6, 79)
         Me.ucrChkPositionDiscrete.Name = "ucrChkPositionDiscrete"
         Me.ucrChkPositionDiscrete.Size = New System.Drawing.Size(202, 23)
         Me.ucrChkPositionDiscrete.TabIndex = 23
@@ -1084,7 +1102,7 @@ Partial Class ucrAxes
         '
         Me.ucrChkNaValueDiscrete.AutoSize = True
         Me.ucrChkNaValueDiscrete.Checked = False
-        Me.ucrChkNaValueDiscrete.Location = New System.Drawing.Point(6, 103)
+        Me.ucrChkNaValueDiscrete.Location = New System.Drawing.Point(6, 51)
         Me.ucrChkNaValueDiscrete.Name = "ucrChkNaValueDiscrete"
         Me.ucrChkNaValueDiscrete.Size = New System.Drawing.Size(202, 23)
         Me.ucrChkNaValueDiscrete.TabIndex = 23
@@ -1095,7 +1113,7 @@ Partial Class ucrAxes
         Me.ucrInputDropUnusedLevels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ucrInputDropUnusedLevels.GetSetSelectedIndex = -1
         Me.ucrInputDropUnusedLevels.IsReadOnly = False
-        Me.ucrInputDropUnusedLevels.Location = New System.Drawing.Point(191, 159)
+        Me.ucrInputDropUnusedLevels.Location = New System.Drawing.Point(191, 107)
         Me.ucrInputDropUnusedLevels.Name = "ucrInputDropUnusedLevels"
         Me.ucrInputDropUnusedLevels.Size = New System.Drawing.Size(78, 23)
         Me.ucrInputDropUnusedLevels.TabIndex = 29
@@ -1104,7 +1122,7 @@ Partial Class ucrAxes
         '
         Me.ucrChkDropUnusedLevels.AutoSize = True
         Me.ucrChkDropUnusedLevels.Checked = False
-        Me.ucrChkDropUnusedLevels.Location = New System.Drawing.Point(6, 160)
+        Me.ucrChkDropUnusedLevels.Location = New System.Drawing.Point(6, 108)
         Me.ucrChkDropUnusedLevels.Name = "ucrChkDropUnusedLevels"
         Me.ucrChkDropUnusedLevels.Size = New System.Drawing.Size(202, 23)
         Me.ucrChkDropUnusedLevels.TabIndex = 28
@@ -1192,24 +1210,6 @@ Partial Class ucrAxes
         Me.UcrPanel1.Name = "UcrPanel1"
         Me.UcrPanel1.Size = New System.Drawing.Size(335, 23)
         Me.UcrPanel1.TabIndex = 18
-        '
-        'lblFrom
-        '
-        Me.lblFrom.AutoSize = True
-        Me.lblFrom.Location = New System.Drawing.Point(94, 24)
-        Me.lblFrom.Name = "lblFrom"
-        Me.lblFrom.Size = New System.Drawing.Size(33, 13)
-        Me.lblFrom.TabIndex = 33
-        Me.lblFrom.Text = "From:"
-        '
-        'lblTo
-        '
-        Me.lblTo.AutoSize = True
-        Me.lblTo.Location = New System.Drawing.Point(187, 23)
-        Me.lblTo.Name = "lblTo"
-        Me.lblTo.Size = New System.Drawing.Size(23, 13)
-        Me.lblTo.TabIndex = 34
-        Me.lblTo.Text = "To:"
         '
         'ucrAxes
         '

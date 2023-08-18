@@ -425,6 +425,14 @@ Public Class ucrAxes
         End If
         ucrInputAxisType.SetName(strAxisType)
 
+        If bIsX Then
+            ucrInputPositionDiscrete.SetItems(New Dictionary(Of String, String)(GgplotDefaults.dctXPosition))
+            ucrInputPositionDiscrete.SetDefaultState("Bottom")
+        Else
+            ucrInputPositionDiscrete.SetItems(New Dictionary(Of String, String)(GgplotDefaults.dctYPosition))
+            ucrInputPositionDiscrete.SetDefaultState("Left")
+        End If
+
         clsXYScaleDateLimitFunction = New RFunction
         clsXYScaleDateLimitFunction.SetRCommand("c")
         clsXYScaleDateLimitFunction.AddParameter("from", clsRFunctionParameter:=ucrDtpLowerLimit.ValueAsRDate(), iPosition:=0)

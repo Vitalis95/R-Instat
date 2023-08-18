@@ -57,6 +57,20 @@ Public Class dlgLinePlot
     Private clsGgSlopeFunction As New RFunction
     Private clsSlopeThemeFunction As New RFunction
     Private clsDumbbellFunction As New RFunction
+    Private clsXLevelsFunction As New RFunction
+    Private clsYLevelsFunction As New RFunction
+    Private clsYScaleDiscreteFunction As New RFunction
+    Private clsXScaleDiscreteFunction As New RFunction
+    Private clsXConcatenateFunction As New RFunction
+    Private clsYConcatenateFunction As New RFunction
+    Private clsXLeftBracketOperator As New ROperator
+    Private clsXRightBracketOperator As New ROperator
+    Private clsYLeftBracketOperator As New ROperator
+    Private clsYRightBracketOperator As New ROperator
+    Private clsXSequenceOperator As New ROperator
+    Private clsYSequenceOperator As New ROperator
+    Private clsAttachFunction As New RFunction
+
 
     'Parameter names for geoms
     Private strFirstParameterName As String = "geomfunc"
@@ -454,6 +468,15 @@ Public Class dlgLinePlot
         clsPathFunction = New RFunction
         clsGeomStepFunction = New RFunction
         clsValleysFunction = New RFunction
+        clsXConcatenateFunction = New RFunction
+        clsYConcatenateFunction = New RFunction
+        clsXLeftBracketOperator = New ROperator
+        clsXRightBracketOperator = New ROperator
+        clsYLeftBracketOperator = New ROperator
+        clsYRightBracketOperator = New ROperator
+        clsXSequenceOperator = New ROperator
+        clsYSequenceOperator = New ROperator
+        clsAttachFunction = New RFunction
 
         ucrLinePlotSelector.Reset()
         ucrLinePlotSelector.SetGgplotFunction(clsBaseOperator)
@@ -491,12 +514,53 @@ Public Class dlgLinePlot
 
         clsSlopeThemeFunction.SetRCommand("slopegraph_theme")
 
+        clsAttachFunction.SetRCommand("attach")
+        clsAttachFunction.AddParameter("what", clsRFunctionParameter:=ucrLinePlotSelector.ucrAvailableDataFrames.clsCurrDataFrame)
+
+        clsXLevelsFunction.SetRCommand("levels")
+
+        clsYLevelsFunction.SetRCommand("levels")
+
+        clsXLeftBracketOperator.SetOperation("[")
+        clsXLeftBracketOperator.AddParameter("left", clsRFunctionParameter:=clsXLevelsFunction)
+        clsXLeftBracketOperator.bBrackets = False
+        clsXLeftBracketOperator.bSpaceAroundOperation = False
+
+        clsXRightBracketOperator.SetOperation("]")
+        clsXRightBracketOperator.bSpaceAroundOperation = False
+
+        clsXSequenceOperator.SetOperation(":")
+        clsXSequenceOperator.AddParameter("left", clsROperatorParameter:=clsXLeftBracketOperator)
+        clsXSequenceOperator.AddParameter("right", clsROperatorParameter:=clsXRightBracketOperator)
+        clsXSequenceOperator.bBrackets = False
+
+        clsXConcatenateFunction.SetRCommand("c")
+        clsXConcatenateFunction.AddParameter("x", clsROperatorParameter:=clsXSequenceOperator, bIncludeArgumentName:=False)
+
+        clsYLeftBracketOperator.SetOperation("[")
+        clsYLeftBracketOperator.AddParameter("left", clsRFunctionParameter:=clsYLevelsFunction)
+        clsYLeftBracketOperator.bBrackets = False
+        clsYLeftBracketOperator.bSpaceAroundOperation = False
+
+        clsYRightBracketOperator.SetOperation("]")
+        clsYRightBracketOperator.bSpaceAroundOperation = False
+
+        clsYSequenceOperator.SetOperation(":")
+        clsYSequenceOperator.AddParameter("left", clsROperatorParameter:=clsYLeftBracketOperator)
+        clsYSequenceOperator.AddParameter("right", clsROperatorParameter:=clsYRightBracketOperator)
+        clsYSequenceOperator.bBrackets = False
+
+        clsYConcatenateFunction.SetRCommand("c")
+        clsYConcatenateFunction.AddParameter("y", clsROperatorParameter:=clsYSequenceOperator, bIncludeArgumentName:=False)
+
         clsBaseOperator.AddParameter(GgplotDefaults.clsDefaultThemeParameter.Clone())
         clsXlabsFunction = GgplotDefaults.clsXlabTitleFunction.Clone()
         clsYlabFunction = GgplotDefaults.clsYlabTitleFunction.Clone
         clsLabsFunction = GgplotDefaults.clsDefaultLabs.Clone()
         clsXScalecontinuousFunction = GgplotDefaults.clsXScalecontinuousFunction.Clone()
         clsYScalecontinuousFunction = GgplotDefaults.clsYScalecontinuousFunction.Clone()
+        clsYScaleDiscreteFunction = GgplotDefaults.clsYScaleDiscreteFunction
+        clsXScaleDiscreteFunction = GgplotDefaults.clsXScaleDiscreteFunction
         clsRFacetFunction = GgplotDefaults.clsFacetFunction.Clone()
         clsCoordPolarStartOperator = GgplotDefaults.clsCoordPolarStartOperator.Clone()
         clsCoordPolarFunction = GgplotDefaults.clsCoordPolarFunction.Clone()
@@ -547,6 +611,7 @@ Public Class dlgLinePlot
         clsGeomSmoothFunc.AddParameter("se", "FALSE", iPosition:=1)
         clsBaseOperator.RemoveParameterByName("geom_point")
         clsBaseOperator.SetAssignTo("last_graph", strTempDataframe:=ucrLinePlotSelector.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempGraph:="last_graph")
+        ucrBase.clsRsyntax.AddToBeforeCodes(clsAttachFunction)
         ucrBase.clsRsyntax.SetBaseROperator(clsBaseOperator)
     End Sub
 
@@ -581,6 +646,7 @@ Public Class dlgLinePlot
         ucrChkSlopeLabelOptions.SetRCode(clsGgSlopeFunction, bReset)
         ucrChkSlopeTextOptions.SetRCode(clsGgSlopeFunction, bReset)
         ucrChkSlopeLineOptions.SetRCode(clsGgSlopeFunction, bReset)
+        AddDiscreteScale()
     End Sub
 
     Private Sub TestOkEnabled()
@@ -644,6 +710,7 @@ Public Class dlgLinePlot
 
     Private Sub ucrReceiverX_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrReceiverX.ControlValueChanged, ucrFactorOptionalReceiver.ControlValueChanged, ucrPnlOptions.ControlValueChanged
         SetGroupParam()
+        AddDiscreteScale()
     End Sub
 
     Private Sub SetGroupParam()
@@ -708,6 +775,39 @@ Public Class dlgLinePlot
         End If
     End Sub
 
+    Private Sub AddDiscreteScale()
+        If rdoLine.Checked OrElse rdoSmoothing.Checked Then
+            If Not ucrReceiverX.IsEmpty AndAlso (ucrReceiverX.strCurrDataType = "factor" OrElse ucrReceiverX.strCurrDataType = "ordered,factor") Then
+                clsXLevelsFunction.AddParameter("x", ucrReceiverX.GetVariableNames(False), bIncludeArgumentName:=False)
+                clsXLeftBracketOperator.AddParameter("left", clsRFunctionParameter:=clsXLevelsFunction, iPosition:=0)
+                clsXScaleDiscreteFunction.AddParameter("limits", clsRFunctionParameter:=clsXConcatenateFunction)
+            Else
+                clsXLeftBracketOperator.RemoveParameterByName("left")
+                clsXScaleDiscreteFunction.RemoveParameterByName("limits")
+                clsXLevelsFunction.RemoveParameterByName("x")
+            End If
+            If Not ucrVariablesAsFactorForLinePlot.IsEmpty AndAlso (ucrVariablesAsFactorForLinePlot.ucrSingleVariable.strCurrDataType = "factor" OrElse ucrVariablesAsFactorForLinePlot.ucrSingleVariable.strCurrDataType = "ordered,factor") Then
+                clsYLevelsFunction.AddParameter("y", ucrVariablesAsFactorForLinePlot.GetVariableNames(False), bIncludeArgumentName:=False)
+                clsYLeftBracketOperator.AddParameter("left", clsRFunctionParameter:=clsYLevelsFunction, iPosition:=0)
+                clsYScaleDiscreteFunction.AddParameter("limits", clsRFunctionParameter:=clsYConcatenateFunction)
+            Else
+                clsYScaleDiscreteFunction.RemoveParameterByName("limits")
+                clsYLeftBracketOperator.RemoveParameterByName("left")
+                clsYLevelsFunction.RemoveParameterByName("y")
+            End If
+        ElseIf rdoDumbbell.Checked OrElse rdoSlope.Checked Then
+            If Not ucrReceiverX.IsEmpty AndAlso (ucrReceiverX.strCurrDataType = "factor" OrElse ucrReceiverX.strCurrDataType = "ordered,factor") Then
+                clsXLevelsFunction.AddParameter("x", ucrReceiverX.GetVariableNames(False), bIncludeArgumentName:=False)
+                clsXLeftBracketOperator.AddParameter("left", clsRFunctionParameter:=clsXLevelsFunction, iPosition:=0)
+                clsXScaleDiscreteFunction.AddParameter("limits", clsRFunctionParameter:=clsXConcatenateFunction)
+            Else
+                clsXLeftBracketOperator.RemoveParameterByName("left")
+                clsXScaleDiscreteFunction.RemoveParameterByName("limits")
+                clsXLevelsFunction.RemoveParameterByName("x")
+            End If
+        End If
+    End Sub
+
     Private Sub ucrChkPathOrStep_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkPathOrStep.ControlValueChanged, ucrPnlStepOrPath.ControlValueChanged, ucrPnlOptions.ControlValueChanged, ucrChkSlopeLegend.ControlValueChanged
         SetGraphPrefixAndRcommand()
     End Sub
@@ -736,13 +836,15 @@ Public Class dlgLinePlot
         sdgPlots.SetRCode(clsNewOperator:=ucrBase.clsRsyntax.clsBaseOperator, clsNewYScalecontinuousFunction:=clsYScalecontinuousFunction, clsNewXScalecontinuousFunction:=clsXScalecontinuousFunction,
                                 clsNewXLabsTitleFunction:=clsXlabsFunction, clsNewYLabTitleFunction:=clsYlabFunction, clsNewLabsFunction:=clsLabsFunction, clsNewFacetFunction:=clsRFacetFunction,
                                 clsNewThemeFunction:=clsThemeFunction, dctNewThemeFunctions:=dctThemeFunctions, clsNewGlobalAesFunction:=clsRaesFunction, ucrNewBaseSelector:=ucrLinePlotSelector,
+                                clsNewYScaleDiscreteFunction:=clsYScaleDiscreteFunction, clsNewXScaleDiscreteFunction:=clsXScaleDiscreteFunction, clsNewXLevelsFunction:=clsXLevelsFunction, clsNewYLevelsFunction:=clsYLevelsFunction,
                                 clsNewCoordPolarFunction:=clsCoordPolarFunction, clsNewCoordPolarStartOperator:=clsCoordPolarStartOperator, clsNewXScaleDateFunction:=clsXScaleDateFunction, clsNewAnnotateFunction:=clsAnnotateFunction,
                                 clsNewScaleFillViridisFunction:=clsScaleFillViridisFunction, clsNewScaleColourViridisFunction:=clsScaleColourViridisFunction, clsNewYScaleDateFunction:=clsYScaleDateFunction,
+                                clsXNewLeftBracketOperator:=clsXLeftBracketOperator, clsXNewRightBracketOperator:=clsXRightBracketOperator, clsXNewConcatenateFunction:=clsXConcatenateFunction, clsYNewLeftBracketOperator:=clsYLeftBracketOperator,
+                                clsYNewRightBracketOperator:=clsYRightBracketOperator, clsYNewConcatenateFunction:=clsYConcatenateFunction, clsYNewSequenceOperator:=clsYSequenceOperator, clsXNewSequenceOperator:=clsXSequenceOperator,
                                 strMainDialogGeomParameterNames:=strGeomParameterNames, bReset:=bResetSubdialog)
         sdgPlots.ShowDialog()
         bResetSubdialog = False
     End Sub
-
     Private Sub PeakOptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PeakOptionsToolStripMenuItem.Click
         openSdgLayerOptions(clsPeakFunction)
     End Sub
