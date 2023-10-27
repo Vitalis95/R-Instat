@@ -245,6 +245,7 @@ Public Class sdgFormatSummaryTables
         Else
             clsPipeOperator.RemoveParameterByName("title_stub_footnote")
         End If
+        AddRemoveOperatorStub()
     End Sub
 
     Private Sub ucrInputTitle_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrInputTitle.ControlValueChanged
@@ -319,30 +320,18 @@ Public Class sdgFormatSummaryTables
     End Sub
 
     Private Sub PipeOperator_controlContentsChanged(ucrChangedControl As ucrCore) Handles ucrChkIncludeTitles.ControlContentsChanged,
-            ucrInputTitle.ControlContentsChanged, ucrInputTitleFootnote.ControlContentsChanged, ucrChkStubs.ControlContentsChanged, ucrInputStubs.ControlContentsChanged,
-            ucrInputStubsFootNote.ControlContentsChanged
-        If tbpFormatOptions.TabPages.Contains(tbpTitle) Then
-            If ucrChkIncludeTitles.Checked Then
-                If ucrInputTitle.IsEmpty AndAlso ucrInputSubtitle.IsEmpty AndAlso ucrInputTitleFootnote.IsEmpty AndAlso
-                    ucrInputSubtitleFootnote.IsEmpty Then
-                    clsJoiningOperator.RemoveParameterByName("pipe")
-                Else
-                    clsJoiningOperator.AddParameter("pipe", clsROperatorParameter:=clsPipeOperator, iPosition:=1)
-                End If
-            Else
+            ucrInputTitle.ControlContentsChanged, ucrInputTitleFootnote.ControlContentsChanged
+        If ucrChkIncludeTitles.Checked Then
+            If ucrInputTitle.IsEmpty AndAlso ucrInputSubtitle.IsEmpty AndAlso ucrInputTitleFootnote.IsEmpty AndAlso
+                ucrInputSubtitleFootnote.IsEmpty Then
                 clsJoiningOperator.RemoveParameterByName("pipe")
-            End If
-        ElseIf tbpFormatOptions.TabPages.Contains(tbpStubs) Then
-            If ucrChkStubs.Checked Then
-                If ucrInputStubs.IsEmpty AndAlso ucrInputStubsFootNote.IsEmpty Then
-                    clsJoiningOperator.RemoveParameterByName("pipe")
-                Else
-                    clsJoiningOperator.AddParameter("pipe", clsROperatorParameter:=clsPipeOperator, iPosition:=1)
-                End If
             Else
-                clsJoiningOperator.RemoveParameterByName("pipe")
+                clsJoiningOperator.AddParameter("pipe", clsROperatorParameter:=clsPipeOperator, iPosition:=1)
             End If
+        Else
+            clsJoiningOperator.RemoveParameterByName("pipe")
         End If
+
 
 
         'If ucrChkStubs.Checked Then
@@ -356,6 +345,17 @@ Public Class sdgFormatSummaryTables
         'End If
     End Sub
 
+    Private Sub AddRemoveOperatorStub()
+        If ucrChkStubs.Checked Then
+            If ucrInputStubs.IsEmpty AndAlso ucrInputStubsFootNote.IsEmpty Then
+                clsJoiningOperator.RemoveParameterByName("pipe")
+            Else
+                clsJoiningOperator.AddParameter("pipe", clsROperatorParameter:=clsPipeOperator, iPosition:=1)
+            End If
+        Else
+            clsJoiningOperator.RemoveParameterByName("pipe")
+        End If
+    End Sub
     Private Sub ucrThemesPanel_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrPnlThemesPanel.ControlValueChanged,
         ucrInputSelectThemes.ControlValueChanged
         If rdoManualTheme.Checked Then
@@ -408,6 +408,7 @@ Public Class sdgFormatSummaryTables
             clsStubFootnoteFunction.RemoveParameterByName("footnote")
         End If
         AddStubFootnote()
+        AddRemoveOperatorStub()
     End Sub
 
     Private Sub ucrChkFootNote_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkFootNote.ControlValueChanged
@@ -421,6 +422,7 @@ Public Class sdgFormatSummaryTables
 
     Private Sub ucrChkStubs_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkStubs.ControlValueChanged
         AddStub()
+        AddRemoveOperatorStub()
     End Sub
 
     'Private Sub tbpFormatOptions_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles tbpFormatOptions.Selecting
