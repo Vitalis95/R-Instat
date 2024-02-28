@@ -51,6 +51,10 @@ Partial Class dlgHistogram
         Me.toolStripMenuItemDensityOptions = New System.Windows.Forms.ToolStripMenuItem()
         Me.toolStripMenuItemDensityRidgesOptions = New System.Windows.Forms.ToolStripMenuItem()
         Me.toolStripMenuItemFrequencyPolygonOptions = New System.Windows.Forms.ToolStripMenuItem()
+        Me.lblReorder = New System.Windows.Forms.Label()
+        Me.ucrNudBinwidth = New instat.ucrNud()
+        Me.ucrChkBinWidth = New instat.ucrCheck()
+        Me.ucrInputAddReorder = New instat.ucrInputComboBox()
         Me.cmdOptions = New instat.ucrSplitButton()
         Me.ucrChkDisplayAsDotPlot = New instat.ucrCheck()
         Me.ucrChkRidges = New instat.ucrCheck()
@@ -62,8 +66,9 @@ Partial Class dlgHistogram
         Me.ucrHistogramSelector = New instat.ucrSelectorByDataFrameAddRemove()
         Me.ucrBase = New instat.ucrButtons()
         Me.ucrPnlOptions = New instat.UcrPanel()
-        Me.lblReorder = New System.Windows.Forms.Label()
-        Me.ucrInputAddReorder = New instat.ucrInputComboBox()
+        Me.ucrChkOmitYAxis = New instat.ucrCheck()
+        Me.ucrNudMinHeight = New instat.ucrNud()
+        Me.ucrChkMinHeight = New instat.ucrCheck()
         Me.ucrInputStation = New instat.ucrInputComboBox()
         Me.ucr1stFactorReceiver = New instat.ucrReceiverSingle()
         Me.lblFacetBy = New System.Windows.Forms.Label()
@@ -183,6 +188,49 @@ Partial Class dlgHistogram
         Me.toolStripMenuItemFrequencyPolygonOptions.Name = "toolStripMenuItemFrequencyPolygonOptions"
         Me.toolStripMenuItemFrequencyPolygonOptions.Size = New System.Drawing.Size(221, 22)
         Me.toolStripMenuItemFrequencyPolygonOptions.Text = "Frequency Polygon Options"
+        '
+        'lblReorder
+        '
+        Me.lblReorder.AutoSize = True
+        Me.lblReorder.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.lblReorder.Location = New System.Drawing.Point(286, 298)
+        Me.lblReorder.Name = "lblReorder"
+        Me.lblReorder.Size = New System.Drawing.Size(48, 13)
+        Me.lblReorder.TabIndex = 38
+        Me.lblReorder.Text = "Reorder:"
+        '
+        'ucrNudBinwidth
+        '
+        Me.ucrNudBinwidth.AutoSize = True
+        Me.ucrNudBinwidth.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.ucrNudBinwidth.Increment = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.ucrNudBinwidth.Location = New System.Drawing.Point(100, 262)
+        Me.ucrNudBinwidth.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
+        Me.ucrNudBinwidth.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.ucrNudBinwidth.Name = "ucrNudBinwidth"
+        Me.ucrNudBinwidth.Size = New System.Drawing.Size(50, 20)
+        Me.ucrNudBinwidth.TabIndex = 41
+        Me.ucrNudBinwidth.Value = New Decimal(New Integer() {0, 0, 0, 0})
+        '
+        'ucrChkBinWidth
+        '
+        Me.ucrChkBinWidth.AutoSize = True
+        Me.ucrChkBinWidth.Checked = False
+        Me.ucrChkBinWidth.Location = New System.Drawing.Point(10, 260)
+        Me.ucrChkBinWidth.Name = "ucrChkBinWidth"
+        Me.ucrChkBinWidth.Size = New System.Drawing.Size(153, 23)
+        Me.ucrChkBinWidth.TabIndex = 40
+        '
+        'ucrInputAddReorder
+        '
+        Me.ucrInputAddReorder.AddQuotesIfUnrecognised = True
+        Me.ucrInputAddReorder.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.ucrInputAddReorder.GetSetSelectedIndex = -1
+        Me.ucrInputAddReorder.IsReadOnly = False
+        Me.ucrInputAddReorder.Location = New System.Drawing.Point(287, 314)
+        Me.ucrInputAddReorder.Name = "ucrInputAddReorder"
+        Me.ucrInputAddReorder.Size = New System.Drawing.Size(120, 21)
+        Me.ucrInputAddReorder.TabIndex = 39
         '
         'cmdOptions
         '
@@ -305,26 +353,36 @@ Partial Class dlgHistogram
         Me.ucrPnlOptions.Size = New System.Drawing.Size(433, 30)
         Me.ucrPnlOptions.TabIndex = 0
         '
-        'lblReorder
+        'ucrChkOmitYAxis
         '
-        Me.lblReorder.AutoSize = True
-        Me.lblReorder.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.lblReorder.Location = New System.Drawing.Point(286, 298)
-        Me.lblReorder.Name = "lblReorder"
-        Me.lblReorder.Size = New System.Drawing.Size(48, 13)
-        Me.lblReorder.TabIndex = 38
-        Me.lblReorder.Text = "Reorder:"
+        Me.ucrChkOmitYAxis.AutoSize = True
+        Me.ucrChkOmitYAxis.Checked = False
+        Me.ucrChkOmitYAxis.Location = New System.Drawing.Point(10, 287)
+        Me.ucrChkOmitYAxis.Name = "ucrChkOmitYAxis"
+        Me.ucrChkOmitYAxis.Size = New System.Drawing.Size(153, 23)
+        Me.ucrChkOmitYAxis.TabIndex = 42
         '
-        'ucrInputAddReorder
+        'ucrNudMinHeight
         '
-        Me.ucrInputAddReorder.AddQuotesIfUnrecognised = True
-        Me.ucrInputAddReorder.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ucrInputAddReorder.GetSetSelectedIndex = -1
-        Me.ucrInputAddReorder.IsReadOnly = False
-        Me.ucrInputAddReorder.Location = New System.Drawing.Point(287, 314)
-        Me.ucrInputAddReorder.Name = "ucrInputAddReorder"
-        Me.ucrInputAddReorder.Size = New System.Drawing.Size(120, 21)
-        Me.ucrInputAddReorder.TabIndex = 39
+        Me.ucrNudMinHeight.AutoSize = True
+        Me.ucrNudMinHeight.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.ucrNudMinHeight.Increment = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.ucrNudMinHeight.Location = New System.Drawing.Point(100, 313)
+        Me.ucrNudMinHeight.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
+        Me.ucrNudMinHeight.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.ucrNudMinHeight.Name = "ucrNudMinHeight"
+        Me.ucrNudMinHeight.Size = New System.Drawing.Size(50, 20)
+        Me.ucrNudMinHeight.TabIndex = 44
+        Me.ucrNudMinHeight.Value = New Decimal(New Integer() {0, 0, 0, 0})
+        '
+        'ucrChkMinHeight
+        '
+        Me.ucrChkMinHeight.AutoSize = True
+        Me.ucrChkMinHeight.Checked = False
+        Me.ucrChkMinHeight.Location = New System.Drawing.Point(10, 311)
+        Me.ucrChkMinHeight.Name = "ucrChkMinHeight"
+        Me.ucrChkMinHeight.Size = New System.Drawing.Size(153, 23)
+        Me.ucrChkMinHeight.TabIndex = 43
         '
         'ucrInputStation
         '
@@ -387,6 +445,11 @@ Partial Class dlgHistogram
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(448, 461)
+        Me.Controls.Add(Me.ucrNudMinHeight)
+        Me.Controls.Add(Me.ucrChkMinHeight)
+        Me.Controls.Add(Me.ucrChkOmitYAxis)
+        Me.Controls.Add(Me.ucrNudBinwidth)
+        Me.Controls.Add(Me.ucrChkBinWidth)
         Me.Controls.Add(Me.ucrInputStation)
         Me.Controls.Add(Me.ucr1stFactorReceiver)
         Me.Controls.Add(Me.lblFacetBy)
@@ -447,9 +510,17 @@ Partial Class dlgHistogram
     Friend WithEvents toolStripMenuItemDotOptions As ToolStripMenuItem
     Friend WithEvents lblReorder As Label
     Friend WithEvents ucrInputAddReorder As ucrInputComboBox
+
+    Friend WithEvents ucrChkBinWidth As ucrCheck
+    Friend WithEvents ucrNudBinwidth As ucrNud
+    Friend WithEvents ucrChkOmitYAxis As ucrCheck
+    Friend WithEvents ucrNudMinHeight As ucrNud
+    Friend WithEvents ucrChkMinHeight As ucrCheck
+
     Friend WithEvents ucrInputStation As ucrInputComboBox
     Friend WithEvents ucr1stFactorReceiver As ucrReceiverSingle
     Friend WithEvents lblFacetBy As Label
     Friend WithEvents ucrInputLegendPosition As ucrInputComboBox
     Friend WithEvents ucrChkLegend As ucrCheck
+
 End Class
