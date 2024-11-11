@@ -30,6 +30,7 @@ Public Class clsDataFramePage
     Private _clsRDotNetDataFrame As DataFrame
     Private _lstColumns As List(Of clsColumnHeaderDisplay)
     Private _hasChanged As Boolean
+    Private _useColumnSelectionInDataView As Boolean
 
     Private ReadOnly Property iColumnIncrements As Integer
         Get
@@ -151,6 +152,7 @@ Public Class clsDataFramePage
         _iColumnStart = 1
         _iRowStart = 1
         _hasChanged = True
+        _useColumnSelectionInDataView = True
     End Sub
 
     ''' <summary>
@@ -184,6 +186,15 @@ Public Class clsDataFramePage
         End If
     End Sub
 
+    Public Property UseColumnSelectionInDataView() As Boolean
+        Get
+            Return _useColumnSelectionInDataView
+        End Get
+        Set(value As Boolean)
+            _useColumnSelectionInDataView = value
+        End Set
+    End Property
+
     Private Function GetNoOfRowPages() As Integer
         'Needs to be a function as the number of increments can be changed through options 
         Return Math.Ceiling(_iTotalRowCount / intRowIncrements)
@@ -194,6 +205,58 @@ Public Class clsDataFramePage
         Return Math.Ceiling(_iTotalColumnCount / iColumnIncrements)
     End Function
 
+    Public Sub Undo()
+        Dim clsUndoRFunction As New RFunction
+        clsUndoRFunction.SetRCommand(_clsRLink.strInstatDataObject & "$undo_last_action")
+        clsUndoRFunction.AddParameter("data_name", Chr(34) & _strDataFrameName & Chr(34))
+        _clsRLink.RunScript(clsUndoRFunction.ToScript)
+
+    End Sub
+
+    Public Function IsUndo(strCurrentDataFrame As String)
+        Dim clsIsUndoFunction As New RFunction
+        Dim expTemp As SymbolicExpression
+        clsIsUndoFunction.SetRCommand(_clsRLink.strInstatDataObject & "$is_undo")
+        clsIsUndoFunction.AddParameter("data_name", Chr(34) & strCurrentDataFrame & Chr(34))
+
+        If clsIsUndoFunction IsNot Nothing Then
+            expTemp = frmMain.clsRLink.RunInternalScriptGetValue(clsIsUndoFunction.ToScript(), bSilent:=True)
+            If expTemp IsNot Nothing AndAlso expTemp.AsCharacter(0) = "TRUE" Then
+                Return True
+            End If
+        End If
+
+        Return False
+    End Function
+
+    Public Sub DisableEnableUndo(bDisable As Boolean, strCurrentDataFrame As String)
+        Dim clsEnableDisableUndoRFunction As New RFunction
+        clsEnableDisableUndoRFunction.SetRCommand(_clsRLink.strInstatDataObject & "$set_enable_disable_undo")
+        clsEnableDisableUndoRFunction.AddParameter("data_name", Chr(34) & strCurrentDataFrame & Chr(34))
+
+        Dim strDisable As String = If(bDisable, "TRUE", "FALSE")
+        clsEnableDisableUndoRFunction.AddParameter("disable_undo", strDisable)
+        _clsRLink.RunScript(clsEnableDisableUndoRFunction.ToScript)
+
+    End Sub
+
+    Public Function HasUndoHistory()
+        Dim expTemp As SymbolicExpression
+        Dim bHasHistory As Boolean = False
+        Dim clsHasHistoryFunction As New RFunction
+
+        clsHasHistoryFunction.SetRCommand(_clsRLink.strInstatDataObject & "$has_undo_history")
+        clsHasHistoryFunction.AddParameter("data_name", Chr(34) & _strDataFrameName & Chr(34))
+        If clsHasHistoryFunction IsNot Nothing Then
+            expTemp = frmMain.clsRLink.RunInternalScriptGetValue(clsHasHistoryFunction.ToScript(), bSilent:=True)
+            If expTemp IsNot Nothing AndAlso expTemp.AsCharacter(0) = "TRUE" Then
+                bHasHistory = True
+            End If
+        End If
+
+        Return bHasHistory
+    End Function
+
     Private Function GetDataFrameFromRCommand() As DataFrame
         Dim clsGetDataFrameRFunction As New RFunction
         Dim expTemp As SymbolicExpression
@@ -201,7 +264,8 @@ Public Class clsDataFramePage
         clsGetDataFrameRFunction.SetRCommand(_clsRLink.strInstatDataObject & "$get_data_frame")
         clsGetDataFrameRFunction.AddParameter("convert_to_character", "TRUE")
         clsGetDataFrameRFunction.AddParameter("use_current_filter", "TRUE")
-        clsGetDataFrameRFunction.AddParameter("use_column_selection", "TRUE")
+        'TODO. why not apply or not the column selection at the R level.
+        clsGetDataFrameRFunction.AddParameter("use_column_selection", If(UseColumnSelectionInDataView, "TRUE", "FALSE"))
         clsGetDataFrameRFunction.AddParameter("max_cols", iColumnIncrements)
         clsGetDataFrameRFunction.AddParameter("max_rows", intRowIncrements)
         clsGetDataFrameRFunction.AddParameter("start_row", _iRowStart)
@@ -274,12 +338,16 @@ Public Class clsDataFramePage
             columnHeader.strTypeShortCode = "(L)"
             ' Structured columns e.g. "circular or bigz or bigq " are coded with "(S)"
         ElseIf strHeaderType.Contains("circular") OrElse strHeaderType.Contains("bigz") OrElse
-               strHeaderType.Contains("bigq") Then
+               strHeaderType.Contains("bigq") OrElse strHeaderType.Contains("polynomial") OrElse strHeaderType.Contains("roman") Then
             columnHeader.strTypeShortCode = "(S)"
         ElseIf strHeaderType.Contains("list") Then
             columnHeader.strTypeShortCode = "(LT)"
         ElseIf strHeaderType.Contains("complex") Then
             columnHeader.strTypeShortCode = "(CX)"
+        ElseIf strHeaderType.Contains("sfc_MULTIPOLYGON") OrElse strHeaderType.Contains("sfc") Then
+            columnHeader.strTypeShortCode = "(G)"
+        ElseIf strHeaderType.Contains("Timeseries") OrElse strHeaderType.Contains("ts") Then
+            columnHeader.strTypeShortCode = "(TS)"
             ' Types of data for specific Application areas e.g. survival are coded with "(A)"
             ' No examples implemented yet.
             'ElseIf strType.Contains() Then

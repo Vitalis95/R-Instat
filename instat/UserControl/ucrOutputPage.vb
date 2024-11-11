@@ -15,12 +15,17 @@
 ' along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Imports System.Runtime.InteropServices
-Imports RScript
+Imports RInsightF461
+
 ''' <summary>
 ''' Output page for R outputs
 ''' </summary>
 Public Class ucrOutputPage
     Private _checkBoxes As List(Of CheckBox)
+
+    ''' <summary> lastCheckedBox used to store a reference to a CheckBox control. </summary>
+    Private lastCheckedBox As CheckBox = Nothing
+
     Private _bCanReOrder As Boolean
     Private _bCanRename As Boolean
     Private _bCanDelete As Boolean
@@ -115,6 +120,15 @@ Public Class ucrOutputPage
     End Sub
 
     ''' <summary>
+    ''' Selects all check boxes on the page
+    ''' </summary>
+    Public Sub SelectAllCheckBoxes()
+        For Each checkbox In _checkBoxes
+            checkbox.Checked = True
+        Next
+    End Sub
+
+    ''' <summary>
     ''' Clears all outputs on the page
     ''' </summary>
     Public Sub ClearAllOutputs()
@@ -131,7 +145,12 @@ Public Class ucrOutputPage
     Public Sub AddNewOutput(outputElement As clsOutputElement, Optional bDisplayOutputInExternalViewer As Boolean = False)
         'add the script first. This applies to whether the output has an output or not or
         'whether it's just a script output
-        AddNewScript(outputElement)
+
+        'todo. temporary fix. Output element should always have an R script
+        If outputElement.Script IsNot Nothing Then
+            AddNewScript(outputElement)
+        End If
+
 
         'then add the output of the script if there is an output
         If Not String.IsNullOrEmpty(outputElement.Output) Then
@@ -159,28 +178,12 @@ Public Class ucrOutputPage
          .BorderStyle = BorderStyle.None
         }
 
+        Dim formattedRScript As List(Of clsRScriptElement) = outputElement.FormattedRScript
         'if settings are not available or both show commands and comments settings are enabled then just show the whole script
-        If frmMain.clsInstatOptions Is Nothing OrElse (frmMain.clsInstatOptions.bIncludeCommentDefault AndAlso frmMain.clsInstatOptions.bCommandsinOutput) Then
-            FillRichTextBoxWithFormatedRScript(richTextBox, outputElement.FormattedRScript)
+        If formattedRScript.Count > 0 Then
+            FillRichTextWithRScriptBasedOnSettings(richTextBox, formattedRScript)
         Else
-
-            'if either show commands or comments settings is enabled show the script that corresponds to either
-            If frmMain.clsInstatOptions.bIncludeCommentDefault Then
-                'show comments only
-                For Each line As clsRScriptElement In outputElement.FormattedRScript
-                    If line.Type = clsRToken.typToken.RComment Then
-                        AddFormatedTextToRichTextBox(richTextBox, line.Text, OutputFont.GetFontForScriptType(line.Type), OutputFont.GetColourForScriptType(line.Type))
-                    End If
-                Next
-
-            ElseIf frmMain.clsInstatOptions.bCommandsinOutput Then
-                'show command lines that are not comments
-                For Each line As clsRScriptElement In outputElement.FormattedRScript
-                    If Not (line.Type = clsRToken.typToken.RComment) Then
-                        AddFormatedTextToRichTextBox(richTextBox, line.Text, OutputFont.GetFontForScriptType(line.Type), OutputFont.GetColourForScriptType(line.Type))
-                    End If
-                Next
-            End If
+            AddFormatedTextToRichTextBox(richTextBox, outputElement.Script, OutputFont.RPresentationFont, OutputFont.RPresentationColour)
         End If
 
         'if no contents added just exit sub
@@ -194,6 +197,35 @@ Public Class ucrOutputPage
         SetRichTextBoxHeight(richTextBox)
         AddHandler richTextBox.KeyUp, AddressOf richTextBox_CopySelectedText
         AddHandler richTextBox.MouseLeave, AddressOf panelContents_MouseLeave
+    End Sub
+
+
+    'fills rich textbox with r script provided based on the global options provided
+    'if all disabled then richtext will not be filled
+    Private Sub FillRichTextWithRScriptBasedOnSettings(richTextBox As RichTextBox, formattedRScript As List(Of clsRScriptElement))
+        'if settings are not available or both show commands and comments settings are enabled then just show the whole script
+        If frmMain.clsInstatOptions Is Nothing OrElse (frmMain.clsInstatOptions.bIncludeCommentDefault AndAlso frmMain.clsInstatOptions.bCommandsinOutput) Then
+            FillRichTextBoxWithFormatedRScript(richTextBox, formattedRScript)
+        Else
+            'if either show commands or comments settings is enabled show the script that corresponds to either
+            If frmMain.clsInstatOptions.bIncludeCommentDefault Then
+                'show comments only
+                For Each line As clsRScriptElement In formattedRScript
+                    If line.Type = RToken.TokenTypes.RComment Then
+                        AddFormatedTextToRichTextBox(richTextBox, line.Text, OutputFont.GetFontForScriptType(line.Type), OutputFont.GetColourForScriptType(line.Type))
+                    End If
+                Next
+
+            ElseIf frmMain.clsInstatOptions.bCommandsinOutput Then
+                'show command lines that are not comments
+                For Each line As clsRScriptElement In formattedRScript
+                    If Not (line.Type = RToken.TokenTypes.RComment) Then
+                        AddFormatedTextToRichTextBox(richTextBox, line.Text, OutputFont.GetFontForScriptType(line.Type), OutputFont.GetColourForScriptType(line.Type))
+                    End If
+                Next
+            End If
+
+        End If
     End Sub
 
     Private Sub AddNewTextOutput(outputElement As clsOutputElement)
@@ -356,11 +388,10 @@ Public Class ucrOutputPage
         }
         panel.Controls.Add(checkBox)
         _checkBoxes.Add(checkBox)
+        AddHandler checkBox.CheckedChanged, AddressOf CheckBox_CheckedChanged
         AddHandler checkBox.Click, AddressOf checkButton_Click
         AddHandler checkBox.MouseLeave, AddressOf panelContents_MouseLeave
     End Sub
-
-
 
     ''' <summary>
     ''' Copies selected elements to clipboard
@@ -403,10 +434,23 @@ Public Class ucrOutputPage
     Private Sub AddElementToRichTextBox(element As clsOutputElement, richText As RichTextBox)
         Select Case element.OutputType
             Case OutputType.Script
-                FillRichTextBoxWithFormatedRScript(richText, element.FormattedRScript)
+                Dim formattedRScript As List(Of clsRScriptElement) = element.FormattedRScript
+                'if settings are not available or both show commands and comments settings are enabled then just show the whole script
+                If formattedRScript.Count > 0 Then
+                    FillRichTextWithRScriptBasedOnSettings(richText, formattedRScript)
+                Else
+                    AddFormatedTextToRichTextBox(richText, element.Script, OutputFont.RPresentationFont, OutputFont.RPresentationColour)
+                End If
             Case OutputType.TextOutput
-                'todo. check if output is file or not. if file, read the contents of the file
-                AddFormatedTextToRichTextBox(richText, element.Output, OutputFont.ROutputFont, OutputFont.ROutputColour)
+                Dim strOutput As String = ""
+                If element.IsFile Then
+                    For Each strLine As String In IO.File.ReadLines(element.Output)
+                        strOutput = strOutput & strLine & Environment.NewLine
+                    Next strLine
+                Else
+                    strOutput = element.Output
+                End If
+                AddFormatedTextToRichTextBox(richText, strOutput, OutputFont.ROutputFont, OutputFont.ROutputColour)
             Case OutputType.ImageOutput
                 Clipboard.Clear()
                 'todo. instead of copy paste, add image to rtf directly from file?
@@ -418,11 +462,7 @@ Public Class ucrOutputPage
     End Sub
 
     Private Function GetBitmapFromFile(strFilename As String) As Bitmap
-        Dim image As Bitmap
-        Using fs As New IO.FileStream(strFilename, IO.FileMode.Open)
-            image = New Bitmap(Drawing.Image.FromStream(fs))
-        End Using
-        Return image
+        Return New Bitmap(strFilename)
     End Function
 
     Private Sub AddFormatedTextToRichTextBox(richTextBox As RichTextBox, text As String, font As Font, colour As Color)
@@ -448,13 +488,47 @@ Public Class ucrOutputPage
         Next
     End Sub
 
-
     Private Sub SetRichTextBoxHeight(richTextBox As RichTextBox)
         richTextBox.Height = (richTextBox.GetLineFromCharIndex(richTextBox.Text.Length) + 1) * (richTextBox.Font.Height + richTextBox.Margin.Vertical) + 5
     End Sub
 
     Private Sub SetPictureBoxHeight(pictureBox As PictureBox)
         pictureBox.Height = pictureBox.Width / (pictureBox.Image.Width / pictureBox.Image.Height)
+    End Sub
+
+    Private Sub CheckBox_CheckedChanged(sender As Object, e As EventArgs)
+        Dim currentBox As CheckBox = DirectCast(sender, CheckBox)
+
+        If lastCheckedBox IsNot Nothing AndAlso Control.ModifierKeys = Keys.Shift Then
+            Dim startIndex As Integer = _checkBoxes.IndexOf(lastCheckedBox)
+            Dim endIndex As Integer = _checkBoxes.IndexOf(currentBox)
+
+            ' Toggle check state for checkboxes between startIndex and endIndex
+            For i As Integer = Math.Min(startIndex, endIndex) To Math.Max(startIndex, endIndex)
+                _checkBoxes(i).Checked = currentBox.Checked
+            Next
+        End If
+
+        lastCheckedBox = currentBox
+    End Sub
+
+    Private Sub CheckBox_MouseDown(sender As Object, e As MouseEventArgs)
+        Dim currentBox As CheckBox = DirectCast(sender, CheckBox)
+
+        If e.Button = MouseButtons.Left AndAlso Control.ModifierKeys = Keys.Shift Then
+            ' Deselect all checkboxes between lastCheckedBox and currentBox
+            Dim startIndex As Integer = _checkBoxes.IndexOf(lastCheckedBox)
+            Dim endIndex As Integer = _checkBoxes.IndexOf(currentBox)
+
+            For i As Integer = Math.Min(startIndex, endIndex) + 1 To Math.Max(startIndex, endIndex) - 1
+                _checkBoxes(i).Checked = False
+            Next
+        ElseIf currentBox.Checked AndAlso Not Control.ModifierKeys = Keys.Shift Then
+            ' Deselect the current checkbox if already checked without Shift key
+            currentBox.Checked = False
+        End If
+
+        lastCheckedBox = currentBox
     End Sub
 
     Private Sub checkButton_Click(sender As Object, e As EventArgs)

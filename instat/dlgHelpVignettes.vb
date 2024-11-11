@@ -40,6 +40,7 @@ Public Class dlgHelpVignettes
         Dim expPackageNames As SymbolicExpression
         Dim chrPackageNames As CharacterVector
 
+        ucrBase.iHelpTopicID = 695
         ucrPnlHelpVignettes.AddRadioButton(rdoHelp)
         ucrPnlHelpVignettes.AddRadioButton(rdoVignettes)
 
@@ -91,6 +92,7 @@ Public Class dlgHelpVignettes
         If strPackageName <> "" Then
             Dim strURL = clsFileUrlUtilities.GetHelpFileURL(strPackageName:=strPackageName, strTopic:=strTopic,
                                                           bVignette:=rdoVignettes.Checked)
+            Dim frmMaximiseOutput As New frmMaximiseOutput
             frmMaximiseOutput.Show(strFileName:=strURL, bReplace:=False)
         End If
     End Sub

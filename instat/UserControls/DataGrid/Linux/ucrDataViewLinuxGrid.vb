@@ -29,7 +29,13 @@ Public Class ucrDataViewLinuxGrid
 
     Public Event DeleteValueToDataframe() Implements IDataViewGrid.DeleteValuesToDataframe
 
+    Public Event EditCell() Implements IDataViewGrid.EditCell
+
+    Public Event FindRow() Implements IDataViewGrid.FindRow
+
     Public Event WorksheetChanged() Implements IDataViewGrid.WorksheetChanged
+
+    Public Event WorksheetInserted() Implements IDataViewGrid.WorksheetInserted
 
     Public Event WorksheetRemoved(worksheet As clsWorksheetAdapter) Implements IDataViewGrid.WorksheetRemoved
 
@@ -65,11 +71,23 @@ Public Class ucrDataViewLinuxGrid
         Next
     End Sub
 
+    Public Sub FocusGrid() Implements IDataViewGrid.Focus
+        Me.Focus()
+    End Sub
+
     Public Function SelectedTab() As String
         If tcTabs.SelectedTab Is Nothing Then
             Return ""
         End If
         Return tcTabs.SelectedTab.Text
+    End Function
+
+    Public Function GetFirstRowHeader() As String Implements IDataViewGrid.GetFirstRowHeader
+        Return ""
+    End Function
+
+    Public Function GetLastRowHeader() As String Implements IDataViewGrid.GetLastRowHeader
+        Return ""
     End Function
 
     Public Function GetWorksheetCount() As Integer Implements IDataViewGrid.GetWorksheetCount
@@ -102,6 +120,10 @@ Public Class ucrDataViewLinuxGrid
                         GetCurrentDataFrameFocus().clsVisibleDataFramePage.lstColumns(dataGrid.CurrentCell.ColumnIndex).strName,
                         GetCurrentDataFrameFocus().clsVisibleDataFramePage.RowNames()(dataGrid.CurrentCell.RowIndex))
         RefreshSingleCell(dataGrid.CurrentCell.ColumnIndex, dataGrid.CurrentCell.RowIndex)
+    End Sub
+
+    Public Sub AdjustColumnWidthAfterWrapping(strColumn As String, Optional bApplyWrap As Boolean = False) Implements IDataViewGrid.AdjustColumnWidthAfterWrapping
+
     End Sub
 
     'ToDo allow editing
@@ -151,5 +173,13 @@ Public Class ucrDataViewLinuxGrid
     Private Sub RefreshSingleCell(iColumn As Integer, iRow As Integer)
         Dim dataGrid = GetDataGridFromSelectedTab()
         dataGrid.Rows(iRow).Cells(iColumn).Value = GetCurrentDataFrameFocus.DisplayedData(iRow, iColumn)
+    End Sub
+
+    Public Sub SearchRowInGrid(rowNumbers As List(Of Integer), strColumn As String, Optional iRow As Integer = 0,
+                            Optional bApplyToRows As Boolean = False) Implements IDataViewGrid.SearchRowInGrid
+    End Sub
+
+    Public Sub SelectColumnInGrid(strColumn As String) Implements IDataViewGrid.SelectColumnInGrid
+
     End Sub
 End Class
