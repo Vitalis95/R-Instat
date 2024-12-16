@@ -1044,19 +1044,19 @@ Public Class dlgDescribeTwoVariable
                 If ucrChkSwapXYVar.Checked Then
                     ucrBase.Location = New Point(iUcrBaseXLocation, 400)
                     Me.Size = New Point(iDialogueXsize, 500)
-                    cmdFormatTable.Location = New Point(326, 350)
+                    'cmdFormatTable.Location = New Point(326, 370)
                 Else
                     ucrBase.Location = New Point(iUcrBaseXLocation, 487)
                     Me.Size = New Point(iDialogueXsize, 580)
-                    cmdFormatTable.Location = New Point(326, 423)
+                    cmdFormatTable.Location = New Point(326, 450)
                 End If
             ElseIf IsNumericByFactor() Then
                 ucrBase.Location = New Point(iUcrBaseXLocation, 319)
                 Me.Size = New Point(iDialogueXsize, 415)
             ElseIf IsFactorByFactor() Then
-                ucrBase.Location = New Point(iUcrBaseXLocation, 392)
+                ucrBase.Location = New Point(iUcrBaseXLocation, 395)
                 Me.Size = New Point(iDialogueXsize, 485)
-                cmdFormatTable.Location = New Point(326, 330)
+                cmdFormatTable.Location = New Point(326, 370)
             Else
                 ucrBase.Location = New Point(iUcrBaseXLocation, 328)
                 Me.Size = New Point(iDialogueXsize, 425)
