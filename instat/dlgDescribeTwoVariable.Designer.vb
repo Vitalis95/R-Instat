@@ -110,7 +110,7 @@ Partial Class dlgDescribeTwoVariable
         'cmdFormatTable
         '
         Me.cmdFormatTable.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.cmdFormatTable.Location = New System.Drawing.Point(334, 430)
+        Me.cmdFormatTable.Location = New System.Drawing.Point(342, 430)
         Me.cmdFormatTable.Name = "cmdFormatTable"
         Me.cmdFormatTable.Size = New System.Drawing.Size(104, 23)
         Me.cmdFormatTable.TabIndex = 23

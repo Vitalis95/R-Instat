@@ -48,6 +48,7 @@ Partial Class dlgOneVariableSummarise
         Me.rdoVariable = New System.Windows.Forms.RadioButton()
         Me.rdoSummary = New System.Windows.Forms.RadioButton()
         Me.grpColumns = New System.Windows.Forms.GroupBox()
+        Me.ucrPnlColumnFactor = New instat.UcrPanel()
         Me.cmdFormatTable = New System.Windows.Forms.Button()
         Me.ucrReorderSummary = New instat.ucrReorder()
         Me.ucrSaveSummary = New instat.ucrSave()
@@ -57,7 +58,6 @@ Partial Class dlgOneVariableSummarise
         Me.ucrSelectorOneVarSummarise = New instat.ucrSelectorByDataFrameAddRemove()
         Me.ucrReceiverOneVarSummarise = New instat.ucrReceiverMultiple()
         Me.ucrBase = New instat.ucrButtons()
-        Me.ucrPnlColumnFactor = New instat.UcrPanel()
         Me.ucrChkDisplayMissing = New instat.ucrCheck()
         Me.ucrInputDisplayMissing = New instat.ucrInputComboBox()
         Me.grpColumns.SuspendLayout()
@@ -203,10 +203,18 @@ Partial Class dlgOneVariableSummarise
         Me.grpColumns.TabStop = False
         Me.grpColumns.Text = "Columns:"
         '
+        'ucrPnlColumnFactor
+        '
+        Me.ucrPnlColumnFactor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.ucrPnlColumnFactor.Location = New System.Drawing.Point(6, 12)
+        Me.ucrPnlColumnFactor.Name = "ucrPnlColumnFactor"
+        Me.ucrPnlColumnFactor.Size = New System.Drawing.Size(137, 65)
+        Me.ucrPnlColumnFactor.TabIndex = 29
+        '
         'cmdFormatTable
         '
         Me.cmdFormatTable.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.cmdFormatTable.Location = New System.Drawing.Point(317, 393)
+        Me.cmdFormatTable.Location = New System.Drawing.Point(327, 393)
         Me.cmdFormatTable.Name = "cmdFormatTable"
         Me.cmdFormatTable.Size = New System.Drawing.Size(104, 23)
         Me.cmdFormatTable.TabIndex = 37
@@ -295,14 +303,6 @@ Partial Class dlgOneVariableSummarise
         Me.ucrBase.Name = "ucrBase"
         Me.ucrBase.Size = New System.Drawing.Size(408, 52)
         Me.ucrBase.TabIndex = 11
-        '
-        'ucrPnlColumnFactor
-        '
-        Me.ucrPnlColumnFactor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ucrPnlColumnFactor.Location = New System.Drawing.Point(6, 12)
-        Me.ucrPnlColumnFactor.Name = "ucrPnlColumnFactor"
-        Me.ucrPnlColumnFactor.Size = New System.Drawing.Size(137, 65)
-        Me.ucrPnlColumnFactor.TabIndex = 29
         '
         'ucrChkDisplayMissing
         '
