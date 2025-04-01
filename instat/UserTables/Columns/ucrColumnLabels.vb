@@ -91,44 +91,63 @@ Public Class ucrColumnLabels
     End Sub
 
     Private Sub DataGridView1_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dataGridColLabels.CellValueChanged
-        If dataGridColLabels.Rows.Count = 0 Then
-            Exit Sub
-        End If
+        If dataGridColLabels.Rows.Count = 0 Then Exit Sub
+
         ' Ensure the changed cell is in the "new_name" column
         If e.ColumnIndex = dataGridColLabels.Columns("colCodnition").Index Then
             Dim rowIndex As Integer = e.RowIndex
             Dim oldName As String = dataGridColLabels.Rows(rowIndex).Cells("colLabel").Value?.ToString()
             Dim newName As String = dataGridColLabels.Rows(rowIndex).Cells("colCodnition").Value?.ToString()
+
             If oldName.Contains("-") Then
                 oldName = "`" & oldName & "`"
             End If
-            clsRenameFunction.AddParameter(newName, oldName)
-            ' Store the changed row with both old and new values
-            'changedRows(rowIndex) = Tuple.Create(oldName, newName)
+
+            ' Ensure clsRenameFunction is cleared before adding new parameters
+            clsRenameFunction.clsParameters.Clear()
+            clsRenameFunction.AddParameter(strParameterName:=newName, oldName)
+
+            ' Update the operator
+            SetValuesToOperator()
         End If
     End Sub
+
 
 
     Public Sub SetValuesToOperator()
-        clsTablesUtils.RemoveRFunctionsParamsWithRCommand({"cols_label"}, clsOperator)
+        ' Clear previous parameters
+        clsOperator.clsParameters.Clear()
 
-        If dataGridColLabels.Rows.Count = 0 Then
-            Exit Sub
-        End If
+        If dataGridColLabels.Rows.Count = 0 Then Exit Sub
 
-        Dim clsColsLabelRFunction As New RFunction
-        clsColsLabelRFunction.SetPackageName("gt")
-        clsColsLabelRFunction.SetRCommand("cols_label")
+        ' Reset rename function
+        clsRenameFunction.SetPackageName("dplyr")
+        clsRenameFunction.SetRCommand("rename")
 
-        For index As Integer = 0 To dataGridColLabels.Rows.Count - 1
-            If dataGridColLabels.Rows.Item(index).Tag IsNot Nothing Then
-                Dim clsRParam As RParameter = dataGridColLabels.Rows.Item(index).Tag
-                clsColsLabelRFunction.AddParameter(clsRParam)
+        ' Ensure rename function has correct parameters
+        For Each row As DataGridViewRow In dataGridColLabels.Rows
+            If row.Cells(0).Value IsNot Nothing AndAlso row.Cells(1).Value IsNot Nothing Then
+                Dim oldName As String = row.Cells(0).Value.ToString()
+                Dim newName As String = row.Cells(1).Value.ToString()
+
+                If oldName.Contains("-") Then
+                    oldName = "`" & oldName & "`"
+                End If
+
+                clsRenameFunction.AddParameter(strParameterName:=newName, oldName)
             End If
         Next
 
-        clsOperator.AddParameter(New RParameter(strParameterName:="cols_label_param", strParamValue:=clsColsLabelRFunction, bNewIncludeArgumentName:=False))
+        ' Ensure rename is applied to last_table$`_data`
+        Dim clsPipeOperator As New ROperator
+        clsPipeOperator.SetOperation("%>%")
+        clsPipeOperator.AddParameter("left", ucrReceiverSingleCol.GetVariableNames(False) & "$`_data`", iPosition:=0)
+        clsPipeOperator.AddParameter("right", clsRFunctionParameter:=clsRenameFunction, iPosition:=1)
+
+        ' Add the final assignment to the operator
+        clsOperator.AddParameter(New RParameter("rename_command", clsPipeOperator, False))
     End Sub
+
 
     Private Sub ucrReceiverSingleCol_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrReceiverSingleCol.ControlValueChanged
         Dim clsGetRObject As New RFunction
@@ -149,6 +168,7 @@ Public Class ucrColumnLabels
         For i = 0 To lstObjectss.Count - 1
             dataGridColLabels.Rows(i).Cells(0).Value = lstObjectss(i).AsCharacter(0)
         Next
-
+        SetValuesToOperator()
     End Sub
+
 End Class
