@@ -93,7 +93,7 @@ Public Class sdgOptions
 
     End Sub
 
-    Private Sub ucrPnlBins_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrPnlBins.ControlValueChanged
+    Private Sub ucrPnlBins_ControlValueChanged(ucrChangedControl As ucrCore)
         AddCustomBinsParmeter()
     End Sub
 
@@ -161,20 +161,20 @@ Public Class sdgOptions
         AddNumberOfBinsParameter()
     End Sub
 
-    'Private Sub AddByMonthParameter()
-    '    If rdoAutoCalculate.Checked Then
-    '        If ucrChkCalcByMonth.Checked Then
-    '            clsDoFillingFunction.AddParameter("by_month  ", "TRUE", iPosition:=112)
-    '        Else
-    '            clsDoFillingFunction.RemoveParameterByName("by_month")
-    '        End If
-    '    Else
-    '        clsDoFillingFunction.RemoveParameterByName("by_month")
-    '    End If
-    'End Sub
+    Private Sub AddByMonthParameter()
+        If rdoAutoCalculate.Checked Then
+            If ucrChkCalcByMonth.Checked Then
+                clsDoFillingFunction.AddParameter("by_month  ", "TRUE", iPosition:=112)
+            Else
+                clsDoFillingFunction.RemoveParameterByName("by_month")
+            End If
+        Else
+            clsDoFillingFunction.RemoveParameterByName("by_month")
+        End If
+    End Sub
 
-    'Private Sub ucrChkCalcByMonth_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkCalcByMonth.ControlValueChanged
-    '    AddByMonthParameter()
-    'End Sub
+    Private Sub ucrChkCalcByMonth_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkCalcByMonth.ControlValueChanged
+        AddByMonthParameter()
+    End Sub
 
 End Class
