@@ -85,7 +85,6 @@ Public Class ucrColumnLabels
         dataGridColLabels.Rows.Clear()
     End Sub
 
-
     Private Sub ucrColSpanner_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrReceiverSingleCol.ControlContentsChanged, ucrInputColLabel.ControlContentsChanged
         btnAddLabel.Enabled = Not ucrReceiverSingleCol.IsEmpty AndAlso Not ucrInputColLabel.IsEmpty
     End Sub
@@ -144,8 +143,12 @@ Public Class ucrColumnLabels
         clsPipeOperator.AddParameter("left", ucrReceiverSingleCol.GetVariableNames(False) & "$`_data`", iPosition:=0)
         clsPipeOperator.AddParameter("right", clsRFunctionParameter:=clsRenameFunction, iPosition:=1)
 
+        Dim clsGtFunction As New RFunction
+        clsGtFunction.SetPackageName("gt")
+        clsGtFunction.SetRCommand("gt")
+        clsGtFunction.AddParameter("data", clsROperatorParameter:=clsPipeOperator, bIncludeArgumentName:=False)
         ' Add the final assignment to the operator
-        clsOperator.AddParameter(New RParameter("rename_command", clsPipeOperator, False))
+        clsOperator.AddParameter(New RParameter("rename_command", clsGtFunction, False))
     End Sub
 
 
