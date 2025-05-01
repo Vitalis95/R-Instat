@@ -19,8 +19,14 @@ Imports RDotNet
 
 Public Class dlgImportfromClimMob
     Private clsKeysFunction, clsClimmobFunction, clsProjectsFunction, clsDplyrFunction, clsSecondDplyrFunction As New RFunction
+    Public clsSetColumnSelection, clsListCoFunction, clsList1CoFunction, clsList1Function, clsListFunction, clsList2Function, clsGetDataFrameFunction, clsTricotDataFunction, clsAddColumnSelection As New RFunction
+
     Private bFirstLoad As Boolean = True
+    Private bKeyRetrieved As Boolean = False
+    Private bFormsFound As Boolean = False
+
     Private bReset As Boolean = True
+    Private bResetSubdialog = False
     Private clsFirstOperator, clsKeysOverallFunction As New ROperator
     Private clsSecondOperator As New ROperator
     Private clsThirdOperator As New ROperator
@@ -53,7 +59,7 @@ Public Class dlgImportfromClimMob
         ucrInputChooseForm.bAllowNonConditionValues = True
 
         ucrChkDefineTricotData.SetText("Define Tricot Data")
-        ucrChkDefineTricotData.Enabled = False
+        'ucrChkDefineTricotData.Enabled = False
 
         cmdTricotData.Visible = False
 
@@ -70,6 +76,12 @@ Public Class dlgImportfromClimMob
         clsProjectsFunction = New RFunction
         clsDplyrFunction = New RFunction
         clsSecondDplyrFunction = New RFunction
+        clsSetColumnSelection = New RFunction
+        clsTricotDataFunction = New RFunction
+        clsAddColumnSelection = New RFunction
+        clsGetDataFrameFunction = New RFunction
+        clsList1Function = New RFunction
+
         clsKeysOverallFunction = New ROperator
         clsFirstOperator = New ROperator
         clsSecondOperator = New ROperator
@@ -131,6 +143,39 @@ Public Class dlgImportfromClimMob
         clsSecondDplyrFunction.SetRCommand("pull")
         clsSecondDplyrFunction.AddParameter("project", "user_owner", bIncludeArgumentName:=False)
 
+        clsTricotDataFunction.SetPackageName("databook")
+        clsTricotDataFunction.SetRCommand("create_tricot_data")
+        clsTricotDataFunction.AddParameter("id_col", Chr(34) & "id" & Chr(34))
+
+        clsList1CoFunction.SetRCommand("list")
+        clsList1CoFunction.AddParameter("ignore.case", "FALSE", iPosition:=1)
+
+        clsListCoFunction.SetRCommand("list")
+        clsListCoFunction.AddParameter("operation", Chr(34) & "tidyselect::ends_with" & Chr(34), iPosition:=0)
+        clsListCoFunction.AddParameter("parameters", clsRFunctionParameter:=clsList1CoFunction, iPosition:=1)
+        clsListCoFunction.AddParameter("negation", "TRUE", iPosition:=3)
+
+
+        clsList2Function.SetRCommand("list")
+        clsList2Function.AddParameter("ignore.case", "FALSE", iPosition:=1)
+
+        clsList1Function.SetRCommand("list")
+        clsList1Function.AddParameter("operation", Chr(34) & "tidyselect::ends_with" & Chr(34), iPosition:=0)
+        clsList1Function.AddParameter("parameters", clsRFunctionParameter:=clsList2Function, iPosition:=1)
+        clsList1Function.AddParameter("negation", "TRUE", iPosition:=3)
+
+        clsListFunction.SetRCommand("list")
+        clsListFunction.AddParameter("C0", clsRFunctionParameter:=clsListCoFunction, iPosition:=0)
+        clsListFunction.AddParameter("C1", clsRFunctionParameter:=clsList1Function, iPosition:=1)
+
+        clsAddColumnSelection.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$ add_column_selection")
+        clsAddColumnSelection.AddParameter("name", Chr(34) & "remove_traits" & Chr(34), iPosition:=2)
+        clsAddColumnSelection.AddParameter("column_selection", clsRFunctionParameter:=clsListFunction, iPosition:=3)
+
+        clsSetColumnSelection.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$ set_current_column_selection")
+        clsSetColumnSelection.AddParameter("name", Chr(34) & "remove_traits" & Chr(34), iPosition:=2)
+
+
         ucrBase.clsRsyntax.SetBaseRFunction(clsClimmobFunction)
     End Sub
 
@@ -164,14 +209,36 @@ Public Class dlgImportfromClimMob
         End If
     End Sub
 
+    Private Sub YourFormName_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' Only disable on first load, otherwise restore last known state
+        If Not bKeyRetrieved Then
+            cmdFindForms.Enabled = False
+        Else
+            cmdFindForms.Enabled = True
+        End If
+
+        If Not bFormsFound Then
+            ucrChkDefineTricotData.Enabled = False
+        Else
+            ucrChkDefineTricotData.Enabled = True
+        End If
+    End Sub
+
     Private Sub cmdChooseFile_Click(sender As Object, e As EventArgs) Handles cmdKey.Click
         sdgImportFromClimMob.Setup(clsKeysFunction.GetParameter("key"))
         sdgImportFromClimMob.ShowDialog()
+
+        ' Enable Find Forms
+        cmdFindForms.Enabled = True
+        bKeyRetrieved = True
     End Sub
 
     Private Sub cmdTricotData_Click(sender As Object, e As EventArgs) Handles cmdTricotData.Click
         'sdgDefineTricotData.Setup(clsKeysFunction.GetParameter("key"))
+        sdgDefineTricotData.SetRCode(clsNewRSyntax:=ucrBase.clsRsyntax, clsNewAddColumnSelection:=clsAddColumnSelection, clsNewGetDataFrameFunction:=clsGetDataFrameFunction, clsNewList2Function:=clsList2Function, clsNewListFunction:=clsListFunction, clsNewSetColumnSelection:=clsSetColumnSelection, clsNewList1Function:=clsList1Function,
+                                     clsNewTricotDataFunction:=clsTricotDataFunction, clsNewListCoFunction:=clsListCoFunction, clsNewList1CoFunction:=clsListCoFunction, bReset:=bResetSubdialog)
         sdgDefineTricotData.ShowDialog()
+        bResetSubdialog = False
     End Sub
 
     Private Sub ucrInputServerName_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrInputServerName.ControlContentsChanged
@@ -202,6 +269,10 @@ Public Class dlgImportfromClimMob
         Else
             ucrInputChooseForm.cboInput.Items.Clear()
         End If
+
+        ' Enable the checkbox
+        ucrChkDefineTricotData.Enabled = True
+        bFormsFound = True
     End Sub
 
     Private Sub ucrChkDefineTricotData_ControlContentsChanged(ucrChangedControl As ucrCore) Handles ucrChkDefineTricotData.ControlContentsChanged
