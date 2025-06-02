@@ -14,7 +14,7 @@
     <AssemblyName>instat</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile>
@@ -227,6 +227,7 @@
     <Compile Include="clsTransformationControl.vb" />
     <Compile Include="clsTransformationRModel.vb" />
     <Compile Include="clsColumnSelectionUtility.vb" />
+    <Compile Include="controls\ucrInput.vb" />
     <Compile Include="dlgApsimx.Designer.vb">
       <DependentUpon>dlgApsimx.vb</DependentUpon>
     </Compile>
@@ -505,6 +506,24 @@
     <Compile Include="sdgTricotModelOptions.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ucrSelectorByTable.Designer.vb">
+      <DependentUpon>ucrSelectorByTable.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ucrSelectorByTable.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ucrSelectorByTablesAddRemove.Designer.vb">
+      <DependentUpon>ucrSelectorByTablesAddRemove.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ucrSelectorByTablesAddRemove.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ucrTables.Designer.vb">
+      <DependentUpon>ucrTables.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ucrTables.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UserTables\Cells\FootNotes\ucrCellsFootNotes.Designer.vb">
       <DependentUpon>ucrCellsFootNotes.vb</DependentUpon>
     </Compile>
@@ -539,6 +558,12 @@
       <DependentUpon>ucrCellFormats.vb</DependentUpon>
     </Compile>
     <Compile Include="UserTables\Cells\Formats\ucrCellFormats.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserTables\Cells\Formats\ucrNewCellFormats.Designer.vb">
+      <DependentUpon>ucrNewCellFormats.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UserTables\Cells\Formats\ucrNewCellFormats.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserTables\Cells\Styles\ucrCellStyles.Designer.vb">
@@ -3637,6 +3662,21 @@
     <EmbeddedResource Include="sdgTricotModelOptions.resx">
       <DependentUpon>sdgTricotModelOptions.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ucrSelectorByTable.resx">
+      <DependentUpon>ucrSelectorByTable.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ucrSelectorByTable.sw-KE.resx">
+      <DependentUpon>ucrSelectorByTable.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ucrSelectorByTablesAddRemove.resx">
+      <DependentUpon>ucrSelectorByTablesAddRemove.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ucrTables.resx">
+      <DependentUpon>ucrTables.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ucrTables.sw-KE.resx">
+      <DependentUpon>ucrTables.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserTables\Cells\FootNotes\ucrCellsFootNotes.resx">
       <DependentUpon>ucrCellsFootNotes.vb</DependentUpon>
     </EmbeddedResource>
@@ -3654,6 +3694,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserTables\Cells\Formats\ucrCellFormats.resx">
       <DependentUpon>ucrCellFormats.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserTables\Cells\Formats\ucrNewCellFormats.resx">
+      <DependentUpon>ucrNewCellFormats.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserTables\Cells\Styles\ucrCellStyles.resx">
       <DependentUpon>ucrCellStyles.vb</DependentUpon>
