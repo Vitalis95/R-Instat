@@ -91,6 +91,11 @@ Public Class clsRecentFiles
     Public Sub addToMenu(frmDialog As Form)
         'Checks for existance, else add it to the beginning
         If lstRecentDialogs.Contains(frmDialog) Then lstRecentDialogs.Remove(frmDialog)
+
+        ' --- Ensure only ONE NetCDF dialog appears in recent dialogs ---
+        If TypeOf frmDialog Is dlgOpenNetCDF Then
+            lstRecentDialogs.RemoveAll(Function(d) TypeOf d Is dlgOpenNetCDF)
+        End If
         'adds to the list
         lstRecentDialogs.Add(frmDialog)
         'checks that only 10 items are allowed

@@ -320,19 +320,15 @@ Public Class dlgOpenNetCDF
 
     Private Sub ApplyInitialFile()
         If String.IsNullOrEmpty(_initialFileToOpen) Then Exit Sub
-        Try
-            ucrInputPath.SetName(Replace(_initialFileToOpen, "\", "/"))
-            Dim strFileName As String = Path.GetFileNameWithoutExtension(_initialFileToOpen)
-            ucrInputDataName.SetName(frmMain.clsRLink.MakeValidText(strFileName))
+        'Try
+        ucrInputPath.SetName(Replace(_initialFileToOpen, "\", "/"))
+        Dim strFileName As String = Path.GetFileNameWithoutExtension(_initialFileToOpen)
+        ucrInputDataName.SetName(frmMain.clsRLink.MakeValidText(strFileName))
 
-            clsNcOpenFunction.AddParameter("filename", Chr(34) & Replace(_initialFileToOpen, "\", "/") & Chr(34))
-            clsRFileDetails.AddParameter("infile", Chr(34) & Replace(_initialFileToOpen, "\", "/") & Chr(34), iPosition:=1)
-            FileDetails()
-            TestOkEnabled()
-        Catch ex As Exception
-            MsgBox("Error loading initial NetCDF file: " & ex.Message)
-        End Try
-        _initialFileToOpen = ""
+        clsNcOpenFunction.AddParameter("filename", Chr(34) & Replace(_initialFileToOpen, "\", "/") & Chr(34))
+        clsRFileDetails.AddParameter("infile", Chr(34) & Replace(_initialFileToOpen, "\", "/") & Chr(34), iPosition:=1)
+        FileDetails()
+        TestOkEnabled()
     End Sub
 
     ' Ensure this dialog appears only once in Recent Dialogs
