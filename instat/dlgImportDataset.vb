@@ -438,7 +438,7 @@ Public Class dlgImportDataset
     'Loads the open dialog on load and click
     Public Sub GetFileFromOpenDialog()
         Using dlgOpen As New OpenFileDialog
-            dlgOpen.Filter = "All Data files|*.csv;*.txt;*.xls;*.xlsx;*.RDS;*.sav;*.tsv;*.csvy;*.feather;*.psv;*.RData;*.json;*.yml;*.dta;*.dbf;*.arff;*.R;*.qmd;*.sas7bdat;*.xpt;*.mtp;*.rec;*.syd;*.dif;*.ods;*.xml;*.html;*.dly;*.dat|" &
+            dlgOpen.Filter = "All Data files|*.csv;*.txt;*.xls;*.xlsx;*.RDS;*.sav;*.tsv;*.csvy;*.feather;*.psv;*.RData;*.json;*.yml;*.dta;*.dbf;*.arff;*.R;*.qmd;*.sas7bdat;*.xpt;*.mtp;*.rec;*.syd;*.dif;*.ods;*.xml;*.html;*.nc;*.dly;*.dat|" &
                              "Comma separated files|*.csv|" &
                              "Text data file|*.txt|" &
                              "Excel files|*.xls;*.xlsx|" &
@@ -466,6 +466,7 @@ Public Class dlgImportDataset
                              "Shallow XML documents|*.xml|" &
                              "Single-table HTML documents|*.html|" &
                              "DLY|*.dly|" &
+                             "NetCDF files|*.nc|" &
                              "DAT|*.dat|" &
                              "All files|*.*"
             dlgOpen.Multiselect = False
@@ -492,8 +493,27 @@ Public Class dlgImportDataset
                     dctSelectedExcelSheets.Clear()
                     clbSheets.Items.Clear()
                     strDirectoryPathTemp = dlgOpen.FileName
+
+                    ' Detect if file is NetCDF (.nc)
+                    Dim strExt As String = Path.GetExtension(strDirectoryPathTemp).ToLower()
+                    If strExt = ".nc" Then
+                        ' Automatically open the NetCDF import dialog instead
+                        Dim dlgOpenNetCDF As New dlgOpenNetCDF()
+                        dlgOpenNetCDF.InitialFileToOpen = strDirectoryPathTemp
+                        dlgOpenNetCDF.StartPosition = FormStartPosition.CenterScreen
+                        dlgOpenNetCDF.Owner = frmMain
+
+                        ' Hide this dialog first (do not Close yet to avoid disposal crash)
+                        Me.Close() ' close immediately so it is not kept in memory
+                        dlgOpenNetCDF.Show() ' non-modal is SAFE here because it is a data-import dialog
+                        dlgOpenNetCDF.BringToFront()
+
+                        Exit Sub
+                    End If
+                    ' Otherwise continue normally
                     SetDialogStateFromFile(strDirectoryPathTemp)
                 End If
+
             End If
         End Using
     End Sub

@@ -45,6 +45,7 @@ Public Class dlgOpenNetCDF
     Private bFromLibrary As Boolean = False
     Private bSubDialogOKEnabled As Boolean = True
     Private bMultiImport As Boolean = False
+    Private _initialFileToOpen As String = ""
     Private strFiles() As String = {}
 
     Public Sub New()
@@ -57,7 +58,30 @@ Public Class dlgOpenNetCDF
         NFilesLabelVisible(False)
     End Sub
 
+    Public Property InitialFileToOpen As String
+        Get
+            Return _initialFileToOpen
+        End Get
+        Set(value As String)
+            _initialFileToOpen = value
+        End Set
+    End Property
+
+    ' --- Singleton instance so only one dlgOpenNetCDF exists ---
+    Private Shared _instance As dlgOpenNetCDF
+    Public Shared ReadOnly Property Instance As dlgOpenNetCDF
+        Get
+            If _instance Is Nothing OrElse _instance.IsDisposed Then
+                _instance = New dlgOpenNetCDF()
+            End If
+            Return _instance
+        End Get
+    End Property
+
+
     Private Sub dlgOpenNetCDF_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+
         If bFirstLoad Then
             InitialiseDialog()
             bFirstLoad = False
@@ -76,6 +100,12 @@ Public Class dlgOpenNetCDF
         bReset = False
         TestOkEnabled()
         autoTranslate(Me)
+
+        ApplyInitialFile()
+
+        EnsureSingleInstanceInRecentDialogs()
+
+
     End Sub
 
     Private Sub OpenFile()
@@ -287,6 +317,36 @@ Public Class dlgOpenNetCDF
         End Using
         autoTranslate(Me)
     End Sub
+
+    Private Sub ApplyInitialFile()
+        If String.IsNullOrEmpty(_initialFileToOpen) Then Exit Sub
+        Try
+            ucrInputPath.SetName(Replace(_initialFileToOpen, "\", "/"))
+            Dim strFileName As String = Path.GetFileNameWithoutExtension(_initialFileToOpen)
+            ucrInputDataName.SetName(frmMain.clsRLink.MakeValidText(strFileName))
+
+            clsNcOpenFunction.AddParameter("filename", Chr(34) & Replace(_initialFileToOpen, "\", "/") & Chr(34))
+            clsRFileDetails.AddParameter("infile", Chr(34) & Replace(_initialFileToOpen, "\", "/") & Chr(34), iPosition:=1)
+            FileDetails()
+            TestOkEnabled()
+        Catch ex As Exception
+            MsgBox("Error loading initial NetCDF file: " & ex.Message)
+        End Try
+        _initialFileToOpen = ""
+    End Sub
+
+    ' Ensure this dialog appears only once in Recent Dialogs
+    Public Sub EnsureSingleInstanceInRecentDialogs()
+        ' Remove null or disposed dialogs
+        frmMain.clsRecentItems.lstRecentDialogs.RemoveAll(Function(f) f Is Nothing OrElse f.IsDisposed)
+
+        ' Remove any previous dlgOpenNetCDF entry
+        frmMain.clsRecentItems.lstRecentDialogs.RemoveAll(Function(f) TypeOf f Is dlgOpenNetCDF)
+
+        ' Add the SINGLETON instance
+        frmMain.clsRecentItems.lstRecentDialogs.Add(dlgOpenNetCDF.Instance)
+    End Sub
+
 
     Private Sub SetNFilesInFolder(strPath As String)
         strFiles = Directory.GetFiles(strPath, "*.nc")
