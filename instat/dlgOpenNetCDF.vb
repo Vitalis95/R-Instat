@@ -78,6 +78,12 @@ Public Class dlgOpenNetCDF
         End Get
     End Property
 
+    ' --- Prepare dialog before showing ---
+    Public Sub PrepareForOpening()
+        bFirstLoad = True
+        bReset = True
+    End Sub
+
 
     Private Sub dlgOpenNetCDF_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -320,6 +326,10 @@ Public Class dlgOpenNetCDF
 
     Private Sub ApplyInitialFile()
         If String.IsNullOrEmpty(_initialFileToOpen) Then Exit Sub
+        ' *** FIX START ***
+        strFilePath = _initialFileToOpen
+        ' *** FIX END ***
+
         'Try
         ucrInputPath.SetName(Replace(_initialFileToOpen, "\", "/"))
         Dim strFileName As String = Path.GetFileNameWithoutExtension(_initialFileToOpen)

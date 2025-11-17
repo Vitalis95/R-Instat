@@ -46,6 +46,7 @@ Public Class dlgImportDataset
     Private clsPipeOperator As New ROperator
     Private clsEmptyDummyFunction As New RFunction
 
+
     Private Sub dlgImportDataset_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         bDialogLoaded = False
         If bFirstLoad Then
@@ -83,6 +84,7 @@ Public Class dlgImportDataset
                 End If
             End If
         End If
+
         HideDropEmptyCheckBox()
         bReset = False
         TestOkEnabled()
@@ -497,16 +499,17 @@ Public Class dlgImportDataset
                     ' Detect if file is NetCDF (.nc)
                     Dim strExt As String = Path.GetExtension(strDirectoryPathTemp).ToLower()
                     If strExt = ".nc" Then
-                        ' Automatically open the NetCDF import dialog instead
-                        Dim dlgOpenNetCDF As New dlgOpenNetCDF()
-                        dlgOpenNetCDF.InitialFileToOpen = strDirectoryPathTemp
-                        dlgOpenNetCDF.StartPosition = FormStartPosition.CenterScreen
-                        dlgOpenNetCDF.Owner = frmMain
+                        ' Use singleton only
+                        dlgOpenNetCDF.Instance.PrepareForOpening()
+                        dlgOpenNetCDF.Instance.InitialFileToOpen = strDirectoryPathTemp
+                        dlgOpenNetCDF.Instance.StartPosition = FormStartPosition.CenterScreen
+                        dlgOpenNetCDF.Instance.Owner = frmMain
 
-                        ' Hide this dialog first (do not Close yet to avoid disposal crash)
-                        Me.Close() ' close immediately so it is not kept in memory
-                        dlgOpenNetCDF.Show() ' non-modal is SAFE here because it is a data-import dialog
-                        dlgOpenNetCDF.BringToFront()
+                        Me.Hide()
+                        Me.Close()
+                        dlgOpenNetCDF.Instance.ShowDialog()
+                        dlgOpenNetCDF.Instance.BringToFront()
+                        Me.Close()
 
                         Exit Sub
                     End If
